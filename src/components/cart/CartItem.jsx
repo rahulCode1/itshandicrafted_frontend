@@ -7,27 +7,32 @@ import {
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { increaseCartQuantityAsync } from "../../features/cart/cartSlice";
+import {toast } from "react-hot-toast"
 
 const CartList = ({
   productCart,
-
   handleDecreaseQuantity,
   handleRemoveFromCart,
   handleCartToWishList,
   fetchUserCarts,
 }) => {
+  const token = localStorage.getItem("token");
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchUserCarts(productCart);
-  }, [productCart]);
+    if (token) {
+      fetchUserCarts(productCart);
+    }
+  }, [token]);
 
   const handleIncreaseQuantity = async (productId) => {
-    console.log(productId)
+   const toastId = toast.loading("Incring quantity...")
     try {
       await dispatch(increaseCartQuantityAsync(productId)).unwrap();
+      toast.success("Quantity increased successfully.", {id: toastId})
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      toast.error("Failed to increase quantity..", {id: toastId})
     }
   };
 

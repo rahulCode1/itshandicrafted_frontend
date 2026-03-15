@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { API } from "../../utils/axios";
+import { privateApi } from "../../utils/axios";
 
 export const fetchUserAddressAsync = createAsyncThunk(
   "address/fetch",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await API.get(`address/69a870245630f0e4e469fc6e`);
+      const res = await privateApi.get(`address/getAllAddress`);
 
-      //   console.log(res.data);
+        // console.log(res.data);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -21,7 +21,7 @@ export const addNewAddressAsync = createAsyncThunk(
   "address/add",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await API.post(`address/new`, data);
+      const res = await privateApi.post(`address/new`, data);
       // console.log(res.data);
 
       return res.data;
@@ -37,7 +37,7 @@ export const removeUserAddressAsync = createAsyncThunk(
   "address/remove",
   async (addressId, { rejectWithValue }) => {
     try {
-      const res = await API.delete(`address/${addressId}`);
+      const res = await privateApi.delete(`address/${addressId}`);
 
       // console.log(res.data);
       return res.data;
@@ -53,7 +53,7 @@ export const updateAddressAsync = createAsyncThunk(
   "address/edit",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await API.patch(`address/update/${data.addressId}`, data);
+      const res = await privateApi.patch(`address/update/${data.addressId}`, data);
       // console.log(res.data);
       return res.data;
     } catch (error) {
@@ -68,7 +68,7 @@ export const setDefaultAddressAsync = createAsyncThunk(
   "address/setDefault",
   async (addressId, { rejectWithValue }) => {
     try {
-      const res = await API.patch(`address/update/${addressId}/default`);
+      const res = await privateApi.patch(`address/update/${addressId}/default`);
       // console.log(res.data);
 
       return res.data;
@@ -91,9 +91,14 @@ const addressSlice = createSlice({
     updateAddressLoading: "idle",
     setDefaultAddressLoading: "idle",
     error: null,
+    
   },
 
-  reducers: {},
+  reducers: {
+    clearError: (state)=>{
+      state.error = null 
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchUserAddressAsync.pending, (state) => {
       state.fetchUserAddressLoading = "loading";
@@ -191,4 +196,6 @@ const addressSlice = createSlice({
   },
 });
 
+
+export const { clearError } = addressSlice.actions
 export default addressSlice;

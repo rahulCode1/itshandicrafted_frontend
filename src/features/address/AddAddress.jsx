@@ -4,7 +4,7 @@ import { indianStates } from "../../data/states";
 import { useLocation, useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading";
 import ErrorModal from "../../components/ErrorModal";
-import { addNewAddressAsync } from "./addressSlice";
+import { addNewAddressAsync, clearError } from "./addressSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const AddAddress = () => {
@@ -18,12 +18,11 @@ const AddAddress = () => {
     state: "",
   };
   const [formData, setFormData] = useState(initialValue);
-  const [error, setError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const redirectTo = location.state?.from || "user";
-  const { addNewAddressLoading } = useSelector((state) => state.address);
+  const redirectTo = location.state?.from || "/address";
+  const { addNewAddressLoading, error } = useSelector((state) => state.address);
 
   const handleOnChange = (e) => {
     setFormData((prevStat) => ({
@@ -37,9 +36,8 @@ const AddAddress = () => {
     const tostId = toast.loading("Adding Addresses...");
 
     try {
-      await dispatch(
-        addNewAddressAsync({ ...formData, userId: "69a870245630f0e4e469fc6e" }),
-      ).unwrap();
+      await dispatch(addNewAddressAsync({ ...formData })).unwrap();
+
       navigate(redirectTo);
 
       toast.success("Address added successfully.", { id: tostId });
@@ -58,7 +56,9 @@ const AddAddress = () => {
           <Loading />
         </div>
       )}
-      {error && <ErrorModal message={error} onClose={() => setError("")} />}
+      {error && (
+        <ErrorModal message={error} onClose={() => dispatch(clearError())} />
+      )}
       <form onSubmit={submitAddress}>
         <div className="mb-2">
           <label
@@ -74,7 +74,7 @@ const AddAddress = () => {
             value={formData.name}
             className="form-control"
             onChange={handleOnChange}
-            required
+            // required
             placeholder="Enter your full name."
           />
         </div>
@@ -91,7 +91,7 @@ const AddAddress = () => {
                 value={formData.phoneNumber}
                 minLength={10}
                 maxLength={10}
-                required
+                // required
                 placeholder="Enter your 10 digits phone number."
                 className="form-control"
               />

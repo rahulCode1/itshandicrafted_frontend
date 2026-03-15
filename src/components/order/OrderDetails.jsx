@@ -28,7 +28,7 @@ const OrderDetails = ({ order }) => {
   return (
     <>
       <div
-        className="container-fluid px-3 px-md-4 py-5"
+        className="container-fluid px-3 px-md-4 py-3 mb-5 mb-md-3"
         style={{
           background: "linear-gradient(135deg, #f0f4ff 0%, #fafafa 100%)",
           minHeight: "100vh",

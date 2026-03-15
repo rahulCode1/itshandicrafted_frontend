@@ -1,15 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { API } from "../../utils/axios";
+import { privateApi } from "../../utils/axios";
 
 export const getAllWishlistAsync = createAsyncThunk(
-  "wishlist/get",
+  "wishlist/getAllItems",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await API.get(`wishlist/69a870245630f0e4e469fc6e`);
+      const response = await privateApi.get(`wishlist/getAllWishlist`);
 
-      // console.log(response.data);
+      console.log(response.data);
       return response.data;
     } catch (error) {
+      console.log(error.response?.data?.message);
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch wishlist",
       );
@@ -18,13 +19,10 @@ export const getAllWishlistAsync = createAsyncThunk(
 );
 
 export const addOrRemoveWishlistAsync = createAsyncThunk(
-  "wishlist/addOrRemove",
+  "wishlist/toggle",
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await API.post(
-        `wishlist/69a870245630f0e4e469fc6e`,
-        productId,
-      );
+      const response = await privateApi.post(`wishlist/toggle`, productId);
 
       // console.log(response.data);
       return response.data;
@@ -40,10 +38,7 @@ export const wishlistToCartAsync = createAsyncThunk(
   "wishlist/moveToCart",
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await API.patch(
-        `wishlist/69a870245630f0e4e469fc6e`,
-        productId,
-      );
+      const response = await privateApi.patch(`wishlist/moveToCart`, productId);
 
       // console.log(response.data);
       return response.data;
@@ -69,6 +64,18 @@ const wishlistSlice = createSlice({
     addToWishlist: (state, action) => {
       state.wishlist.push(action.payload);
     },
+
+    clearError: (state) => {
+      state.error = null;
+    },
+
+    clearWishlist: (state) => {
+      state.wishlist = [];
+    },
+
+    clearWishlistError: (state)=>{
+      state.error = null 
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(getAllWishlistAsync.pending, (state) => {
@@ -83,7 +90,8 @@ const wishlistSlice = createSlice({
     });
 
     builder.addCase(getAllWishlistAsync.rejected, (state, action) => {
-      state.getWishlistLoading = action.payload;
+      state.getWishlistLoading = "error";
+      state.error = action.payload;
     });
 
     builder.addCase(addOrRemoveWishlistAsync.pending, (state) => {
@@ -132,5 +140,5 @@ const wishlistSlice = createSlice({
   },
 });
 
-export const { addToWishlist } = wishlistSlice.actions;
+export const { addToWishlist, clearError, clearWishlist , clearWishlistError} = wishlistSlice.actions;
 export default wishlistSlice;

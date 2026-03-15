@@ -1,15 +1,19 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   sentOtpAsync,
   verifyOtpAsync,
   setIsOtpSent,
   reSentOtpAsync,
+  clearError,
 } from "./userSlice";
 import SentOtp from "./SentOtp";
 import VerifyOtp from "./VerifyOtp";
 import { toast } from "react-hot-toast";
+import ErrorModal from "../../components/ErrorModal";
+import { getAllWishlistAsync } from "../wishlist/wishlistSlice";
+import { getAllCartAsync } from "../cart/cartSlice";
 
 const LoginWithOtp = () => {
   const initialValue = {
@@ -21,9 +25,9 @@ const LoginWithOtp = () => {
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(10);
   const [isDisabledBtn, setIsBtnDisabled] = useState(true);
-  const { isOtpSent } = useSelector((state) => state.user);
+  const { isOtpSent, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleOnChange = (e) => {
     setFormData((prevStat) => ({
@@ -33,21 +37,33 @@ const LoginWithOtp = () => {
   };
 
   const handleSetTimer = () => {
-    const timerIntervalId = setInterval(() => {
-      setTimer((prevStat) => prevStat - 1);
+    setIsBtnDisabled(true);
+    setTimer(10);
+
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setIsBtnDisabled(false);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
-    setTimeout(() => {
-      setIsBtnDisabled(false);
-      setTimer(10)
-      clearInterval(timerIntervalId);
-    }, 10000);
   };
 
   const handleSentOtp = async (e) => {
     e.preventDefault();
     const toastId = toast.loading("Sending OTP...");
-    if (formData.name.length === 0 || formData.phoneNumber.length !== 10) {
-      return toast.error("Please enter name & phone number", { id: toastId });
+
+    if (formData.name.length === 0) {
+      return toast.error("Please enter your name", { id: toastId });
+    }
+
+    if (formData.phoneNumber.length < 10) {
+      return toast.error("Phone number digits sort then 10.", { id: toastId });
+    } else if (formData.phoneNumber.length > 10) {
+      return toast.error("Phone number digits more then 10.", { id: toastId });
     }
 
     try {
@@ -59,6 +75,7 @@ const LoginWithOtp = () => {
       toast.error(error || "Failed to sent otp", { id: toastId });
     }
   };
+
   const handleResentOtp = async (e) => {
     e.preventDefault();
     const toastId = toast.loading("Resending OTP...");
@@ -71,8 +88,8 @@ const LoginWithOtp = () => {
         reSentOtpAsync({ phoneNumber: formData.phoneNumber }),
       ).unwrap();
       handleSetTimer();
-      setIsBtnDisabled(true)
-      setOtp("")
+      setIsBtnDisabled(true);
+      setOtp("");
       toast.success(res.message || "OTP re-sent successfully", { id: toastId });
     } catch (error) {
       console.log(error);
@@ -100,10 +117,12 @@ const LoginWithOtp = () => {
       const res = await dispatch(verifyOtpAsync(data)).unwrap();
       dispatch(setIsOtpSent());
       setFormData(initialValue);
+      dispatch(getAllWishlistAsync());
+      dispatch(getAllCartAsync());
       toast.success(res.message || "OTP verified successfully", {
         id: toastId,
       });
-      navigate('/products')
+      navigate("/products");
     } catch (error) {
       console.log(error);
       toast.error(error || "Failed to verify otp", { id: toastId });
@@ -111,7 +130,13 @@ const LoginWithOtp = () => {
   };
 
   return (
-    <main className="container py-4">
+    <main 
+    style={{maxWidth: '1200px', margin: 'auto'}}
+    >
+      {error && (
+        <ErrorModal message={error} onClose={() => dispatch(clearError())} />
+      )}
+
       {isOtpSent ? (
         <VerifyOtp
           formData={formData}

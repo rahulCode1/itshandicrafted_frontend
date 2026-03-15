@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { API } from "../../utils/axios";
+import { privateApi } from "../../utils/axios";
 
 export const addToCartAsync = createAsyncThunk(
   "cart/add",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await API.post(`cart/69a870245630f0e4e469fc6e`, data);
+      const response = await privateApi.post(`cart/addToCart`, data);
 
       // console.log(response.data);
       return response.data;
@@ -21,7 +21,7 @@ export const getAllCartAsync = createAsyncThunk(
   "cart/get",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await API.get(`cart/69a870245630f0e4e469fc6e`);
+      const response = await privateApi.get(`cart/getAllCart`);
 
       // console.log(response.data);
       return response.data;
@@ -37,7 +37,7 @@ export const increaseCartQuantityAsync = createAsyncThunk(
   "cart/increase",
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await API.patch(`cart/69a870245630f0e4e469fc6e`, {
+      const response = await privateApi.patch(`cart/increase`, {
         productId,
       });
 
@@ -54,12 +54,9 @@ export const decreaseCartQuantityAsync = createAsyncThunk(
   "cart/decrease",
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await API.patch(
-        `cart/decrease/69a870245630f0e4e469fc6e`,
-        {
-          productId,
-        },
-      );
+      const response = await privateApi.patch(`cart/decrease`, {
+        productId,
+      });
 
       // console.log(response.data);
       return response.data;
@@ -75,7 +72,7 @@ export const removeFromCartAsync = createAsyncThunk(
   "cart/remove",
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await API.patch(`cart/remove/69a870245630f0e4e469fc6e`, {
+      const response = await privateApi.patch(`cart/remove`, {
         productId,
       });
 
@@ -94,8 +91,8 @@ export const moveToWishlistAsync = createAsyncThunk(
   async (productId, { rejectWithValue }) => {
     // console.log(productId)
     try {
-      const response = await API.patch(
-        `cart/moveto_wishlist/69a870245630f0e4e469fc6e`,
+      const response = await privateApi.patch(
+        `cart/moveto_wishlist`,
         productId,
       );
 
@@ -105,6 +102,22 @@ export const moveToWishlistAsync = createAsyncThunk(
     } catch (error) {
       rejectWithValue(
         error.response?.data?.message || "Failed to move to wishlist.",
+      );
+    }
+  },
+);
+
+export const clearCartAsync = createAsyncThunk(
+  "cart/clear",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await privateApi.patch(`cart/clearCart`);
+
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to clear cart.",
       );
     }
   },
@@ -138,10 +151,15 @@ const cartSlice = createSlice({
       }
     },
 
-    emptyCartToPlaceOrder: (state, action)=>{
-      state.cart = []
-    }
+    clearCart: (state) => {
+      state.cart = [];
+    },
+
+    clearError: (state) => {
+      state.error = null;
+    },
   },
+
   extraReducers: (builder) => {
     builder.addCase(getAllCartAsync.pending, (state) => {
       state.getCartsLoading = "loading";
@@ -269,8 +287,23 @@ const cartSlice = createSlice({
       state.moveToWishlistLoading = "error";
       state.error = action.payload;
     });
+
+    builder.addCase(clearCartAsync.pending, (state) => {
+      state.status = "loading";
+    });
+    
+    builder.addCase(clearCartAsync.fulfilled, (state) => {
+      state.status = "success";
+      state.cart = [];
+    });
+
+    builder.addCase(clearCartAsync.rejected, (state, action) => {
+      state.status = "error";
+      state.error = action.payload;
+    });
   },
 });
 
-export const { addToCart , emptyCartToPlaceOrder} = cartSlice.actions;
+export const { addToCart, clearCart, clearError } =
+  cartSlice.actions;
 export default cartSlice;

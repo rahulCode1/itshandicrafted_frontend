@@ -7,11 +7,13 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   fetchUserAddressAsync,
   removeUserAddressAsync,
+  clearError,
 } from "../../features/address/addressSlice";
+import ErrorModal from "../../components/ErrorModal";
 
 const AllAddress = () => {
   const { handleSelectDefaultAddress } = useEcommerce();
-  const { address, fetchUserAddressLoading, removeAddressLoading } =
+  const { address, fetchUserAddressLoading, removeAddressLoading, error } =
     useSelector((state) => state.address);
   const dispatch = useDispatch();
 
@@ -22,7 +24,7 @@ const AllAddress = () => {
       dispatch(removeUserAddressAsync(addressId));
       toast.success("Address removed successfully.", { id: toastId });
     } catch (error) {
-      toast.error("Failed to remove address.", { id: toastId });
+      toast.error(error || "Failed to remove address.", { id: toastId });
     }
   };
 
@@ -35,13 +37,30 @@ const AllAddress = () => {
         <Loading />
       ) : (
         <div className="p-4 col-lg-8">
-          <Link
-            to="/user"
-            className="btn mb-3 text-light"
-            style={{ background: "linear-gradient(135deg, #4f46e5, #7c3aed" }}
-          >
-            Back to Profile
-          </Link>
+          {error && (
+            <ErrorModal
+              message={error}
+              onClose={() => dispatch(clearError())}
+            />
+          )}
+          <div className="d-flex justify-content-between">
+            <Link
+              to="/user"
+              className="btn mb-3 text-light"
+              style={{ background: "linear-gradient(135deg, #4f46e5, #7c3aed" }}
+            >
+              Back to Profile
+            </Link>
+
+            <Link
+              to="addAddress"
+              state={{from: "/address"}}
+              className="btn mb-3 text-light btn-primary"
+            >
+              + Add Address
+            </Link>
+          </div>
+
           {/* ── Section Header ── */}
           <div className="d-flex align-items-center justify-content-between mb-4">
             <div className="d-flex align-items-center gap-3">

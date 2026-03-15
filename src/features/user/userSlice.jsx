@@ -39,7 +39,11 @@ export const verifyOtpAsync = createAsyncThunk(
     try {
       const res = await API.patch(`user/verify-otp`, data);
 
-      console.log(res.data);
+      // console.log(res.data);
+      const token = res.data?.token;
+      const userId = res.data?.user?.userId;
+      localStorage.setItem("token", token);
+      localStorage.setItem("userId", userId);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -49,6 +53,7 @@ export const verifyOtpAsync = createAsyncThunk(
   },
 );
 
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -56,8 +61,8 @@ const userSlice = createSlice({
       name: "",
       phoneNumber: "",
       userId: "",
-      isVerified: false,
     },
+
     sentOtpLoading: "idle",
     verifyOtpLoading: "idle",
     resendOtpLoading: "idle",
@@ -69,6 +74,11 @@ const userSlice = createSlice({
     setIsOtpSent: (state) => {
       state.isOtpSent = false;
     },
+
+    clearError: (state)=>{
+      state.error = null 
+    }
+  
   },
   extraReducers: (builder) => {
     builder.addCase(sentOtpAsync.pending, (state) => {
@@ -101,7 +111,8 @@ const userSlice = createSlice({
       state.verifyOtpLoading = "loading";
     });
 
-    builder.addCase(verifyOtpAsync.fulfilled, (state) => {
+    builder.addCase(verifyOtpAsync.fulfilled, (state, action) => {
+      state.user = action.payload?.user;
       state.verifyOtpLoading = "success";
     });
 
@@ -112,5 +123,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setIsOtpSent } = userSlice.actions;
+export const { setIsOtpSent , clearError} = userSlice.actions;
 export default userSlice;

@@ -1,4 +1,4 @@
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import kitchenCategory from "../imgs/kitchen.jpg";
 import { useState } from "react";
 import giftCategory from "../imgs/gifts.jpg";
@@ -7,6 +7,8 @@ import decoreCategory from "../imgs/decores.jpg";
 import ganesh from "../imgs/ganesh.png";
 import tray from "../imgs/tray.jpg";
 import newArrivals from "../imgs/new.jpg";
+import deepakCategoryImg from "../imgs/deepak.png";
+import decorativeBowl from "../imgs/bowl.jpg";
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -35,6 +37,22 @@ const Home = () => {
       category: "ReligiousItems",
       imgUrl: religiousCategory,
     },
+    {
+      name: "Statues & Idols",
+      category: "StatuesIdols",
+      imgUrl: ganesh,
+    },
+    {
+      name: "Candle Holders",
+      category: "CandleHolders",
+      imgUrl: deepakCategoryImg,
+    },
+    {
+      name: "Decorative Bowls",
+      category: "DecorativeBowls",
+      imgUrl: decorativeBowl,
+    },
+    { name: "Serving Platters", category: "ServingPlatters", imgUrl: tray },
   ];
 
   const newArrival = [
@@ -62,228 +80,174 @@ const Home = () => {
       params.set(key, value);
     }
     setSearchParams(params);
-
     navigate(`/products?${params}`);
   };
 
   return (
     <main
-      className="py-5"
+      className="py-4 py-md-5 mb-5 mb-md-0"
       style={{
         background: "linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%)",
       }}
     >
       <section className="container">
+        {/* 1. Categories - Horizontal Scroll with improved touch target */}
         <div
-          className="d-flex gap-4 w-100 mb-5 pb-3"
-          style={{ overflowX: "auto" }}
+          className="d-flex gap-3 gap-md-4 w-100 mb-5 pb-3 custom-scrollbar"
+          style={{
+            overflowX: "auto",
+            WebkitOverflowScrolling: "touch",
+            scrollbarWidth: "none", // Hides scrollbar for Firefox
+          }}
         >
           {categories.map((data, i) => (
             <div
               key={i}
               onClick={() => handleUpdateParams("category", data.category)}
-              className="flex-fill text-center position-relative"
+              className="text-center flex-shrink-0"
               style={{
-                minWidth: "140px",
+                width: "120px",
                 cursor: "pointer",
                 transition: "transform 0.3s ease",
               }}
               onMouseEnter={(e) =>
-                (e.currentTarget.style.transform = "translateY(-8px)")
+                (e.currentTarget.style.transform = "translateY(-5px)")
               }
               onMouseLeave={(e) =>
                 (e.currentTarget.style.transform = "translateY(0)")
               }
             >
               <div
-                className={`position-relative overflow-hidden ${
+                className={`rounded-circle mx-auto mb-2 overflow-hidden border-2 ${
                   selectedCategory === data.category
-                    ? "border border-3 border-dark"
-                    : ""
+                    ? "border border-dark"
+                    : "border border-transparent"
                 }`}
-                style={{ borderRadius: "16px" }}
+                style={{ width: "85px", height: "85px" }}
               >
                 <img
-                  src={data.imgUrl}
+                  src={data?.imgUrl}
                   alt={data.name}
-                  className="img-fluid w-100"
-                  style={{
-                    height: "200px",
-                    objectFit: "cover",
-                    filter: "brightness(0.95)",
-                  }}
+                  className="w-100 h-100 object-fit-cover"
+                  style={{ filter: "brightness(0.95)" }}
                 />
-                <div
-                  className="position-absolute bottom-0 start-0 end-0 text-white py-3 px-2"
-                  style={{
-                    background:
-                      "linear-gradient(to top, rgba(0,0,0,0.85), transparent)",
-                    backdropFilter: "blur(2px)",
-                  }}
-                >
-                  <p
-                    className="mb-0 fw-semibold text-uppercase"
-                    style={{ fontSize: "0.85rem", letterSpacing: "1px" }}
-                  >
-                    {data.name}
-                  </p>
-                </div>
               </div>
+              <p
+                className="mb-0 fw-bold text-uppercase"
+                style={{ fontSize: "0.7rem", letterSpacing: "1px" }}
+              >
+                {data.name}
+              </p>
             </div>
           ))}
         </div>
 
+        {/* 2. Hero Banner - Responsive text and height */}
         <div
-          className="my-5 position-relative pointer"
+          className="my-4 my-md-5 position-relative rounded-4 overflow-hidden shadow-lg"
           onClick={() => handleUpdateParams("category", "StatuesIdols")}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", minHeight: "400px" }}
         >
-          <div className="rounded-4 overflow-hidden shadow-lg position-relative">
-            <img
-              src={ganesh}
-              className="img-fluid w-100 h-100"
-              alt="Banner"
-              style={{
-                maxHeight: "700px",
-                objectFit: "cover",
-                filter: "brightness(0.9)",
-              }}
-            />
-            <div
-              className="position-absolute top-0 start-0 end-0 bottom-0 d-flex align-items-center justify-content-center"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(0,0,0,0.3), rgba(0,0,0,0.6))",
-              }}
-            >
-              <div className="text-center text-white px-4">
-                <div className="mb-4" style={{ fontFamily: "Georgia, serif" }}>
-                  <div
-                    className="mb-2"
-                    style={{
-                      fontSize: "0.9rem",
-                      letterSpacing: "3px",
-                      fontWeight: "300",
-                    }}
-                  >
-                    LUXURY MARBLE COLLECTION
-                  </div>
-                  <h1
-                    className="display-2 fw-bold mb-3"
-                    style={{ letterSpacing: "2px" }}
-                  >
-                    Timeless Elegance
-                  </h1>
-                  <div
-                    className="mx-auto mb-4"
-                    style={{
-                      width: "120px",
-                      height: "2px",
-                      background: "white",
-                    }}
-                  ></div>
-                  <p
-                    className="fs-5 fw-light mb-4"
-                    style={{
-                      maxWidth: "600px",
-                      margin: "0 auto",
-                      lineHeight: "1.8",
-                    }}
-                  >
-                    Discover exquisite handcrafted masterpieces that transform
-                    spaces into sanctuaries of refined beauty
-                  </p>
-                </div>
-              </div>
+          <img
+            src={ganesh}
+            alt="Stone Handicraft"
+            className="position-absolute w-100 h-100 object-fit-cover"
+            style={{ filter: "brightness(0.7)" }}
+          />
+
+          <div
+            className="position-relative d-flex align-items-center justify-content-center text-center p-4 py-5"
+            style={{
+              minHeight: "400px",
+              background: "linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.5))",
+            }}
+          >
+            <div className="text-white" style={{ maxWidth: "800px" }}>
+              <p
+                className="text-uppercase mb-2"
+                style={{ letterSpacing: "3px", fontSize: "0.75rem" }}
+              >
+                Premium Stone Handicrafts
+              </p>
+
+              <h1 className="fw-bold display-4 display-md-3 mb-3">
+                Timeless Stone Art
+              </h1>
+
+              <div
+                className="mx-auto mb-4 bg-white"
+                style={{ width: "60px", height: "2px" }}
+              />
+
+              <p className="lead fs-6 fs-md-5 mb-4 opacity-90 px-md-5">
+                Handcrafted marble sculptures and decor pieces that bring
+                heritage, spirituality and elegance into your home.
+              </p>
+
+              <button className="btn btn-light rounded-pill px-4 py-2 fw-bold text-uppercase small">
+                Explore Collection
+              </button>
             </div>
           </div>
         </div>
 
-        <div className="row g-4" style={{ cursor: "pointer" }}>
+        {/* 3. New Arrivals - Responsive Grid */}
+        <div className="row g-4">
           {newArrival.map((product, i) => (
             <div
-              onClick={() => handleUpdateParams("category", product.category)}
-              className="col-md-6"
+              className="col-12 col-lg-6"
               key={i}
+              onClick={() => handleUpdateParams("category", product.category)}
             >
               <div
-                className="p-4 bg-white rounded-4 shadow h-100 position-relative"
+                className="card border-0 shadow-sm h-100 overflow-hidden rounded-4 transition-hover"
                 style={{
-                  border: "1px solid #e9ecef",
-                  transition: "all 0.4s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-8px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 20px 40px rgba(0,0,0,0.12)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "";
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
                 }}
               >
-                <div
-                  className="position-absolute top-0 start-0 m-3 px-3 py-1 bg-dark text-white"
-                  style={{
-                    fontSize: "0.7rem",
-                    letterSpacing: "2px",
-                    fontWeight: "600",
-                    borderRadius: "4px",
-                    zIndex: 10,
-                  }}
-                >
+                {/* New Badge */}
+                <span className="position-absolute top-0 start-0 m-3 badge bg-dark px-3 py-2 z-1">
                   NEW
-                </div>
+                </span>
 
-                <div className="d-flex">
-                  <div className="flex-shrink-0 me-4">
-                    <div
-                      className="overflow-hidden shadow-sm"
-                      style={{ borderRadius: "12px" }}
-                    >
-                      <img
-                        src={product.image}
-                        className="object-fit-cover"
-                        style={{
-                          height: "220px",
-                          width: "160px",
-                          transition: "transform 0.5s ease",
-                        }}
-                        alt={product.name}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.transform = "scale(1.05)")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.transform = "scale(1)")
-                        }
-                      />
-                    </div>
+                <div className="row g-0 h-100">
+                  {/* Image Column */}
+                  <div className="col-4 col-sm-5 col-md-4">
+                    <img
+                      src={product.image}
+                      className="w-100 h-100 object-fit-cover"
+                      style={{ minHeight: "200px" }}
+                      alt={product.name}
+                    />
                   </div>
 
-                  <div className="d-flex flex-column justify-content-between flex-grow-1 py-2">
-                    <div>
+                  {/* Content Column */}
+                  <div className="col-8 col-sm-7 col-md-8">
+                    <div className="card-body d-flex flex-column justify-content-center h-100 p-3 p-md-4">
                       <p
-                        className="text-uppercase mb-2 text-muted fw-semibold"
-                        style={{ fontSize: "0.75rem", letterSpacing: "2px" }}
+                        className="text-primary fw-bold text-uppercase mb-1"
+                        style={{ fontSize: "0.65rem", letterSpacing: "1.5px" }}
                       >
-                        NEW ARRIVALS
+                        New Arrival
                       </p>
                       <h5
-                        className="fw-bold mb-3"
-                        style={{
-                          fontFamily: "Georgia, serif",
-                          fontSize: "1.5rem",
-                          color: "#212529",
-                        }}
+                        className="card-title fw-bold mb-2 fs-5 fs-md-4"
+                        style={{ fontFamily: "serif" }}
                       >
                         {product.name}
                       </h5>
-                      <p
-                        className="mb-0 text-muted"
-                        style={{ lineHeight: "1.7", fontSize: "0.95rem" }}
-                      >
+                      <p className="card-text text-muted small d-none d-sm-block">
                         {product.details}
                       </p>
+                      <div className="mt-auto">
+                        <span
+                          className="text-dark fw-bold border-bottom border-dark border-2 pb-1"
+                          style={{ fontSize: "0.8rem" }}
+                        >
+                          VIEW DETAILS
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -292,6 +256,17 @@ const Home = () => {
           ))}
         </div>
       </section>
+
+      {/* CSS for hiding scrollbars while keeping functionality */}
+      <style>{`
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .transition-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important;
+    }
+  `}</style>
     </main>
   );
 };

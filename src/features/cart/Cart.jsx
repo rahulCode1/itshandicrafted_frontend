@@ -13,8 +13,10 @@ import {
   decreaseCartQuantityAsync,
   removeFromCartAsync,
   moveToWishlistAsync,
+  clearError,
 } from "./cartSlice";
 import { addToWishlist } from "../wishlist/wishlistSlice";
+import ErrorModal from "../../components/ErrorModal";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -23,6 +25,7 @@ const Cart = () => {
     increaseQuantityLoading,
     getCartsLoading,
     moveToWishlistLoading,
+    error,
   } = useSelector((state) => state.cart);
 
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -107,6 +110,9 @@ const Cart = () => {
 
   return (
     <>
+      {error && (
+        <ErrorModal message={error} onClose={() => dispatch(clearError())} />
+      )}
       {getCartsLoading === "loading" ? (
         <Loading />
       ) : (

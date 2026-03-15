@@ -1,13 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { API } from "../../utils/axios";
+import { privateApi } from "../../utils/axios";
 
 export const addProductAsync = createAsyncThunk(
   "products/addProduct",
   async (data, { rejectWithValue }) => {
     try {
-    
-      const response = await API.post(`product/add`, data, {
+      const response = await privateApi.post(`product/add`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -23,9 +22,7 @@ export const addProductAsync = createAsyncThunk(
   },
 );
 
-export const fetchProductAsync = createAsyncThunk("product/fetch", async(_, {rejectWithValue})=>{
-  
-})
+
 
 const productSlice = createSlice({
   name: "product",

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function UserProfile() {
+const UserProfile = ({ user }) => {
   return (
     <>
       <div className="container-fluid bg-light min-vh-100 py-5">
@@ -19,7 +19,7 @@ export default function UserProfile() {
                 >
                   <div className="position-relative d-inline-block mb-3">
                     <img
-                      src="https://www.mciinstitute.edu.au/hubfs/Business%20Manager.jpg"
+                      src="https://cdn-icons-png.flaticon.com/512/6522/6522516.png"
                       className="rounded-circle border border-4 border-white shadow"
                       alt="Profile"
                       style={{
@@ -29,40 +29,16 @@ export default function UserProfile() {
                       }}
                     />
                   </div>
-                  <h4 className="mb-1 fw-bold">Alice Johnson</h4>
+                  <h4 className="mb-1 fw-bold">{user.name}</h4>
                 </div>
+
+                
 
                 {/* Contact Information */}
                 <div className="card-body p-4">
                   <h6 className="text-uppercase text-muted small fw-bold mb-3">
                     Contact Information
                   </h6>
-
-                  <div className="mb-3">
-                    <div className="d-flex align-items-center p-3 bg-light rounded">
-                      <div
-                        className="d-flex align-items-center justify-content-center rounded-circle me-3"
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                          backgroundColor: "#e8eaf6",
-                        }}
-                      >
-                        <svg
-                          width="18"
-                          height="18"
-                          fill="#5e35b1"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
-                        </svg>
-                      </div>
-                      <div className="flex-grow-1">
-                        <small className="text-muted d-block">Email</small>
-                        <span className="fw-medium">alice@gmail.com</span>
-                      </div>
-                    </div>
-                  </div>
 
                   <div className="mb-4">
                     <div className="d-flex align-items-center p-3 bg-light rounded">
@@ -84,8 +60,10 @@ export default function UserProfile() {
                         </svg>
                       </div>
                       <div className="flex-grow-1">
-                        <small className="text-muted d-block">Phone</small>
-                        <span className="fw-medium">1234567890</span>
+                        <small className="text-muted d-block">
+                          Phone number
+                        </small>
+                        <span className="fw-medium">+91{user.phoneNumber}</span>
                       </div>
                     </div>
                   </div>
@@ -95,7 +73,7 @@ export default function UserProfile() {
                   {/* Action Buttons */}
                   <div className="d-grid gap-2">
                     <Link
-                      to="/allAddress"
+                      to="/address"
                       state={{ from: "/user" }}
                       className="btn btn-lg text-white fw-medium"
                       style={{
@@ -129,4 +107,6 @@ export default function UserProfile() {
       </div>
     </>
   );
-}
+};
+
+export default UserProfile;

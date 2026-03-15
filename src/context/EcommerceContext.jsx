@@ -2,7 +2,12 @@ import { createContext, useContext, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setDefaultAddressAsync } from "../features/address/addressSlice";
-import { API } from "../utils/axios";
+import { privateApi } from "../utils/axios";
+import { clearCart } from "../features/cart/cartSlice";
+import {
+  clearWishlist,
+  clearWishlistError,
+} from "../features/wishlist/wishlistSlice";
 
 const EcommerceContext = createContext();
 
@@ -18,7 +23,7 @@ const EcommerceProvider = ({ children }) => {
   const handleSelectDefaultAddress = async (addressId) => {
     const toastId = toast.loading("Setting default address...");
     try {
-      const res = dispatch(setDefaultAddressAsync(addressId)).unwrap();
+      const res = await dispatch(setDefaultAddressAsync(addressId)).unwrap();
       toast.success(res.msg || "Status updated successfully.", { id: toastId });
     } catch (error) {
       console.log(error);
@@ -30,7 +35,7 @@ const EcommerceProvider = ({ children }) => {
     const toastId = toast.loading("Order cancel...");
     try {
       setIsLoading(true);
-      await API.patch(`order/${id}/cancel`);
+      await privateApi.patch(`order/${id}/cancel`);
       revalidator.revalidate();
 
       toast.success("Order canceled successfully.", { id: toastId });
@@ -40,6 +45,14 @@ const EcommerceProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleLogout = async (navigate) => {
+    dispatch(clearCart());
+    dispatch(clearWishlist());
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    navigate("/login");
   };
 
   return (
@@ -52,6 +65,7 @@ const EcommerceProvider = ({ children }) => {
         handleCancelOrder,
         searchText,
         setSearchText,
+        handleLogout,
         handleSelectDefaultAddress,
       }}
     >

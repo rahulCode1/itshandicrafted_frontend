@@ -1,11 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link,  useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCartAsync } from "../../features/cart/cartSlice";
 import { toast } from "react-hot-toast";
 import { addOrRemoveWishlistAsync } from "../../features/wishlist/wishlistSlice";
 export default function ProductCard({ product }) {
   const { cart: productCart } = useSelector((state) => state.cart);
-  const { wishlist, addOrRemoveWishlistLoading } = useSelector((state) => state.wishlist);
+  const { wishlist, addOrRemoveWishlistLoading } = useSelector(
+    (state) => state.wishlist,
+  );
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const checkProductIsWishlist = (id) => {
@@ -17,6 +21,13 @@ export default function ProductCard({ product }) {
   };
 
   const handleAddToCart = async (productId, quantity) => {
+
+    
+
+    if (!token) {
+      return navigate("/login");
+    }
+
     const tostId = toast.loading("Adding to cart...");
 
     try {
@@ -31,6 +42,12 @@ export default function ProductCard({ product }) {
   };
 
   const handleAddToWishList = async (productId, type) => {
+
+    if (!token) {
+      return navigate("/login");
+    }
+
+    
     const tostId = toast.loading(
       type === "add" ? "Adding to wishlist..." : "Removing from wishlist...",
     );
@@ -74,7 +91,7 @@ export default function ProductCard({ product }) {
     >
       {/* ── Wishlist Button ── */}
       <button
-      disabled={addOrRemoveWishlistLoading === 'loading'}
+        disabled={addOrRemoveWishlistLoading === "loading"}
         onClick={() =>
           handleAddToWishList(
             product.id,

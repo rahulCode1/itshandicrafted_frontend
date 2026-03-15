@@ -1,4 +1,5 @@
 import { Await, useLoaderData } from "react-router-dom";
+import { API } from "../../utils/axios";
 
 import ProductsList from "./ProductsList";
 import { Suspense } from "react";
@@ -7,14 +8,12 @@ import Loading from "../../components/Loading";
 const Products = () => {
   const { products } = useLoaderData();
 
-  
-
   return (
     <>
       <Suspense fallback={<Loading />}>
         <Await resolve={products}>
-          {(isLoadingProducts) => (
-            <ProductsList productsList={isLoadingProducts} />
+          {(isLoadProducts) => (
+            <ProductsList productsList={isLoadProducts} />
           )}
         </Await>
       </Suspense>
@@ -25,22 +24,10 @@ const Products = () => {
 export default Products;
 
 const products = async () => {
-  let url = `${process.env.REACT_APP_BACKEND_URL}products`;
-
   try {
-    const res = await fetch(url);
+    const res = await API.get("/products");
 
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Response(
-        JSON.stringify({
-          message: data.message || "Error occurred while fetching products.",
-        }),
-        { status: data.status || 500 }
-      );
-    }
-
-    const products = data.data?.products;
+    const products = res.data?.products;
     return products;
   } catch (error) {
     console.error(error || "Failed to fetch products:");

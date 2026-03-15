@@ -1,5 +1,5 @@
 import { Await, useLoaderData } from "react-router-dom";
-import { API } from "../../utils/axios";
+import { privateApi } from "../../utils/axios";
 import UserOrders from "../../components/order/UserOrders";
 
 const UserOrdersPage = () => {
@@ -18,7 +18,7 @@ export default UserOrdersPage;
 
 const userOrders = async () => {
   try {
-    const res = await API.get(`order/69a870245630f0e4e469fc6e`);
+    const res = await privateApi.get(`order/getUserOrders`);
 
     return res.data;
   } catch (error) {

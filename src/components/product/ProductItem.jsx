@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { toast } from "react-hot-toast";
 import ProductImageCarousel from "./ProductImageCarousel";
@@ -19,22 +19,29 @@ const ProductItem = ({ productData }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
   const dispatch = useDispatch();
   const productId = useParams().id;
-  const productInfo = productData.data.product;
-  const similarProducts = productData.data.similarProducts;
+  const productInfo = productData?.product;
+  const similarProducts = productData?.similarProducts;
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   const checkProductIsWishlist = (id) => {
     return wishlist.some((product) => product.id === id);
   };
 
   useEffect(() => {
-    dispatch(getAllCartAsync());
-  }, [dispatch]);
+    if (token) {
+      dispatch(getAllCartAsync());
+    }
+  }, [dispatch, token]);
 
   const checkProductIsInCart = (id) => {
     return productCart.some((cart) => cart.id === id);
   };
 
   const handleAddToCart = async (productId) => {
+    if (!token) {
+      return navigate("/login");
+    }
     const toastId = toast.loading("Adding to cart...");
     try {
       const res = await dispatch(
@@ -48,6 +55,11 @@ const ProductItem = ({ productData }) => {
   };
 
   const handleAddToWishList = async (productId, type) => {
+
+     if (!token) {
+      return navigate("/login");
+    }
+
     const tostId = toast.loading(
       type === "add" ? "Adding to wishlist..." : "Removing from wishlist...",
     );
@@ -82,6 +94,8 @@ const ProductItem = ({ productData }) => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [productId]);
+
+  
   return (
     <>
       <main

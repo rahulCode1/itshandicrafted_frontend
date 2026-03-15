@@ -15,17 +15,19 @@ import NotFound from "./components/NotFound"
 import ErrorPage from './pages/ErrorPage';
 import { lazy, Suspense } from 'react';
 import Loading from './components/Loading';
-import LoginWithOtp from './features/user/LoginWithOtp';
+import ProtectedRoutes from "./pages/auth/ProtectedRoutes"
 
 const Products = lazy(() => import("./features/product/Products"))
 const ProductDetails = lazy(() => import("./features/product/ProductDetails"))
-const UpdateAddress = lazy(() => import("./features/address/UpdateAddress"))
 const Cart = lazy(() => import("./features/cart/Cart"))
 const Wishlist = lazy(() => import("./features/wishlist/Wishlist"))
+const UserProfilePage = lazy(() => import("./pages/user/UserProfilePage"))
 const UserOrdersPage = lazy(() => import("./pages/order/UserOrdersPage"))
-const UserProfile = lazy(() => import("./pages/user/UserProfile"))
 const OrderDetailsPage = lazy(() => import('./pages/order/OrderDetailsPage'))
 const AllAddress = lazy(() => import("./features/address/AllAddress"))
+const UpdateAddressPage = lazy(() => import("./features/address/UpdateAddressPage"))
+const LoginWithOtp = lazy(() => import("./features/user/LoginWithOtp"))
+
 
 function App() {
 
@@ -49,7 +51,7 @@ function App() {
             },
             {
               path: "add",
-              element: <AddProducts />
+              element: <ProtectedRoutes><AddProducts /></ProtectedRoutes>
             },
             {
               path: ":id",
@@ -63,50 +65,50 @@ function App() {
 
         {
           path: "cart",
-          element: <Cart />
+          element: <ProtectedRoutes> <Cart /></ProtectedRoutes>
         },
         {
           path: "wishlist",
-          element: <Wishlist />
+          element: <ProtectedRoutes> <Wishlist /> </ProtectedRoutes>
         },
         {
           path: "address",
           children: [
             {
               index: true,
-              element: <AllAddress />
+              element: <ProtectedRoutes><AllAddress /></ProtectedRoutes>
             }
             ,
             {
               path: "addAddress",
-              element: <AddAddress />
+              element: <ProtectedRoutes><AddAddress /></ProtectedRoutes>
             },
             {
               path: ":id",
               element: <Suspense
-                fallback={<Loading />}><UpdateAddress /></Suspense>,
+                fallback={<Loading />}><ProtectedRoutes><UpdateAddressPage /></ProtectedRoutes></Suspense>,
               loader: (meta) =>
-                import("./features/address/UpdateAddress").then(module => module.loader(meta))
+                import("./features/address/UpdateAddressPage").then(module => module.loader(meta))
             },
           ],
         },
 
         {
           path: "checkout",
-          element: <Checkout />
+          element: <ProtectedRoutes><Checkout /></ProtectedRoutes>
         },
         {
           path: "orders",
           children: [
             {
               index: true,
-              element: <Suspense fallback={<Loading />}> <UserOrdersPage /> </Suspense>,
+              element: <Suspense fallback={<Loading />}> <ProtectedRoutes><UserOrdersPage /></ProtectedRoutes> </Suspense>,
               loader: () =>
                 import("./pages/order/UserOrdersPage").then(module => module.loader())
             },
             {
               path: ":id",
-              element: <Suspense fallback={<Loading />}><OrderDetailsPage /> </Suspense>,
+              element: <Suspense fallback={<Loading />}> <ProtectedRoutes><OrderDetailsPage /></ProtectedRoutes> </Suspense>,
               loader: (meta) =>
                 import("./pages/order/OrderDetailsPage").then(module => module.loader(meta))
             }
@@ -114,11 +116,12 @@ function App() {
         },
         {
           path: "user",
-          element: <UserProfile />
+          element: <ProtectedRoutes><UserProfilePage /></ProtectedRoutes>,
+          loader: () => import("./pages/user/UserProfilePage").then(module => module.loader())
         },
         {
           path: "login",
-          element: <LoginWithOtp/>
+          element: <LoginWithOtp />
         },
 
         { path: "*", element: <NotFound /> },
