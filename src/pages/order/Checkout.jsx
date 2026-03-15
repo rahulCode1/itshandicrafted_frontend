@@ -41,11 +41,11 @@ const Checkout = () => {
 
   const handleSubmitOrder = async () => {
     if (address.length === 0) {
-      return alert("Please add address.");
+      return setError("Please add address to place order.");
     }
 
     if (address.length !== 0 && !selectedAddress) {
-      return alert("Please select an address.");
+      return setError("Select an default address to place order.");
     }
 
     const toastId = toast.loading("Place order...");
@@ -58,7 +58,7 @@ const Checkout = () => {
         totalQuantity,
       },
 
-      paymentMethod: payment,
+      paymentMethod: "COD",
       paymentStatus: payment === "UPI" ? "completed" : "pending",
     };
 
@@ -91,13 +91,15 @@ const Checkout = () => {
 
   return (
     <main
-      className="mb-5"
       style={{
-        background: "linear-gradient(135deg, #f0f4ff 0%, #fafafa 100%)",
+        background:
+          "linear-gradient(160deg, #f0f4ff 0%, #fafafa 60%, #f5f3ff 100%)",
         minHeight: "100vh",
+        marginBottom: '5em'
       }}
     >
       {error && <ErrorModal message={error} onClose={() => setError(null)} />}
+
       <div className="container py-4 py-md-5">
         {isLoading && (
           <div className="overlay">
@@ -106,16 +108,17 @@ const Checkout = () => {
         )}
 
         {/* ── Page Header ── */}
-        <div className="d-flex align-items-center gap-3 mb-4">
+        <div className="d-flex align-items-center gap-3 mb-4 mb-md-5">
           <div
-            className="d-flex align-items-center justify-content-center rounded-3 text-white flex-shrink-0"
+            className="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0"
             style={{
               width: 48,
               height: 48,
               background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
+              boxShadow: "0 4px 14px rgba(79,70,229,0.3)",
             }}
           >
-            <i className="bi bi-bag-check-fill fs-5"></i>
+            <i className="bi bi-bag-check-fill text-white fs-5"></i>
           </div>
           <div>
             <h4
@@ -124,217 +127,186 @@ const Checkout = () => {
             >
               Checkout
             </h4>
-            <span className="text-muted small">
-              Review and place your order
+            <span className="text-muted" style={{ fontSize: "0.83rem" }}>
+              Review your order and place it securely
             </span>
           </div>
         </div>
 
         <div className="row g-4 align-items-start">
-          {/* ══════════════════════════
-          LEFT: Delivery Addresses
-      ══════════════════════════ */}
-          <div className="col-12 col-md-6">
-            {address && address.length > 0 && (
-              <div className="d-flex align-items-center gap-2 mb-3">
-                <span
-                  className="d-inline-flex align-items-center justify-content-center rounded-2"
-                  style={{ width: 28, height: 28, background: "#ede9fe" }}
-                >
-                  <i
-                    className="bi bi-geo-alt-fill"
-                    style={{ fontSize: 13, color: "#4f46e5" }}
-                  ></i>
-                </span>
-                <h6 className="fw-bold mb-0" style={{ color: "#1e1b4b" }}>
-                  Select Delivery Address
-                </h6>
-              </div>
-            )}
+          {/* LEFT: Delivery Address */}
+          <div className="col-12 col-lg-6">
+            <p
+              className="fw-semibold mb-2 d-flex align-items-center gap-2"
+              style={{
+                color: "#4f46e5",
+                fontSize: "0.78rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.6px",
+              }}
+            >
+              <i className="bi bi-geo-alt-fill"></i> Delivery Address
+            </p>
 
-            {address && address.length > 0 ? (
-              <div className="d-flex flex-column gap-3">
-                {address.map((userAdd) => (
-                  <div
-                    key={userAdd.id}
-                    className="card border-0"
-                    style={{
-                      borderRadius: 14,
-                      boxShadow: userAdd.isDefault
-                        ? "0 4px 16px rgba(79,70,229,0.15)"
-                        : "0 2px 8px rgba(79,70,229,0.06)",
-                      border: userAdd.isDefault
-                        ? "1.5px solid #a5b4fc"
-                        : "1px solid #ede9fe",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {/* Default highlight bar */}
-                    {userAdd.isDefault && (
+            {selectedAddress ? (
+              <div
+                className="card border-0 rounded-4 overflow-hidden"
+                style={{
+                  boxShadow: selectedAddress.isDefault
+                    ? "0 6px 24px rgba(79,70,229,0.14)"
+                    : "0 2px 10px rgba(79,70,229,0.07)",
+                  border: selectedAddress.isDefault
+                    ? "1.5px solid #a5b4fc"
+                    : "1px solid #ede9fe",
+                }}
+              >
+                <div
+                  style={{
+                    height: 4,
+                    background:
+                      "linear-gradient(90deg, #4f46e5, #7c3aed, #a855f7)",
+                  }}
+                />
+
+                <div className="card-body p-3 p-md-4">
+                  <div className="d-flex align-items-center justify-content-between mb-3">
+                    <div className="d-flex align-items-center gap-2">
                       <div
+                        className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                        style={{ width: 36, height: 36, background: "#ede9fe" }}
+                      >
+                        <i
+                          className="bi bi-person-fill"
+                          style={{ color: "#4f46e5", fontSize: 15 }}
+                        ></i>
+                      </div>
+                      <h6 className="fw-bold mb-0" style={{ color: "#1e1b4b" }}>
+                        {selectedAddress.name}
+                      </h6>
+                    </div>
+                    {selectedAddress.isDefault && (
+                      <span
+                        className="badge rounded-pill d-flex align-items-center gap-1"
                         style={{
-                          height: 3,
                           background:
                             "linear-gradient(135deg, #4f46e5, #7c3aed)",
+                          fontSize: "0.68rem",
+                          padding: "4px 10px",
                         }}
-                      />
+                      >
+                        <i className="bi bi-check-circle-fill"></i> Default
+                      </span>
                     )}
+                  </div>
 
-                    <div className="card-body p-3 p-md-4">
-                      {/* Name + Default badge */}
-                      <div className="d-flex align-items-center justify-content-between mb-3">
-                        <div className="d-flex align-items-center gap-2">
-                          <div
-                            className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
-                            style={{
-                              width: 34,
-                              height: 34,
-                              background: "#ede9fe",
-                            }}
-                          >
-                            <i
-                              className="bi bi-person-fill"
-                              style={{ color: "#4f46e5", fontSize: 14 }}
-                            ></i>
-                          </div>
-                          <h6
-                            className="fw-bold mb-0"
-                            style={{ color: "#1e1b4b" }}
-                          >
-                            {userAdd.name}
-                          </h6>
-                        </div>
-                        {userAdd.isDefault && (
-                          <span
-                            className="badge rounded-pill"
-                            style={{
-                              background:
-                                "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                              color: "#fff",
-                              fontSize: "0.68rem",
-                              fontWeight: 600,
-                              padding: "4px 10px",
-                            }}
-                          >
-                            <i className="bi bi-check-circle-fill me-1"></i>
-                            Default
-                          </span>
-                        )}
-                      </div>
+                  <div
+                    className="d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-3"
+                    style={{
+                      background: "#f5f3ff",
+                      border: "1px solid #ede9fe",
+                    }}
+                  >
+                    <i
+                      className="bi bi-telephone-fill"
+                      style={{ color: "#4f46e5", fontSize: 12 }}
+                    ></i>
+                    <span className="small text-muted">
+                      {selectedAddress.phoneNumber}
+                    </span>
+                  </div>
 
-                      {/* Phone */}
-                      <div
-                        className="d-flex align-items-center gap-2 px-3 py-2 rounded-2 mb-3"
-                        style={{
-                          background: "#f5f3ff",
-                          border: "1px solid #ede9fe",
-                        }}
-                      >
-                        <i
-                          className="bi bi-telephone-fill"
-                          style={{ color: "#4f46e5", fontSize: 12 }}
-                        ></i>
-                        <span className="small text-muted">
-                          {userAdd.phoneNumber}
-                        </span>
-                      </div>
-
-                      {/* Zip / City / State chips */}
-                      <div className="row g-2 mb-3">
-                        {[
-                          {
-                            label: "ZIP",
-                            value: userAdd.zipCode,
-                            icon: "bi-mailbox",
-                          },
-                          {
-                            label: "City",
-                            value: userAdd.city,
-                            icon: "bi-building",
-                          },
-                          {
-                            label: "State",
-                            value: userAdd.state,
-                            icon: "bi-flag",
-                          },
-                        ].map(({ label, value, icon }) => (
-                          <div className="col-4" key={label}>
-                            <div
-                              className="p-2 rounded-2 text-center"
-                              style={{
-                                background: "#f5f3ff",
-                                border: "1px solid #ede9fe",
-                              }}
-                            >
-                              <small
-                                className="text-muted d-block mb-1"
-                                style={{
-                                  fontSize: "0.62rem",
-                                  textTransform: "uppercase",
-                                  letterSpacing: "0.5px",
-                                }}
-                              >
-                                {label}
-                              </small>
-                              <span
-                                className="fw-bold d-block"
-                                style={{ color: "#1e1b4b", fontSize: "0.8rem" }}
-                              >
-                                {value}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Full Address */}
-                      <div
-                        className="d-flex align-items-start gap-2 p-3 rounded-2 mb-3"
-                        style={{
-                          background: "#fafafa",
-                          border: "2px dashed #ddd6fe",
-                        }}
-                      >
-                        <i
-                          className="bi bi-geo-alt-fill mt-1 flex-shrink-0"
-                          style={{ color: "#7c3aed", fontSize: 14 }}
-                        ></i>
-                        <p
-                          className="mb-0 small text-muted"
-                          style={{ lineHeight: 1.6 }}
-                        >
-                          {userAdd.fullAddress}
-                        </p>
-                      </div>
-
-                      {!userAdd.isDefault && (
-                        <button
-                          className="btn btn-sm w-100 fw-semibold"
-                          onClick={() => handleSelectDefaultAddress(userAdd.id)}
+                  <div className="row g-2 mb-3">
+                    {[
+                      {
+                        label: "ZIP",
+                        value: selectedAddress.zipCode,
+                        icon: "bi-mailbox",
+                      },
+                      {
+                        label: "City",
+                        value: selectedAddress.city,
+                        icon: "bi-building",
+                      },
+                      {
+                        label: "State",
+                        value: selectedAddress.state,
+                        icon: "bi-flag",
+                      },
+                    ].map(({ label, value, icon }) => (
+                      <div className="col-4" key={label}>
+                        <div
+                          className="p-2 rounded-3 text-center"
                           style={{
-                            border: "1.5px solid #10b981",
-                            color: "#10b981",
-                            borderRadius: 8,
-                            background: "transparent",
-                            fontSize: "0.8rem",
+                            background: "#f5f3ff",
+                            border: "1px solid #ede9fe",
                           }}
                         >
-                          <i className="bi bi-check2-circle me-1"></i>Set as
-                          Default
-                        </button>
-                      )}
-                    </div>
+                          <small
+                            className="text-muted d-block mb-1"
+                            style={{
+                              fontSize: "0.6rem",
+                              textTransform: "uppercase",
+                              letterSpacing: "0.5px",
+                            }}
+                          >
+                            <i className={`bi ${icon} me-1`}></i>
+                            {label}
+                          </small>
+                          <span
+                            className="fw-bold d-block"
+                            style={{ color: "#1e1b4b", fontSize: "0.8rem" }}
+                          >
+                            {value}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
+
+                  <div
+                    className="d-flex align-items-start gap-2 p-3 rounded-3 mb-3"
+                    style={{
+                      background: "#fafafa",
+                      border: "2px dashed #ddd6fe",
+                    }}
+                  >
+                    <i
+                      className="bi bi-geo-alt-fill mt-1 flex-shrink-0"
+                      style={{ color: "#7c3aed", fontSize: 14 }}
+                    ></i>
+                    <p
+                      className="mb-0 small text-muted"
+                      style={{ lineHeight: 1.7 }}
+                    >
+                      {selectedAddress.fullAddress}
+                    </p>
+                  </div>
+
+                  {!selectedAddress.isDefault && (
+                    <button
+                      className="btn btn-sm w-100 fw-semibold rounded-3"
+                      onClick={() =>
+                        handleSelectDefaultAddress(selectedAddress.id)
+                      }
+                      style={{
+                        border: "1.5px solid #10b981",
+                        color: "#10b981",
+                        background: "#f0fdf4",
+                        fontSize: "0.82rem",
+                      }}
+                    >
+                      <i className="bi bi-check2-circle me-1"></i>Set as Default
+                    </button>
+                  )}
+                </div>
               </div>
             ) : (
-              /* No address empty state */
               <div
-                className="card border-0 text-center py-4"
+                className="card border-0 text-center py-4 rounded-4"
                 style={{
-                  borderRadius: 14,
                   border: "1px solid #ede9fe",
                   background: "#fff",
+                  boxShadow: "0 2px 10px rgba(79,70,229,0.06)",
                 }}
               >
                 <div className="card-body">
@@ -356,12 +328,12 @@ const Checkout = () => {
                   <Link
                     to="/address/addAddress"
                     state={{ from: "/checkout" }}
-                    className="btn fw-semibold px-4 py-2 text-white"
+                    className="btn fw-semibold px-4 py-2 text-white rounded-3"
                     style={{
                       background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
                       border: "none",
-                      borderRadius: 10,
                       fontSize: "0.85rem",
+                      boxShadow: "0 2px 10px rgba(79,70,229,0.25)",
                     }}
                   >
                     <i className="bi bi-plus-circle-fill me-2"></i>Add New
@@ -371,43 +343,62 @@ const Checkout = () => {
               </div>
             )}
 
-            {/* Add new address link — always visible */}
-            {address && address.length > 0 && (
-              <div className="mt-3">
+            <div className="d-flex flex-column gap-2 mt-3">
+              <Link
+                to="/address/addAddress"
+                state={{ from: "/checkout" }}
+                className="btn fw-semibold d-flex align-items-center justify-content-center gap-2 rounded-3"
+                style={{
+                  border: "1.5px dashed #a5b4fc",
+                  color: "#4f46e5",
+                  background: "#f5f3ff",
+                  fontSize: "0.85rem",
+                  padding: "10px",
+                }}
+              >
+                <i className="bi bi-plus-circle-fill"></i>Add New Address
+              </Link>
+              {address && address.length > 1 && (
                 <Link
-                  to="/address/addAddress"
+                  to="/address"
                   state={{ from: "/checkout" }}
-                  className="btn w-100 fw-semibold d-flex align-items-center justify-content-center gap-2"
+                  className="btn fw-semibold d-flex align-items-center justify-content-center gap-2 rounded-3"
                   style={{
                     border: "1.5px dashed #a5b4fc",
                     color: "#4f46e5",
-                    borderRadius: 12,
                     background: "#f5f3ff",
                     fontSize: "0.85rem",
                     padding: "10px",
                   }}
                 >
-                  <i className="bi bi-plus-circle-fill"></i>Add New Address
+                  <i className="bi bi-arrow-left-right"></i>Change Address
                 </Link>
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
-          {/* ══════════════════════════
-          RIGHT: Order Review
-      ══════════════════════════ */}
-          <div className="col-12 col-md-6">
+          {/* RIGHT: Order Summary */}
+          <div className="col-12 col-lg-6">
+            <p
+              className="fw-semibold mb-2 d-flex align-items-center gap-2"
+              style={{
+                color: "#4f46e5",
+                fontSize: "0.78rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.6px",
+              }}
+            >
+              <i className="bi bi-clipboard2-check-fill"></i> Order Summary
+            </p>
+
             {productCart && productCart.length > 0 ? (
               <div
-                className="card border-0"
+                className="card border-0 rounded-4 overflow-hidden"
                 style={{
-                  borderRadius: 16,
-                  overflow: "hidden",
                   boxShadow: "0 8px 32px rgba(79,70,229,0.1)",
                   border: "1px solid #ede9fe",
                 }}
               >
-                {/* Card header */}
                 <div
                   className="px-4 py-3 d-flex align-items-center gap-2"
                   style={{
@@ -419,8 +410,7 @@ const Checkout = () => {
                   <h6 className="fw-bold text-white mb-0">Review Your Order</h6>
                 </div>
 
-                <div className="p-4" style={{ background: "#fff" }}>
-                  {/* Order stats */}
+                <div className="p-3 p-md-4" style={{ background: "#fff" }}>
                   <div className="row g-2 mb-4">
                     {[
                       {
@@ -458,7 +448,7 @@ const Checkout = () => {
                     ].map(({ label, value, icon, color, bg, border }) => (
                       <div className="col-6" key={label}>
                         <div
-                          className="p-3 rounded-3"
+                          className="p-3 rounded-3 h-100"
                           style={{
                             background: bg,
                             border: `1px solid ${border}`,
@@ -491,7 +481,28 @@ const Checkout = () => {
                     ))}
                   </div>
 
-                  {/* Divider */}
+                  {/* Net payable */}
+                  <div
+                    className="d-flex align-items-center justify-content-between px-3 py-3 rounded-3 mb-4"
+                    style={{
+                      background: "linear-gradient(135deg, #f5f3ff, #ede9fe)",
+                      border: "1.5px solid #c4b5fd",
+                    }}
+                  >
+                    <span
+                      className="fw-semibold"
+                      style={{ color: "#4f46e5", fontSize: "0.88rem" }}
+                    >
+                      <i className="bi bi-receipt me-2"></i>Net Payable
+                    </span>
+                    <span
+                      className="fw-bold"
+                      style={{ color: "#1e1b4b", fontSize: "1.1rem" }}
+                    >
+                      ₹{totalPrice - totalDiscount}
+                    </span>
+                  </div>
+
                   <div
                     style={{
                       borderTop: "2px dashed #ddd6fe",
@@ -499,7 +510,6 @@ const Checkout = () => {
                     }}
                   />
 
-                  {/* Payment Method */}
                   <div className="mb-4">
                     <label
                       htmlFor="payment"
@@ -521,34 +531,36 @@ const Checkout = () => {
                       onChange={(e) => setPayment(e.target.value)}
                       required
                       id="payment"
-                      className="form-select"
+                      className="form-select rounded-3"
                       style={{
                         border: "1.5px solid #ddd6fe",
-                        borderRadius: 10,
+                        background: "#f5f3ff",
                         color: "#1e1b4b",
                         fontSize: "0.9rem",
                         padding: "10px 14px",
                       }}
                     >
-                      <option value="COD" selected >💵 Cash On Delivery</option>
+                      <option value="COD">💵 Cash On Delivery</option>
                     </select>
                   </div>
 
-                  {/* Place Order CTA */}
                   <button
                     onClick={handleSubmitOrder}
                     disabled={isLoading}
-                    className="btn w-100 fw-bold py-3 text-white d-flex align-items-center justify-content-center gap-2"
+                    className="btn w-100 fw-bold py-3 text-white d-flex align-items-center justify-content-center gap-2 rounded-3"
                     style={{
                       background: "linear-gradient(135deg, #1e1b4b, #4f46e5)",
                       border: "none",
-                      borderRadius: 12,
                       fontSize: "1rem",
                       letterSpacing: "0.3px",
+                      boxShadow: "0 4px 16px rgba(79,70,229,0.3)",
                     }}
                   >
                     <i className="bi bi-bag-check-fill fs-5"></i>
-                    {isLoading ? "Placing Order..." : "Place Order"}
+                    {isLoading ? "Placing Order…" : "Place Order"}
+                    {isLoading && (
+                      <span className="spinner-border spinner-border-sm ms-1" />
+                    )}
                   </button>
 
                   <p
@@ -565,9 +577,8 @@ const Checkout = () => {
               </div>
             ) : (
               <div
-                className="card border-0 text-center"
+                className="card border-0 text-center rounded-4"
                 style={{
-                  borderRadius: 16,
                   border: "1px solid #ede9fe",
                   boxShadow: "0 4px 20px rgba(79,70,229,0.08)",
                 }}
@@ -588,12 +599,12 @@ const Checkout = () => {
                   <p className="text-muted small mb-3">No products in cart.</p>
                   <Link
                     to="/cart"
-                    className="btn fw-semibold px-4 py-2 text-white"
+                    className="btn fw-semibold px-4 py-2 text-white rounded-3"
                     style={{
                       background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
                       border: "none",
-                      borderRadius: 10,
                       fontSize: "0.85rem",
+                      boxShadow: "0 2px 10px rgba(79,70,229,0.25)",
                     }}
                   >
                     <i className="bi bi-cart3 me-2"></i>Go to Cart

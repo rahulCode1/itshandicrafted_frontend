@@ -102,6 +102,7 @@ const ProductItem = ({ productData }) => {
         style={{
           background: "linear-gradient(135deg, #f0f4ff 0%, #fafafa 100%)",
           minHeight: "100vh",
+          marginBottom: "5em"
         }}
       >
         {/* ════════════════════════════════

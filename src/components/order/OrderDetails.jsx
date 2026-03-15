@@ -218,17 +218,19 @@ const OrderDetails = ({ order }) => {
                             >
                               <td className="py-2 px-3">
                                 <div className="d-flex align-items-center gap-2">
-                                  <img
-                                    src={product.images[0].url}
-                                    alt={product.name}
-                                    className="rounded-2 flex-shrink-0"
-                                    style={{
-                                      width: 52,
-                                      height: 52,
-                                      objectFit: "cover",
-                                      border: "2px solid #ede9fe",
-                                    }}
-                                  />
+                                  <Link to={`/products/${product.id}`}>
+                                    <img
+                                      src={product.images[0].url}
+                                      alt={product.name}
+                                      className="rounded-2 flex-shrink-0"
+                                      style={{
+                                        width: 52,
+                                        height: 52,
+                                        objectFit: "cover",
+                                        border: "2px solid #ede9fe",
+                                      }}
+                                    />
+                                  </Link>
                                   <div>
                                     <div
                                       className="fw-semibold"

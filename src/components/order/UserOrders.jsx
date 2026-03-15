@@ -345,6 +345,7 @@ const UserOrders = ({ userOrders }) => {
                                         border: "2px solid #ede9fe",
                                       }}
                                     />
+
                                     <div>
                                       <div
                                         className="fw-semibold"

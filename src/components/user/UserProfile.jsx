@@ -3,99 +3,198 @@ import { Link } from "react-router-dom";
 const UserProfile = ({ user }) => {
   return (
     <>
-      <div className="container-fluid bg-light min-vh-100 py-5">
+      <div
+        className="min-vh-100 py-4 py-md-5"
+        style={{
+          background:
+            "linear-gradient(160deg, #f0f4ff 0%, #fafafa 60%, #f5f3ff 100%)",
+        }}
+      >
         <div className="container">
-          <div className="row g-4">
-            {/* Profile Card */}
-            <div className="col-lg-4">
-              <div className="card border-0 shadow-sm overflow-hidden h-100">
-                {/* Profile Header with Gradient */}
+          <div className="row justify-content-center">
+            <div className="col-12 col-sm-10 col-md-7 col-lg-5">
+              <div
+                className="card border-0 rounded-4 overflow-hidden"
+                style={{
+                  boxShadow: "0 8px 40px rgba(79,70,229,0.13)",
+                  border: "1.5px solid #ede9fe",
+                }}
+              >
+                {/* ── Gradient Header ── */}
                 <div
-                  className="text-white text-center p-4"
+                  className="position-relative text-white text-center pt-5 pb-5 px-4 overflow-hidden"
                   style={{
                     background:
-                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                      "linear-gradient(135deg, #4f46e5 0%, #7c3aed 60%, #a855f7 100%)",
                   }}
                 >
-                  <div className="position-relative d-inline-block mb-3">
-                    <img
-                      src="https://cdn-icons-png.flaticon.com/512/6522/6522516.png"
-                      className="rounded-circle border border-4 border-white shadow"
-                      alt="Profile"
+                  {/* Decorative blobs */}
+                  <div
+                    className="position-absolute rounded-circle"
+                    style={{
+                      width: 180,
+                      height: 180,
+                      top: -70,
+                      right: -50,
+                      background: "rgba(255,255,255,0.07)",
+                    }}
+                  />
+                  <div
+                    className="position-absolute rounded-circle"
+                    style={{
+                      width: 110,
+                      height: 110,
+                      bottom: -40,
+                      left: -25,
+                      background: "rgba(255,255,255,0.06)",
+                    }}
+                  />
+                  <div
+                    className="position-absolute rounded-circle"
+                    style={{
+                      width: 60,
+                      height: 60,
+                      top: 20,
+                      left: 30,
+                      background: "rgba(255,255,255,0.05)",
+                    }}
+                  />
+
+                  {/* Avatar initial */}
+                  <div
+                    className="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 position-relative"
+                    style={{
+                      width: 88,
+                      height: 88,
+                      background: "rgba(255,255,255,0.18)",
+                      border: "3px solid rgba(255,255,255,0.45)",
+                      fontSize: "2rem",
+                      fontWeight: 700,
+                      color: "#fff",
+                      backdropFilter: "blur(8px)",
+                      zIndex: 1,
+                    }}
+                  >
+                    {user.name?.charAt(0).toUpperCase()}
+
+                    {/* Online dot */}
+                    <span
+                      className="position-absolute rounded-circle"
                       style={{
-                        width: "120px",
-                        height: "120px",
-                        objectFit: "cover",
+                        width: 16,
+                        height: 16,
+                        background: "#10b981",
+                        border: "2.5px solid #fff",
+                        bottom: 4,
+                        right: 2,
                       }}
                     />
                   </div>
-                  <h4 className="mb-1 fw-bold">{user.name}</h4>
+
+                  <h5
+                    className="fw-bold mb-1 position-relative"
+                    style={{ zIndex: 1 }}
+                  >
+                    {user.name}
+                  </h5>
+                  <span
+                    className="badge rounded-pill position-relative"
+                    style={{
+                      background: "rgba(255,255,255,0.18)",
+                      fontSize: "0.72rem",
+                      padding: "4px 12px",
+                      zIndex: 1,
+                    }}
+                  >
+                    Member
+                  </span>
                 </div>
 
-                
-
-                {/* Contact Information */}
+                {/* ── Card Body ── */}
                 <div className="card-body p-4">
-                  <h6 className="text-uppercase text-muted small fw-bold mb-3">
-                    Contact Information
-                  </h6>
+                  {/* Section label */}
+                  <p
+                    className="fw-semibold mb-3 d-flex align-items-center gap-2"
+                    style={{
+                      color: "#4f46e5",
+                      fontSize: "0.72rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.6px",
+                    }}
+                  >
+                    <i className="bi bi-person-lines-fill"></i> Contact
+                    Information
+                  </p>
 
-                  <div className="mb-4">
-                    <div className="d-flex align-items-center p-3 bg-light rounded">
-                      <div
-                        className="d-flex align-items-center justify-content-center rounded-circle me-3"
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                          backgroundColor: "#e8f5e9",
-                        }}
+                  {/* Phone row */}
+                  <div
+                    className="d-flex align-items-center gap-3 p-3 rounded-3 mb-4"
+                    style={{
+                      background: "#f5f3ff",
+                      border: "1.5px solid #ede9fe",
+                    }}
+                  >
+                    <div
+                      className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                      style={{ width: 40, height: 40, background: "#ede9fe" }}
+                    >
+                      <i
+                        className="bi bi-telephone-fill"
+                        style={{ color: "#4f46e5", fontSize: 15 }}
+                      ></i>
+                    </div>
+                    <div>
+                      <small
+                        className="text-muted d-block"
+                        style={{ fontSize: "0.72rem" }}
                       >
-                        <svg
-                          width="18"
-                          height="18"
-                          fill="#2e7d32"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
-                        </svg>
-                      </div>
-                      <div className="flex-grow-1">
-                        <small className="text-muted d-block">
-                          Phone number
-                        </small>
-                        <span className="fw-medium">+91{user.phoneNumber}</span>
-                      </div>
+                        Phone number
+                      </small>
+                      <span
+                        className="fw-semibold"
+                        style={{ color: "#1e1b4b", fontSize: "0.95rem" }}
+                      >
+                        +91 {user.phoneNumber}
+                      </span>
                     </div>
                   </div>
 
-                  <hr className="my-4" />
+                  {/* Divider */}
+                  <div
+                    style={{
+                      borderTop: "2px dashed #ddd6fe",
+                      marginBottom: 20,
+                    }}
+                  />
 
-                  {/* Action Buttons */}
+                  {/* Action buttons */}
                   <div className="d-grid gap-2">
                     <Link
                       to="/address"
                       state={{ from: "/user" }}
-                      className="btn btn-lg text-white fw-medium"
+                      className="btn fw-semibold rounded-3 py-2 text-white d-flex align-items-center justify-content-center gap-2"
                       style={{
-                        background:
-                          "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                        background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
+                        border: "none",
+                        fontSize: "0.92rem",
+                        boxShadow: "0 2px 12px rgba(79,70,229,0.25)",
                       }}
                     >
-                      View All address
+                      <i className="bi bi-geo-alt-fill"></i>
+                      View All Addresses
                     </Link>
+
                     <Link
                       to="/orders"
-                      className="btn btn-lg btn-outline-primary fw-medium"
+                      className="btn fw-semibold rounded-3 py-2 d-flex align-items-center justify-content-center gap-2"
+                      style={{
+                        border: "1.5px solid #ddd6fe",
+                        color: "#4f46e5",
+                        background: "#f5f3ff",
+                        fontSize: "0.92rem",
+                      }}
                     >
-                      <svg
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        className="me-2"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z" />
-                      </svg>
+                      <i className="bi bi-bag-check-fill"></i>
                       View All Orders
                     </Link>
                   </div>

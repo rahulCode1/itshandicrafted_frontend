@@ -1,4 +1,5 @@
 import Loading from "../../components/Loading";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addOrRemoveWishlistAsync,
@@ -56,7 +57,10 @@ const Wishlist = () => {
   };
 
   return (
-    <main className="container py-4 py-md-5 mb-5 mb-md-2">
+    <main
+      className="container py-4 py-md-5  mb-md-2"
+      style={{ marginBottom: "5em" }}
+    >
       {/* ── Page Header ── */}
       <div className="d-flex align-items-center gap-2 mb-4 mb-md-5">
         <div
@@ -131,18 +135,20 @@ const Wishlist = () => {
                       className="position-relative overflow-hidden"
                       style={{ height: "220px" }}
                     >
-                      <img
-                        src={product.images[0].url}
-                        className="w-100 h-100 object-fit-cover"
-                        alt={product.name}
-                        style={{ transition: "transform 0.35s ease" }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.transform = "scale(1.06)")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.transform = "scale(1)")
-                        }
-                      />
+                      <Link to={`/product/${product.id}`}>
+                        <img
+                          src={product.images[0].url}
+                          className="w-100 h-100 object-fit-cover"
+                          alt={product.name}
+                          style={{ transition: "transform 0.35s ease" }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.transform = "scale(1.06)")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.transform = "scale(1)")
+                          }
+                        />
+                      </Link>
                       {/* Wishlist badge */}
                       <span
                         className="position-absolute top-0 end-0 m-2 badge rounded-pill"

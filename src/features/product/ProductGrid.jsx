@@ -17,8 +17,8 @@ const ProductGrid = ({filteredProducts, handleClearFilter })=>{
             <section>
               {/* Grid header */}
               {filteredProducts && (
-                <div className="d-flex align-items-center justify-content-between mb-4">
-                  <div className="d-flex align-items-center gap-3">
+              
+                  <div className="d-flex align-items-center gap-3 mb-4">
                     <div
                       className="d-flex align-items-center justify-content-center rounded-3 text-white flex-shrink-0"
                       style={{
@@ -48,19 +48,8 @@ const ProductGrid = ({filteredProducts, handleClearFilter })=>{
                       </span>
                     </div>
                   </div>
-                  <span
-                    className="badge rounded-pill px-3 py-2"
-                    style={{
-                      background: "#f5f3ff",
-                      color: "#4f46e5",
-                      border: "1px solid #ddd6fe",
-                      fontSize: "0.75rem",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {filteredProducts.length} items
-                  </span>
-                </div>
+                 
+                
               )}
 
               {/* Products */}

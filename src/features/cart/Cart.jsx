@@ -120,6 +120,7 @@ const Cart = () => {
           style={{
             background: "linear-gradient(135deg, #f0f4ff 0%, #fafafa 100%)",
             minHeight: "100vh",
+            marginBottom: "5em",
           }}
         >
           <div className="container py-4 py-md-5">
@@ -167,18 +168,19 @@ const Cart = () => {
                       <div className="row g-0">
                         {/* Product Image */}
                         <div className="col-3 col-md-2">
-                          <img
-                            src={product?.images[0]?.url}
-                            className="w-100 h-100"
-                            style={{
-                              objectFit: "cover",
-                              minHeight: 130,
-                              display: "block",
-                            }}
-                            alt={product.name}
-                          />
+                          <Link to={`/products/${product.id}`}>
+                            <img
+                              src={product?.images[0]?.url}
+                              className="w-100 h-100"
+                              style={{
+                                objectFit: "cover",
+                                minHeight: 130,
+                                display: "block",
+                              }}
+                              alt={product.name}
+                            />
+                          </Link>
                         </div>
-
                         {/* Product Info */}
                         <div className="col-9 col-md-10">
                           <div className="p-3 p-md-4 h-100 d-flex flex-column justify-content-between">

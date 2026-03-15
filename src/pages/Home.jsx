@@ -85,15 +85,16 @@ const Home = () => {
 
   return (
     <main
-      className="py-4 py-md-5 mb-5 mb-md-0"
+      className="py-4 py-md-5  mb-md-0"
       style={{
         background: "linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%)",
+        marginBottom: "5em",
       }}
     >
       <section className="container">
         {/* 1. Categories - Horizontal Scroll with improved touch target */}
         <div
-          className="d-flex gap-3 gap-md-4 w-100 mb-5 pb-3 custom-scrollbar"
+          className="d-flex gap-3 gap-md-4 w-100  pb-3 custom-scrollbar"
           style={{
             overflowX: "auto",
             WebkitOverflowScrolling: "touch",

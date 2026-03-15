@@ -7,7 +7,7 @@ export const getAllWishlistAsync = createAsyncThunk(
     try {
       const response = await privateApi.get(`wishlist/getAllWishlist`);
 
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } catch (error) {
       console.log(error.response?.data?.message);

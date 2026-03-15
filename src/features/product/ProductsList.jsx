@@ -108,7 +108,7 @@ const ProductsList = ({ productsList }) => {
   return (
     <>
       <main
-        className="py-4"
+        className="py-2"
         style={{
           background: "linear-gradient(135deg, #f0f4ff 0%, #fafafa 100%)",
           minHeight: "100vh",
@@ -121,7 +121,7 @@ const ProductsList = ({ productsList }) => {
           <div
             className="position-fixed mb-4 d-flex d-md-none align-items-center justify-content-end px-3 py-2 w-100"
             style={{
-              top: 90,
+              top: 100,
               zIndex: 1020,
               pointerEvents: "none",
             }}
