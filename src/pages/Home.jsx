@@ -1,6 +1,5 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import kitchenCategory from "../imgs/kitchen.jpg";
-import { useState } from "react";
 import giftCategory from "../imgs/gifts.jpg";
 import religiousCategory from "../imgs/religious.jpg";
 import decoreCategory from "../imgs/decores.jpg";
@@ -11,7 +10,7 @@ import deepakCategoryImg from "../imgs/deepak.png";
 import decorativeBowl from "../imgs/bowl.jpg";
 
 const Home = () => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
+ 
   const [searchParams, setSearchParams] = useSearchParams();
 
   const navigate = useNavigate();
@@ -120,7 +119,7 @@ const Home = () => {
             >
               <div
                 className={`rounded-circle mx-auto mb-2 overflow-hidden border-2 ${
-                  selectedCategory === data.category
+                  "all" === data.category
                     ? "border border-dark"
                     : "border border-transparent"
                 }`}
