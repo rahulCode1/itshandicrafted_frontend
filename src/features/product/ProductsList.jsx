@@ -29,7 +29,7 @@ const ProductsList = ({ productsList }) => {
     if (productCategory && !category.includes(productCategory)) {
       setCategory([productCategory]);
     }
-  }, [productCategory]);
+  }, [productCategory, category]);
 
   let filteredProducts =
     searchProductText === ""

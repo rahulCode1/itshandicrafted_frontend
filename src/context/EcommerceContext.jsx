@@ -5,8 +5,7 @@ import { setDefaultAddressAsync } from "../features/address/addressSlice";
 import { privateApi } from "../utils/axios";
 import { clearCart } from "../features/cart/cartSlice";
 import {
-  clearWishlist,
-  clearWishlistError,
+  clearWishlist
 } from "../features/wishlist/wishlistSlice";
 
 const EcommerceContext = createContext();
