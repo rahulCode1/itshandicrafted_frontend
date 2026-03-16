@@ -5,7 +5,7 @@ export const sentOtpAsync = createAsyncThunk(
   "user/sent-otp",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await API.post(`user/send-otp`, data);
+      const res = await API.post(`/user/send-otp`, data);
 
       console.log(res.data);
       return res.data;
@@ -21,7 +21,7 @@ export const reSentOtpAsync = createAsyncThunk(
   "user/resend-otp",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await API.patch(`user/resend-otp`, data);
+      const res = await API.patch(`/user/resend-otp`, data);
 
       console.log(res.data);
       return res.data;
@@ -37,7 +37,7 @@ export const verifyOtpAsync = createAsyncThunk(
   "user/verify-otp",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await API.patch(`user/verify-otp`, data);
+      const res = await API.patch(`/user/verify-otp`, data);
 
       // console.log(res.data);
       const token = res.data?.token;

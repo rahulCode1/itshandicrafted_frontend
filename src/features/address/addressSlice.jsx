@@ -5,7 +5,7 @@ export const fetchUserAddressAsync = createAsyncThunk(
   "address/fetch",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await privateApi.get(`address/getAllAddress`);
+      const res = await privateApi.get(`/address/getAllAddress`);
 
         // console.log(res.data);
       return res.data;
@@ -21,7 +21,7 @@ export const addNewAddressAsync = createAsyncThunk(
   "address/add",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await privateApi.post(`address/new`, data);
+      const res = await privateApi.post(`/address/new`, data);
       // console.log(res.data);
 
       return res.data;
@@ -37,7 +37,7 @@ export const removeUserAddressAsync = createAsyncThunk(
   "address/remove",
   async (addressId, { rejectWithValue }) => {
     try {
-      const res = await privateApi.delete(`address/${addressId}`);
+      const res = await privateApi.delete(`/address/${addressId}`);
 
       // console.log(res.data);
       return res.data;
@@ -53,7 +53,7 @@ export const updateAddressAsync = createAsyncThunk(
   "address/edit",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await privateApi.patch(`address/update/${data.addressId}`, data);
+      const res = await privateApi.patch(`/address/update/${data.addressId}`, data);
       // console.log(res.data);
       return res.data;
     } catch (error) {
@@ -68,7 +68,7 @@ export const setDefaultAddressAsync = createAsyncThunk(
   "address/setDefault",
   async (addressId, { rejectWithValue }) => {
     try {
-      const res = await privateApi.patch(`address/update/${addressId}/default`);
+      const res = await privateApi.patch(`/address/update/${addressId}/default`);
       // console.log(res.data);
 
       return res.data;

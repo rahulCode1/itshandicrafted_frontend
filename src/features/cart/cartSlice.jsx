@@ -5,7 +5,7 @@ export const addToCartAsync = createAsyncThunk(
   "cart/add",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await privateApi.post(`cart/addToCart`, data);
+      const response = await privateApi.post(`/cart/addToCart`, data);
 
       // console.log(response.data);
       return response.data;
@@ -21,7 +21,7 @@ export const getAllCartAsync = createAsyncThunk(
   "cart/get",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await privateApi.get(`cart/getAllCart`);
+      const response = await privateApi.get(`/cart/getAllCart`);
 
       // console.log(response.data);
       return response.data;
@@ -37,7 +37,7 @@ export const increaseCartQuantityAsync = createAsyncThunk(
   "cart/increase",
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await privateApi.patch(`cart/increase`, {
+      const response = await privateApi.patch(`/cart/increase`, {
         productId,
       });
 
@@ -54,7 +54,7 @@ export const decreaseCartQuantityAsync = createAsyncThunk(
   "cart/decrease",
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await privateApi.patch(`cart/decrease`, {
+      const response = await privateApi.patch(`/cart/decrease`, {
         productId,
       });
 
@@ -72,7 +72,7 @@ export const removeFromCartAsync = createAsyncThunk(
   "cart/remove",
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await privateApi.patch(`cart/remove`, {
+      const response = await privateApi.patch(`/cart/remove`, {
         productId,
       });
 
@@ -92,7 +92,7 @@ export const moveToWishlistAsync = createAsyncThunk(
     // console.log(productId)
     try {
       const response = await privateApi.patch(
-        `cart/moveto_wishlist`,
+        `/cart/moveto_wishlist`,
         productId,
       );
 
@@ -111,7 +111,7 @@ export const clearCartAsync = createAsyncThunk(
   "cart/clear",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await privateApi.patch(`cart/clearCart`);
+      const response = await privateApi.patch(`/cart/clearCart`);
 
       console.log(response.data);
       return response.data;

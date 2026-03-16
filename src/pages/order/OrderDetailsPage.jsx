@@ -21,7 +21,7 @@ export default OrderDetailsPage;
 const orderDetails = async (orderId) => {
   try {
     const res = await privateApi.get(
-      `order/${orderId}/details`,
+      `/order/${orderId}/details`,
     );
   
     return res.data;

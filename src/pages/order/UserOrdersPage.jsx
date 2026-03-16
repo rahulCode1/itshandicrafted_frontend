@@ -18,7 +18,7 @@ export default UserOrdersPage;
 
 const userOrders = async () => {
   try {
-    const res = await privateApi.get(`order/getUserOrders`);
+    const res = await privateApi.get(`/order/getUserOrders`);
 
     return res.data;
   } catch (error) {

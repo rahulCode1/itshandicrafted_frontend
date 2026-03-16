@@ -5,7 +5,7 @@ export const getAllWishlistAsync = createAsyncThunk(
   "wishlist/getAllItems",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await privateApi.get(`wishlist/getAllWishlist`);
+      const response = await privateApi.get(`/wishlist/getAllWishlist`);
 
       // console.log(response.data);
       return response.data;
@@ -22,7 +22,7 @@ export const addOrRemoveWishlistAsync = createAsyncThunk(
   "wishlist/toggle",
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await privateApi.post(`wishlist/toggle`, productId);
+      const response = await privateApi.post(`/wishlist/toggle`, productId);
 
       // console.log(response.data);
       return response.data;
@@ -38,7 +38,7 @@ export const wishlistToCartAsync = createAsyncThunk(
   "wishlist/moveToCart",
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await privateApi.patch(`wishlist/moveToCart`, productId);
+      const response = await privateApi.patch(`/wishlist/moveToCart`, productId);
 
       // console.log(response.data);
       return response.data;

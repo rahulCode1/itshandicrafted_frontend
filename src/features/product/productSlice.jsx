@@ -6,7 +6,7 @@ export const addProductAsync = createAsyncThunk(
   "products/addProduct",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await privateApi.post(`product/add`, data, {
+      const response = await privateApi.post(`/product/add`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

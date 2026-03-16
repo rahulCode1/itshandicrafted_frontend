@@ -64,7 +64,7 @@ const Checkout = () => {
 
     try {
       setIsLoading(true);
-      const response = await privateApi.post(`order/placeOrder`, order);
+      const response = await privateApi.post(`/order/placeOrder`, order);
 
       dispatch(clearCart());
       navigate("/orders");
