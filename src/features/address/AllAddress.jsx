@@ -22,7 +22,7 @@ const AllAddress = () => {
     const toastId = toast.loading("Address remove...");
     setAddressId(addressId);
     try {
-      dispatch(removeUserAddressAsync(addressId));
+      await dispatch(removeUserAddressAsync(addressId)).unwrap();
       toast.success("Address removed successfully.", { id: toastId });
     } catch (error) {
       toast.error(error || "Failed to remove address.", { id: toastId });
@@ -39,12 +39,18 @@ const AllAddress = () => {
       ) : (
         <div
           className="min-vh-100 py-4 py-md-5"
-          style={{ background: "linear-gradient(160deg, #f0f4ff 0%, #fafafa 60%, #f5f3ff 100%)" }}
+          style={{
+            background:
+              "linear-gradient(160deg, #f0f4ff 0%, #fafafa 60%, #f5f3ff 100%)",
+            marginBottom: "5em",
+          }}
         >
           <div className="container">
-
             {error && (
-              <ErrorModal message={error} onClose={() => dispatch(clearError())} />
+              <ErrorModal
+                message={error}
+                onClose={() => dispatch(clearError())}
+              />
             )}
 
             {/* ── Top nav bar ── */}
@@ -97,9 +103,15 @@ const AllAddress = () => {
                 <i className="bi bi-geo-alt-fill text-white fs-5"></i>
               </div>
               <div>
-                <h4 className="fw-bold mb-0 d-flex align-items-center gap-2" style={{ color: "#1e1b4b", letterSpacing: "-0.4px" }}>
+                <h4
+                  className="fw-bold mb-0 d-flex align-items-center gap-2"
+                  style={{ color: "#1e1b4b", letterSpacing: "-0.4px" }}
+                >
                   Delivery Addresses
-                  <span className="fw-semibold" style={{ color: "#7c3aed", fontSize: "1rem" }}>
+                  <span
+                    className="fw-semibold"
+                    style={{ color: "#7c3aed", fontSize: "1rem" }}
+                  >
                     ({address?.length || 0})
                   </span>
                 </h4>
@@ -140,7 +152,8 @@ const AllAddress = () => {
                         <div
                           className="position-absolute text-white px-3 py-1 fw-semibold"
                           style={{
-                            background: "linear-gradient(135deg, #10b981, #059669)",
+                            background:
+                              "linear-gradient(135deg, #10b981, #059669)",
                             top: 18,
                             right: -28,
                             transform: "rotate(45deg)",
@@ -156,18 +169,27 @@ const AllAddress = () => {
                       )}
 
                       <div className="card-body p-3 p-md-4">
-
                         {/* Name + Set Default */}
                         <div className="d-flex justify-content-between align-items-start mb-3">
                           <div className="d-flex align-items-center gap-2">
                             <div
                               className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
-                              style={{ width: 36, height: 36, background: "#ede9fe" }}
+                              style={{
+                                width: 36,
+                                height: 36,
+                                background: "#ede9fe",
+                              }}
                             >
-                              <i className="bi bi-person-fill" style={{ color: "#4f46e5", fontSize: 15 }}></i>
+                              <i
+                                className="bi bi-person-fill"
+                                style={{ color: "#4f46e5", fontSize: 15 }}
+                              ></i>
                             </div>
                             <div>
-                              <h6 className="mb-0 fw-bold" style={{ color: "#1e1b4b" }}>
+                              <h6
+                                className="mb-0 fw-bold"
+                                style={{ color: "#1e1b4b" }}
+                              >
                                 {userAdd.name}
                               </h6>
                               <span
@@ -187,7 +209,9 @@ const AllAddress = () => {
 
                           {!userAdd.isDefault && (
                             <button
-                              onClick={() => handleSelectDefaultAddress(userAdd.id)}
+                              onClick={() =>
+                                handleSelectDefaultAddress(userAdd.id)
+                              }
                               className="btn btn-sm fw-semibold rounded-3 flex-shrink-0"
                               style={{
                                 border: "1.5px solid #10b981",
@@ -197,7 +221,8 @@ const AllAddress = () => {
                                 whiteSpace: "nowrap",
                               }}
                             >
-                              <i className="bi bi-check2-circle me-1"></i>Set Default
+                              <i className="bi bi-check2-circle me-1"></i>Set
+                              Default
                             </button>
                           )}
                         </div>
@@ -205,10 +230,18 @@ const AllAddress = () => {
                         {/* Phone */}
                         <div
                           className="d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-3"
-                          style={{ background: "#f5f3ff", border: "1px solid #ede9fe" }}
+                          style={{
+                            background: "#f5f3ff",
+                            border: "1px solid #ede9fe",
+                          }}
                         >
-                          <i className="bi bi-telephone-fill" style={{ color: "#4f46e5", fontSize: 12 }}></i>
-                          <span className="text-muted small">{userAdd.phoneNumber}</span>
+                          <i
+                            className="bi bi-telephone-fill"
+                            style={{ color: "#4f46e5", fontSize: 12 }}
+                          ></i>
+                          <span className="text-muted small">
+                            {userAdd.phoneNumber}
+                          </span>
                         </div>
 
                         {/* ZIP / City / State chips */}
@@ -221,12 +254,28 @@ const AllAddress = () => {
                             <div className="col-4" key={label}>
                               <div
                                 className="p-2 rounded-3 text-center"
-                                style={{ background: "#f5f3ff", border: "1px solid #ede9fe" }}
+                                style={{
+                                  background: "#f5f3ff",
+                                  border: "1px solid #ede9fe",
+                                }}
                               >
-                                <small className="text-muted d-block mb-1" style={{ fontSize: "0.6rem", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                                <small
+                                  className="text-muted d-block mb-1"
+                                  style={{
+                                    fontSize: "0.6rem",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.5px",
+                                  }}
+                                >
                                   {label}
                                 </small>
-                                <span className="fw-bold d-block text-truncate" style={{ color: "#1e1b4b", fontSize: "0.78rem" }}>
+                                <span
+                                  className="fw-bold d-block text-truncate"
+                                  style={{
+                                    color: "#1e1b4b",
+                                    fontSize: "0.78rem",
+                                  }}
+                                >
                                   {value}
                                 </span>
                               </div>
@@ -237,10 +286,19 @@ const AllAddress = () => {
                         {/* Full Address */}
                         <div
                           className="d-flex align-items-start gap-2 p-3 rounded-3 mb-4"
-                          style={{ background: "#fafafa", border: "2px dashed #ddd6fe" }}
+                          style={{
+                            background: "#fafafa",
+                            border: "2px dashed #ddd6fe",
+                          }}
                         >
-                          <i className="bi bi-geo-alt-fill mt-1 flex-shrink-0" style={{ color: "#7c3aed", fontSize: 14 }}></i>
-                          <p className="mb-0 small text-muted" style={{ lineHeight: 1.6 }}>
+                          <i
+                            className="bi bi-geo-alt-fill mt-1 flex-shrink-0"
+                            style={{ color: "#7c3aed", fontSize: 14 }}
+                          ></i>
+                          <p
+                            className="mb-0 small text-muted"
+                            style={{ lineHeight: 1.6 }}
+                          >
                             {userAdd.fullAddress}
                           </p>
                         </div>
@@ -259,7 +317,10 @@ const AllAddress = () => {
                                 fontSize: "0.82rem",
                               }}
                             >
-                              <i className="bi bi-pencil-fill" style={{ fontSize: 11 }}></i>
+                              <i
+                                className="bi bi-pencil-fill"
+                                style={{ fontSize: 11 }}
+                              ></i>
                               Edit
                             </Link>
                           </div>
@@ -275,21 +336,24 @@ const AllAddress = () => {
                                 fontSize: "0.82rem",
                               }}
                             >
-                              {removeAddressLoading === "loading" && addressId === userAdd.id ? (
+                              {removeAddressLoading === "loading" &&
+                              addressId === userAdd.id ? (
                                 <>
                                   <span className="spinner-border spinner-border-sm"></span>
                                   Deleting…
                                 </>
                               ) : (
                                 <>
-                                  <i className="bi bi-trash3-fill" style={{ fontSize: 11 }}></i>
+                                  <i
+                                    className="bi bi-trash3-fill"
+                                    style={{ fontSize: 11 }}
+                                  ></i>
                                   Delete
                                 </>
                               )}
                             </button>
                           </div>
                         </div>
-
                       </div>
                     </div>
                   </div>
@@ -309,9 +373,14 @@ const AllAddress = () => {
                     className="d-inline-flex align-items-center justify-content-center rounded-circle mb-4"
                     style={{ width: 88, height: 88, background: "#f5f3ff" }}
                   >
-                    <i className="bi bi-geo-alt" style={{ fontSize: 36, color: "#7c3aed" }}></i>
+                    <i
+                      className="bi bi-geo-alt"
+                      style={{ fontSize: 36, color: "#7c3aed" }}
+                    ></i>
                   </div>
-                  <h5 className="fw-bold mb-2" style={{ color: "#1e1b4b" }}>No Addresses Yet</h5>
+                  <h5 className="fw-bold mb-2" style={{ color: "#1e1b4b" }}>
+                    No Addresses Yet
+                  </h5>
                   <p className="text-muted mb-4 small">
                     Add your first delivery address to start shopping
                   </p>
@@ -331,7 +400,6 @@ const AllAddress = () => {
                 </div>
               </div>
             )}
-
           </div>
         </div>
       )}
