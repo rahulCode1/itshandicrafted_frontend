@@ -108,6 +108,8 @@ const Cart = () => {
     }
   };
 
+
+  
   return (
     <>
       {error && (

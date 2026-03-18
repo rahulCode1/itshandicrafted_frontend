@@ -1,0 +1,491 @@
+import { fetchUserAddressAsync } from "../../features/address/addressSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { MdLocationOn, MdPhone, MdHome, MdPinDrop } from "react-icons/md";
+import {
+  RiAddCircleFill,
+  RiSwapLine,
+  RiCheckboxCircleFill,
+  RiAddLine,
+} from "react-icons/ri";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { privateApi } from "../../utils/axios";
+import ErrorModal from "../ErrorModal";
+
+const BuyNow = ({ info }) => {
+  const { address } = useSelector((state) => state.address);
+  const [payment, setPayment] = useState("cod");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const totalQuantity = info.quantity;
+  const totalPrice = Number(info.product.price) * Number(info.quantity);
+  const totalDiscount =
+    (info.product.price - info.product.discountPrice) * Number(info.quantity);
+  const finalTotal = Number(info.product.discountPrice) * Number(info.quantity);
+  const discountPct = Math.round(
+    ((info.product.price - info.product.discountPrice) / info.product.price) *
+      100,
+  );
+
+  const selectedAddress =
+    address &&
+    address.length > 0 &&
+    address.find((addr) => addr.isDefault === true);
+
+  const handleSubmitOrder = async (e) => {
+    e.preventDefault();
+    if (!address || address.length === 0) {
+      setError("Please add a delivery address to place your order.");
+      setShowModal(true);
+      return;
+    }
+    if (!selectedAddress) {
+      setError("Please set a default address to place your order.");
+      setShowModal(true);
+      return;
+    }
+
+    const toastId = toast.loading("Placing your order...");
+    const order = {
+      address: selectedAddress.id,
+      summary: { totalPrice, totalDiscount, totalQuantity },
+      paymentMethod: "COD",
+      paymentStatus: payment === "UPI" ? "completed" : "pending",
+    };
+
+    try {
+      setIsLoading(true);
+      const response = await privateApi.post(
+        `/order/placeOrderViaBuyNow`,
+        order,
+      );
+      toast.success(response.data?.message || "Order placed successfully!", {
+        id: toastId,
+      });
+
+      
+      navigate(`/orders/${response.data.order}`)
+    } catch (err) {
+      const msg =
+        err.response?.data?.message ||
+        "Something went wrong while placing your order.";
+      setError(msg);
+      toast.error(msg, { id: toastId });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    dispatch(fetchUserAddressAsync());
+  }, [dispatch]);
+
+  return (
+    <>
+      {/* ── Top Bar ── */}
+      <div className="bg-dark text-white d-flex align-items-center gap-2 px-3 py-2 border-bottom border-secondary">
+        <i className="bi bi-bag-heart-fill text-warning"></i>
+        <span className="fw-semibold small">It's Handicrafted</span>
+        <span className="vr mx-1 opacity-25"></span>
+        <span className="text-white-50 small">Secure Checkout</span>
+        <i className="bi bi-shield-lock-fill text-success ms-auto small"></i>
+      </div>
+      {error && <ErrorModal message={error} onClose={() => setError(null)} />}
+      <div
+        style={{ marginBottom: "5em" }}
+        className="bg-light min-vh-100 py-3 pb-5"
+      >
+        <div className="container" style={{ maxWidth: 540 }}>
+          {/* Page heading */}
+          <h5 className="fw-bold mb-3 d-flex align-items-center gap-2">
+            <i className="bi bi-cart-check text-primary"></i>
+            Review &amp; Place Order
+          </h5>
+
+          {/* ════════════════════════════
+              CARD 1 — Order Summary
+          ════════════════════════════ */}
+          <div className="card border-0 shadow-sm rounded-4 mb-3 overflow-hidden">
+            <div className="card-header bg-white border-bottom px-4 py-3 d-flex align-items-center gap-2">
+              <i className="bi bi-box-seam text-primary"></i>
+              <span className="fw-semibold text-dark">Order Summary</span>
+              <span
+                className="badge bg-primary-subtle text-primary rounded-pill ms-auto"
+                style={{ fontSize: "0.7rem" }}
+              >
+                {totalQuantity} {totalQuantity > 1 ? "items" : "item"}
+              </span>
+            </div>
+
+            <div className="card-body px-4 py-3">
+              {/* Product row */}
+              <div className="d-flex gap-3 align-items-start">
+                <img
+                  src={info.product.images[0].url}
+                  alt={info.product.name}
+                  className="rounded-3 border object-fit-cover flex-shrink-0"
+                  style={{ width: 88, height: 88 }}
+                />
+                <div className="flex-grow-1">
+                  <p
+                    className="fw-semibold text-dark mb-1 lh-sm"
+                    style={{ fontSize: "0.92rem" }}
+                  >
+                    {info.product.name}
+                  </p>
+
+                  <div className="d-flex flex-wrap gap-1 mb-2">
+                    <span
+                      className="badge bg-secondary-subtle text-secondary rounded-pill"
+                      style={{ fontSize: "0.68rem" }}
+                    >
+                      {info.product.category}
+                    </span>
+                    <span
+                      className="badge bg-light text-muted border rounded-pill"
+                      style={{ fontSize: "0.68rem" }}
+                    >
+                      <i className="bi bi-layers me-1"></i>Qty: {info.quantity}
+                    </span>
+                    {discountPct > 0 && (
+                      <span
+                        className="badge bg-success-subtle text-success rounded-pill"
+                        style={{ fontSize: "0.68rem" }}
+                      >
+                        {discountPct}% OFF
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="d-flex align-items-baseline gap-2">
+                    <span className="fw-bold fs-6 text-dark">
+                      ₹{info.product.discountPrice}
+                    </span>
+                    <span className="text-decoration-line-through text-muted small">
+                      ₹{info.product.price}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <hr className="my-3" />
+
+              {/* Price breakdown */}
+              <div className="d-flex flex-column gap-2">
+                <div className="d-flex justify-content-between small text-muted">
+                  <span>
+                    MRP ({totalQuantity} {totalQuantity > 1 ? "items" : "item"})
+                  </span>
+                  <span>₹{totalPrice}</span>
+                </div>
+                <div className="d-flex justify-content-between small">
+                  <span className="text-muted">Discount</span>
+                  <span className="text-success fw-medium">
+                    − ₹{totalDiscount}
+                  </span>
+                </div>
+                <div className="d-flex justify-content-between small">
+                  <span className="text-muted">Delivery Charges</span>
+                  <span className="text-success fw-medium">
+                    <i className="bi bi-truck me-1"></i>FREE
+                  </span>
+                </div>
+                <hr className="my-1" />
+                <div className="d-flex justify-content-between align-items-center">
+                  <span className="fw-bold text-dark">Total Payable</span>
+                  <span className="fw-bold fs-5 text-dark">₹{finalTotal}</span>
+                </div>
+              </div>
+
+              {totalDiscount > 0 && (
+                <div className="alert alert-success d-flex align-items-center gap-2 py-2 px-3 mb-0 mt-3 rounded-3 small">
+                  <i className="bi bi-piggy-bank-fill fs-5"></i>
+                  You're saving{" "}
+                  <strong className="ms-1">₹{totalDiscount}</strong> on this
+                  order!
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* ════════════════════════════
+              CARD 2 — Delivery Address
+          ════════════════════════════ */}
+          <div className="card border-0 shadow-sm rounded-4 mb-3 overflow-hidden">
+            {/* Header */}
+            <div className="card-header bg-white border-bottom px-4 py-3 d-flex align-items-center gap-2">
+              <MdLocationOn
+                className="text-danger"
+                style={{ fontSize: "1.1rem" }}
+              />
+              <span
+                className="fw-semibold text-dark"
+                style={{ fontSize: "0.92rem" }}
+              >
+                Delivery Address
+              </span>
+            </div>
+
+            <div className="card-body px-4 py-3">
+              {selectedAddress ? (
+                <div
+                  className="rounded-3 p-3"
+                  style={{
+                    background: "#f9fafb",
+                    border: "0.5px solid #e5e7eb",
+                  }}
+                >
+                  {/* Name + Default badge */}
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <span
+                      className="fw-semibold text-dark"
+                      style={{ fontSize: "0.9rem" }}
+                    >
+                      {selectedAddress.name}
+                    </span>
+                    {selectedAddress.isDefault && (
+                      <span
+                        className="d-flex align-items-center gap-1 rounded-pill px-2 py-1"
+                        style={{
+                          background: "#dbeafe",
+                          color: "#1d4ed8",
+                          fontSize: "0.65rem",
+                          fontWeight: 600,
+                          border: "0.5px solid #bfdbfe",
+                        }}
+                      >
+                        <RiCheckboxCircleFill style={{ fontSize: "0.75rem" }} />
+                        Default
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Detail rows */}
+                  <div className="d-flex flex-column gap-2">
+                    <div className="d-flex align-items-center gap-2">
+                      <MdPhone
+                        className="text-muted flex-shrink-0"
+                        style={{ fontSize: "0.9rem" }}
+                      />
+                      <span
+                        className="text-muted"
+                        style={{ fontSize: "0.82rem" }}
+                      >
+                        {selectedAddress.phoneNumber}
+                      </span>
+                    </div>
+
+                    <div className="d-flex align-items-center gap-2">
+                      <MdPinDrop
+                        className="text-muted flex-shrink-0"
+                        style={{ fontSize: "0.9rem" }}
+                      />
+                      <span
+                        className="text-muted"
+                        style={{ fontSize: "0.82rem" }}
+                      >
+                        {selectedAddress.zipCode}
+                      </span>
+                    </div>
+
+                    <div className="d-flex align-items-start gap-2">
+                      <MdHome
+                        className="text-muted flex-shrink-0 mt-1"
+                        style={{ fontSize: "0.9rem" }}
+                      />
+                      <span
+                        className="text-muted"
+                        style={{ fontSize: "0.82rem", lineHeight: 1.5 }}
+                      >
+                        {selectedAddress.fullAddress}
+                        {selectedAddress.area &&
+                          `, ${selectedAddress.area}`}, {selectedAddress.city},{" "}
+                        {selectedAddress.state}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Action buttons */}
+                  <div className="d-flex gap-2 mt-3">
+                    {address.length > 1 && (
+                      <Link
+                        to="/address"
+                        className="btn btn-sm flex-fill d-flex align-items-center justify-content-center gap-1 rounded-3"
+                        style={{
+                          border: "0.5px solid #e5e7eb",
+                          background: "#fff",
+                          color: "#374151",
+                          fontSize: "0.78rem",
+                          padding: "6px 0",
+                        }}
+                      >
+                        <RiSwapLine style={{ fontSize: "0.85rem" }} />
+                        Change
+                      </Link>
+                    )}
+                    <Link
+                      to="/address/addAddress"
+                      className="btn btn-sm flex-fill d-flex align-items-center justify-content-center gap-1 rounded-3"
+                      style={{
+                        border: "0.5px solid #e5e7eb",
+                        background: "#fff",
+                        color: "#374151",
+                        fontSize: "0.78rem",
+                        padding: "6px 0",
+                      }}
+                    >
+                      <RiAddLine style={{ fontSize: "0.85rem" }} />
+                      Add New
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-4">
+                  <MdLocationOn
+                    className="text-muted mb-2"
+                    style={{ fontSize: "2.5rem", opacity: 0.3 }}
+                  />
+                  <p className="text-muted small mb-3">
+                    No delivery address found
+                  </p>
+                  <Link
+                    to="/address/addAddress"
+                    state={{ from: "/buyNow" }}
+                    className="btn btn-primary btn-sm rounded-pill px-4 d-inline-flex align-items-center gap-1"
+                  >
+                    <RiAddCircleFill style={{ fontSize: "0.85rem" }} />
+                    Add Address
+                  </Link>
+                </div>
+              )}
+
+              {/* Dashed quick-action links */}
+              <div className="d-flex flex-column gap-2 mt-3">
+                <Link
+                  to="/address/addAddress"
+                  state={{ from: "/buyNow" }}
+                  className="btn btn-sm d-flex align-items-center justify-content-center gap-2 rounded-3"
+                  style={{
+                    border: "0.5px dashed #93c5fd",
+                    background: "#eff6ff",
+                    color: "#1d4ed8",
+                    fontSize: "0.8rem",
+                    padding: "9px",
+                  }}
+                >
+                  <RiAddCircleFill style={{ fontSize: "0.9rem" }} />
+                  Add New Address
+                </Link>
+
+                {address && address.length > 1 && (
+                  <Link
+                    to="/address"
+                    state={{ from: "/buyNow" }}
+                    className="btn btn-sm d-flex align-items-center justify-content-center gap-2 rounded-3"
+                    style={{
+                      border: "0.5px dashed #d1d5db",
+                      background: "#f9fafb",
+                      color: "#6b7280",
+                      fontSize: "0.8rem",
+                      padding: "9px",
+                    }}
+                  >
+                    <RiSwapLine style={{ fontSize: "0.9rem" }} />
+                    Switch Address
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* ════════════════════════════
+              CARD 3 — Payment Method
+          ════════════════════════════ */}
+          <div className="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+            <div className="card-header bg-white border-bottom px-4 py-3 d-flex align-items-center gap-2">
+              <i className="bi bi-wallet2 text-success"></i>
+              <span className="fw-semibold text-dark">Payment Method</span>
+            </div>
+
+            <div className="card-body px-4 py-3">
+              {/* COD Option */}
+              <div
+                role="button"
+                onClick={() => setPayment("cod")}
+                className={`d-flex align-items-center gap-3 p-3 rounded-3 border ${
+                  payment === "cod"
+                    ? "border-primary bg-primary-subtle"
+                    : "border-light bg-light"
+                }`}
+              >
+                <div
+                  className="bg-white border rounded-2 d-flex align-items-center justify-content-center flex-shrink-0"
+                  style={{ width: 40, height: 40 }}
+                >
+                  <i className="bi bi-cash-coin text-success fs-5"></i>
+                </div>
+                <div className="flex-grow-1">
+                  <div className="fw-semibold small text-dark">
+                    Cash on Delivery
+                  </div>
+                  <div className="text-muted" style={{ fontSize: "0.72rem" }}>
+                    Pay when your order arrives at your door
+                  </div>
+                </div>
+                {payment === "cod" && (
+                  <i className="bi bi-check-circle-fill text-primary fs-5 flex-shrink-0"></i>
+                )}
+              </div>
+
+              <p
+                className="text-muted d-flex align-items-center gap-1 mt-3 mb-0"
+                style={{ fontSize: "0.72rem" }}
+              >
+                <i className="bi bi-info-circle text-primary"></i>
+                More payment options (UPI, Cards) coming soon.
+              </p>
+            </div>
+          </div>
+
+          {/* ── Place Order Button ── */}
+          <div className="d-grid mb-2">
+            <button
+              onClick={handleSubmitOrder}
+              disabled={isLoading}
+              className="btn btn-dark fw-bold py-3 rounded-3 d-flex align-items-center justify-content-center gap-2"
+              style={{ fontSize: "1rem", letterSpacing: "0.02em" }}
+            >
+              {isLoading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm" />
+                  Placing Order…
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-bag-check-fill text-warning"></i>
+                  Place Order &nbsp;·&nbsp; ₹{finalTotal}
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Secure note */}
+          <p
+            className="text-center text-muted d-flex align-items-center justify-content-center gap-1 mb-0"
+            style={{ fontSize: "0.72rem" }}
+          >
+            <i className="bi bi-shield-lock-fill text-success"></i>
+            100% Secure &amp; Trusted Checkout
+          </p>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default BuyNow;

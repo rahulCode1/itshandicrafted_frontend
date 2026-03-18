@@ -6,6 +6,7 @@ const UserProfile = ({ user }) => {
       <div
         className="min-vh-100 py-4 py-md-5"
         style={{
+          marginBottom: "5em",
           background:
             "linear-gradient(160deg, #f0f4ff 0%, #fafafa 60%, #f5f3ff 100%)",
         }}
@@ -196,6 +197,19 @@ const UserProfile = ({ user }) => {
                     >
                       <i className="bi bi-bag-check-fill"></i>
                       View All Orders
+                    </Link>
+
+                    <Link
+                      className="btn fw-semibold rounded-3 py-2 d-flex align-items-center justify-content-center gap-2"
+                      style={{
+                        border: "1.5px solid #ddd6fe",
+                        color: "#4f46e5",
+                        background: "#f5f3ff",
+                        fontSize: "0.92rem",
+                      }}
+                      to="/address/addAddress"
+                    >
+                      Add new Address{" "}
                     </Link>
                   </div>
                 </div>

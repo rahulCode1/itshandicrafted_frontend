@@ -24,6 +24,7 @@ const user = async () => {
   try {
     const res = await privateApi.get("/user/userDetails");
 
+   
     return res.data;
   } catch (error) {
     console.log(error);

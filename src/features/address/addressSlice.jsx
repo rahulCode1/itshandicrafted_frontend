@@ -112,7 +112,7 @@ const addressSlice = createSlice({
 
     builder.addCase(fetchUserAddressAsync.rejected, (state, action) => {
       state.fetchUserAddressLoading = "error";
-      state.error = action.payload;
+      state.error = null;
     });
 
     builder.addCase(addNewAddressAsync.pending, (state) => {

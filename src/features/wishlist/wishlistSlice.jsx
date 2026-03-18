@@ -91,7 +91,7 @@ const wishlistSlice = createSlice({
 
     builder.addCase(getAllWishlistAsync.rejected, (state, action) => {
       state.getWishlistLoading = "error";
-      state.error = action.payload;
+      state.error = null;
     });
 
     builder.addCase(addOrRemoveWishlistAsync.pending, (state) => {

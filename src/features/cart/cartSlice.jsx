@@ -26,6 +26,7 @@ export const getAllCartAsync = createAsyncThunk(
       // console.log(response.data);
       return response.data;
     } catch (error) {
+      console.log(error.response?.data);
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch cart",
       );
@@ -177,7 +178,7 @@ const cartSlice = createSlice({
 
     builder.addCase(getAllCartAsync.rejected, (state, action) => {
       state.getCartsLoading = "error";
-      state.error = action.payload;
+      state.error = null;
     });
 
     builder.addCase(addToCartAsync.pending, (state) => {
@@ -291,7 +292,7 @@ const cartSlice = createSlice({
     builder.addCase(clearCartAsync.pending, (state) => {
       state.status = "loading";
     });
-    
+
     builder.addCase(clearCartAsync.fulfilled, (state) => {
       state.status = "success";
       state.cart = [];
@@ -304,6 +305,5 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addToCart, clearCart, clearError } =
-  cartSlice.actions;
+export const { addToCart, clearCart, clearError } = cartSlice.actions;
 export default cartSlice;

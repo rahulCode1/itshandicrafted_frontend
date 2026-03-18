@@ -16,6 +16,9 @@ import ErrorPage from './pages/ErrorPage';
 import { lazy, Suspense } from 'react';
 import Loading from './components/Loading';
 import ProtectedRoutes from "./pages/auth/ProtectedRoutes"
+import PaymentSuccess from './pages/PaymentSuccess';
+
+
 
 const Products = lazy(() => import("./features/product/Products"))
 const ProductDetails = lazy(() => import("./features/product/ProductDetails"))
@@ -27,6 +30,7 @@ const OrderDetailsPage = lazy(() => import('./pages/order/OrderDetailsPage'))
 const AllAddress = lazy(() => import("./features/address/AllAddress"))
 const UpdateAddressPage = lazy(() => import("./features/address/UpdateAddressPage"))
 const LoginWithOtp = lazy(() => import("./features/user/LoginWithOtp"))
+const BuyNowPage = lazy(() => import('./pages/order/BuyNowPage'))
 
 
 function App() {
@@ -35,7 +39,7 @@ function App() {
     {
       path: "/",
       element: <Layout />,
-      errorElement: <ErrorPage />,
+      // errorElement: <ErrorPage />,
       children: [
         {
           index: true,
@@ -98,6 +102,11 @@ function App() {
           element: <ProtectedRoutes><Checkout /></ProtectedRoutes>
         },
         {
+          path: "buyNow",
+          element: <ProtectedRoutes><BuyNowPage /></ProtectedRoutes>,
+          loader: () => import("./pages/order/BuyNowPage").then(module => module.loader())
+        },
+        {
           path: "orders",
           children: [
             {
@@ -124,6 +133,10 @@ function App() {
           element: <LoginWithOtp />
         },
 
+        {
+          path: "paymentSuccess",
+          element: <PaymentSuccess />
+        },
         { path: "*", element: <NotFound /> },
       ]
     }

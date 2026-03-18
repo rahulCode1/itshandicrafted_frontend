@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import {  Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
@@ -38,6 +38,54 @@ const Checkout = () => {
     address &&
     address.length > 0 &&
     address.find((address) => address.isDefault === true);
+
+  const handleMakePayment = async () => {
+    try {
+      const res = await fetch(`http://localhost/api/order/create-order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount: 1 }),
+      });
+
+      const order = await res.json();
+      openRazorpay(order);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const openRazorpay = (order) => {
+    const options = {
+      key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: "INR",
+      name: "It's Handicrafted",
+      order_id: order.id,
+      method: {
+        upi: true,
+      },
+
+      handler: async function (response) {
+        const res = await fetch(`http://localhost/api/order/verify-payment`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(response),
+        });
+
+        const data = await res.json();
+        console.log(data);
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+
+  
 
   const handleSubmitOrder = async () => {
     if (address.length === 0) {
@@ -95,10 +143,16 @@ const Checkout = () => {
         background:
           "linear-gradient(160deg, #f0f4ff 0%, #fafafa 60%, #f5f3ff 100%)",
         minHeight: "100vh",
-        marginBottom: '5em'
+        marginBottom: "5em",
       }}
     >
       {error && <ErrorModal message={error} onClose={() => setError(null)} />}
+
+      <div>
+        <button className="btn my-5 btn-primary" onClick={handleMakePayment}>
+          Pay Online
+        </button>
+      </div>
 
       <div className="container py-4 py-md-5">
         {isLoading && (
