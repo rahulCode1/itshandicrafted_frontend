@@ -92,6 +92,10 @@ const ProductItem = ({ productData }) => {
   };
 
   const handleAddToBuyNow = async () => {
+    if (!token) {
+      return navigate("/login");
+    }
+
     try {
       await privateApi.post(`http://localhost/api/order/addItemToBuyNow`, {
         product: productId,
