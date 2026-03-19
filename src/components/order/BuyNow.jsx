@@ -20,6 +20,7 @@ const BuyNow = ({ info }) => {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   const totalQuantity = info.quantity;
   const totalPrice = Number(info.product.price) * Number(info.quantity);
@@ -38,14 +39,18 @@ const BuyNow = ({ info }) => {
 
   const handleSubmitOrder = async (e) => {
     e.preventDefault();
+
+    if (!token) {
+      return navigate("/login");
+    }
     if (!address || address.length === 0) {
       setError("Please add a delivery address to place your order.");
-     
+
       return;
     }
     if (!selectedAddress) {
       setError("Please set a default address to place your order.");
-    
+
       return;
     }
 
@@ -67,8 +72,7 @@ const BuyNow = ({ info }) => {
         id: toastId,
       });
 
-      
-      navigate(`/orders/${response.data.order}`)
+      navigate(`/orders/${response.data.order}`);
     } catch (err) {
       const msg =
         err.response?.data?.message ||
