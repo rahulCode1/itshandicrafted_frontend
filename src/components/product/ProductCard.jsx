@@ -1,4 +1,4 @@
-import { Link,  useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCartAsync } from "../../features/cart/cartSlice";
 import { toast } from "react-hot-toast";
@@ -21,9 +21,7 @@ export default function ProductCard({ product }) {
   };
 
   const handleAddToCart = async (productId, quantity) => {
-
-    
-
+  
     if (!token) {
       return navigate("/login");
     }
@@ -42,12 +40,10 @@ export default function ProductCard({ product }) {
   };
 
   const handleAddToWishList = async (productId, type) => {
-
     if (!token) {
       return navigate("/login");
     }
 
-    
     const tostId = toast.loading(
       type === "add" ? "Adding to wishlist..." : "Removing from wishlist...",
     );

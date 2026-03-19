@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 import CategoryFilter from "../../components/CategoryFilter";
 import ProductGrid from "./ProductGrid";
-
+import ScrollToTopBtn from "../../components/scroll/ScrollToTopBtn";
 
 const ProductsList = ({ productsList }) => {
   const [changePrice, setChangePrice] = useState(5000);
@@ -115,34 +115,8 @@ const ProductsList = ({ productsList }) => {
         }}
       >
         <div className="row g-0 position-relative">
-          {/* ══════════════════════════════
-        MOBILE: Filter toggle button
-    ══════════════════════════════ */}
-          <div
-            className="position-fixed mb-4 d-flex d-md-none align-items-center justify-content-end px-3 py-2 w-100"
-            style={{
-              top: 100,
-              zIndex: 1020,
-              pointerEvents: "none",
-            }}
-          >
-            <button
-              className="btn fw-semibold d-flex align-items-center gap-2"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasResponsive"
-              style={{
-                background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                color: "#fff",
-                border: "none",
-                borderRadius: 10,
-                fontSize: "0.85rem",
-                boxShadow: "0 4px 12px rgba(79,70,229,0.3)",
-                pointerEvents: "auto",
-              }}
-            >
-              <i className="bi bi-funnel-fill"></i> Filters
-            </button>
-          </div>
+     
+        <ScrollToTopBtn />
 
           {/* ══════════════════════════════
         MOBILE: Offcanvas filter panel

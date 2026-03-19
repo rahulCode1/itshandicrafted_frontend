@@ -5,7 +5,6 @@ import {
   sentOtpAsync,
   verifyOtpAsync,
   setIsOtpSent,
-  reSentOtpAsync,
   clearError,
 } from "./userSlice";
 import SentOtp from "./SentOtp";
@@ -67,7 +66,9 @@ const LoginWithOtp = () => {
     }
 
     try {
-      const res = await dispatch(sentOtpAsync(formData)).unwrap();
+      const res = await dispatch(
+        sentOtpAsync({ phoneNumber: formData.phoneNumber }),
+      ).unwrap();
       handleSetTimer();
       toast.success(res.message || "OTP sent successfully", { id: toastId });
     } catch (error) {
@@ -79,13 +80,14 @@ const LoginWithOtp = () => {
   const handleResentOtp = async (e) => {
     e.preventDefault();
     const toastId = toast.loading("Resending OTP...");
+
     if (formData.phoneNumber.length !== 10) {
       return toast.error("Phone number 10 digits long.", { id: toastId });
     }
 
     try {
       const res = await dispatch(
-        reSentOtpAsync({ phoneNumber: formData.phoneNumber }),
+        sentOtpAsync({ phoneNumber: formData.phoneNumber }),
       ).unwrap();
       handleSetTimer();
       setIsBtnDisabled(true);
@@ -110,6 +112,7 @@ const LoginWithOtp = () => {
 
     const data = {
       otp,
+      name: formData.name,
       phoneNumber: formData.phoneNumber,
     };
 
@@ -130,9 +133,7 @@ const LoginWithOtp = () => {
   };
 
   return (
-    <main 
-    style={{maxWidth: '1200px', margin: 'auto'}}
-    >
+    <main style={{ maxWidth: "1200px", margin: "auto" }}>
       {error && (
         <ErrorModal message={error} onClose={() => dispatch(clearError())} />
       )}

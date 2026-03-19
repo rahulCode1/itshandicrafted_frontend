@@ -1,5 +1,6 @@
-import Header from "../components/layout/Header";
 import { isRouteErrorResponse, useRouteError, Link } from "react-router-dom";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
 
 const ErrorPage = () => {
   const error = useRouteError();
@@ -39,6 +40,7 @@ const ErrorPage = () => {
           </button>
         </div>
       </main>
+      <Footer />
     </>
   );
 };
