@@ -17,7 +17,6 @@ const BuyNow = ({ info }) => {
   const { address } = useSelector((state) => state.address);
   const [payment, setPayment] = useState("cod");
   const [isLoading, setIsLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -41,12 +40,12 @@ const BuyNow = ({ info }) => {
     e.preventDefault();
     if (!address || address.length === 0) {
       setError("Please add a delivery address to place your order.");
-      setShowModal(true);
+     
       return;
     }
     if (!selectedAddress) {
       setError("Please set a default address to place your order.");
-      setShowModal(true);
+    
       return;
     }
 

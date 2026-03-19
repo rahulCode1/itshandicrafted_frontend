@@ -93,15 +93,11 @@ const ProductItem = ({ productData }) => {
 
   const handleAddToBuyNow = async () => {
     try {
-      const { data } = await privateApi.post(
-        `http://localhost/api/order/addItemToBuyNow`,
-        {
-          product: productId,
-          quantity,
-        },
-      );
+      await privateApi.post(`http://localhost/api/order/addItemToBuyNow`, {
+        product: productId,
+        quantity,
+      });
 
-      // console.log(data);
       navigate(`/buyNow`);
     } catch (error) {
       console.log(error);
@@ -122,19 +118,21 @@ const ProductItem = ({ productData }) => {
       </button>
 
       <main className="bg-light min-vh-100 pb-5">
-
         {/* ════════════════════════════════
             PRODUCT DETAIL SECTION
         ════════════════════════════════ */}
         <section className="container py-4 py-lg-5">
           <div className="row g-4 align-items-start">
-
             {/* ── LEFT: Image ── */}
             <div className="col-12 col-md-6 col-lg-5">
               <div className="position-md-sticky" style={{ top: 24 }}>
                 <div
                   className="card border-0 shadow overflow-hidden rounded-4"
-                  style={{ minHeight: 420, height: "calc(100vh - 120px)", maxHeight: 680 }}
+                  style={{
+                    minHeight: 420,
+                    height: "calc(100vh - 120px)",
+                    maxHeight: 680,
+                  }}
                 >
                   <div className="card-body p-0 d-flex flex-column h-100">
                     <ProductImageCarousel images={productInfo.images} />
@@ -146,11 +144,14 @@ const ProductItem = ({ productData }) => {
             {/* ── RIGHT: Details ── */}
             <div className="col-12 col-md-6 col-lg-7">
               <div className="card border-0 shadow-sm rounded-4 p-3 p-md-4 h-100">
-
                 {/* Category pill */}
                 <div className="mb-2">
-                  <span className="badge bg-primary-subtle text-primary rounded-pill px-3 py-1" style={{ fontSize: "0.72rem", letterSpacing: "0.05em" }}>
-                    <i className="bi bi-tag me-1"></i>{productInfo.category || "Handicrafts"}
+                  <span
+                    className="badge bg-primary-subtle text-primary rounded-pill px-3 py-1"
+                    style={{ fontSize: "0.72rem", letterSpacing: "0.05em" }}
+                  >
+                    <i className="bi bi-tag me-1"></i>
+                    {productInfo.category || "Handicrafts"}
                   </span>
                 </div>
 
@@ -173,49 +174,73 @@ const ProductItem = ({ productData }) => {
                       ></i>
                     ))}
                   </div>
-                  <span className="fw-bold text-dark">{productInfo.rating}</span>
-                  <span className="text-muted small">({productInfo.reviews || 0} reviews)</span>
+                  <span className="fw-bold text-dark">
+                    {productInfo.rating}
+                  </span>
+                  <span className="text-muted small">
+                    ({productInfo.reviews || 0} reviews)
+                  </span>
                 </div>
 
                 {/* Pricing */}
                 <div className="d-flex align-items-center flex-wrap gap-3 mb-4 pb-4 border-bottom border-dashed">
-                  <h2 className="fw-bold mb-0 text-primary" style={{ fontSize: "2rem" }}>
+                  <h2
+                    className="fw-bold mb-0 text-primary"
+                    style={{ fontSize: "2rem" }}
+                  >
                     ₹{productInfo.discountPrice}
                   </h2>
                   <span className="text-muted fs-5 text-decoration-line-through">
                     ₹{productInfo.price}
                   </span>
-                  <span className="badge bg-success-subtle text-success rounded-pill px-3 py-2 fw-semibold" style={{ fontSize: "0.8rem" }}>
+                  <span
+                    className="badge bg-success-subtle text-success rounded-pill px-3 py-2 fw-semibold"
+                    style={{ fontSize: "0.8rem" }}
+                  >
                     <i className="bi bi-tag-fill me-1"></i>
                     {Math.round(
-                      ((productInfo.price - productInfo.discountPrice) / productInfo.price) * 100
-                    )}% OFF
+                      ((productInfo.price - productInfo.discountPrice) /
+                        productInfo.price) *
+                        100,
+                    )}
+                    % OFF
                   </span>
                 </div>
 
                 {/* Short Description + Material */}
                 <div className="mb-4">
-                  <p className="text-secondary mb-3" style={{ lineHeight: 1.7, fontSize: "0.95rem" }}>
+                  <p
+                    className="text-secondary mb-3"
+                    style={{ lineHeight: 1.7, fontSize: "0.95rem" }}
+                  >
                     {productInfo.shortDescription}
                   </p>
                   <div className="d-flex align-items-center gap-2 px-3 py-2 rounded-3 bg-primary-subtle border border-primary-subtle">
                     <i className="bi bi-box-seam-fill text-primary"></i>
                     <span className="small">
                       <strong className="text-dark">Material:</strong>{" "}
-                      <span className="text-muted">{productInfo.materialType}</span>
+                      <span className="text-muted">
+                        {productInfo.materialType}
+                      </span>
                     </span>
                   </div>
                 </div>
 
                 {/* Quantity + Actions */}
                 <div className="bg-primary-subtle border border-primary-subtle p-3 rounded-3 mb-4">
-                  <label className="form-label fw-bold mb-3 small text-uppercase text-primary" style={{ letterSpacing: "0.8px" }}>
+                  <label
+                    className="form-label fw-bold mb-3 small text-uppercase text-primary"
+                    style={{ letterSpacing: "0.8px" }}
+                  >
                     <i className="bi bi-bag me-1"></i>Select Quantity
                   </label>
 
                   <div className="d-flex flex-column flex-sm-row gap-3 align-items-sm-center">
                     {/* Stepper */}
-                    <div className="input-group flex-shrink-0" style={{ maxWidth: 130 }}>
+                    <div
+                      className="input-group flex-shrink-0"
+                      style={{ maxWidth: 130 }}
+                    >
                       <button
                         disabled={quantity === 1}
                         onClick={() => setQuantity((prevStat) => prevStat - 1)}
@@ -246,14 +271,18 @@ const ProductItem = ({ productData }) => {
                           to="/cart"
                           className="btn btn-dark flex-grow-1 fw-semibold py-2 rounded-3"
                         >
-                          <i className="bi bi-cart-check-fill me-2"></i>Go to Cart
+                          <i className="bi bi-cart-check-fill me-2"></i>Go to
+                          Cart
                         </Link>
                       ) : (
                         <button
-                          onClick={() => handleAddToCart(productInfo.id, quantity)}
+                          onClick={() =>
+                            handleAddToCart(productInfo.id, quantity)
+                          }
                           className="btn btn-dark flex-grow-1 fw-semibold py-2 rounded-3"
                         >
-                          <i className="bi bi-cart-plus-fill me-2"></i>Add to Cart
+                          <i className="bi bi-cart-plus-fill me-2"></i>Add to
+                          Cart
                         </button>
                       )}
                       (
@@ -261,7 +290,9 @@ const ProductItem = ({ productData }) => {
                         onClick={() =>
                           handleAddToWishList(
                             productInfo.id,
-                            checkProductIsWishlist(productInfo.id) ? "remove" : "add"
+                            checkProductIsWishlist(productInfo.id)
+                              ? "remove"
+                              : "add",
                           )
                         }
                         className="btn btn-outline-danger fw-semibold py-2 px-3 rounded-3"
@@ -289,20 +320,38 @@ const ProductItem = ({ productData }) => {
                 <div className="row g-2 mb-4">
                   {[
                     { src: COD, alt: "COD", label: "Cash on\nDelivery" },
-                    { src: free, alt: "Free Delivery", label: "Free\nDelivery" },
-                    { src: payment, alt: "Secure Payment", label: "Secure\nPayment" },
+                    {
+                      src: free,
+                      alt: "Free Delivery",
+                      label: "Free\nDelivery",
+                    },
+                    {
+                      src: payment,
+                      alt: "Secure Payment",
+                      label: "Secure\nPayment",
+                    },
                   ].map(({ src, alt, label }) => (
                     <div className="col-4" key={alt}>
                       <div className="text-center py-3 rounded-3 h-100 bg-primary-subtle border border-primary-subtle">
                         <img
                           src={src}
                           className="img-fluid mb-2"
-                          style={{ width: 36, height: 36, objectFit: "contain" }}
+                          style={{
+                            width: 36,
+                            height: 36,
+                            objectFit: "contain",
+                          }}
                           alt={alt}
                         />
-                        <p className="mb-0 fw-semibold text-primary lh-sm" style={{ fontSize: "0.7rem" }}>
+                        <p
+                          className="mb-0 fw-semibold text-primary lh-sm"
+                          style={{ fontSize: "0.7rem" }}
+                        >
                           {label.split("\n").map((line, i) => (
-                            <span key={i}>{line}{i === 0 && <br />}</span>
+                            <span key={i}>
+                              {line}
+                              {i === 0 && <br />}
+                            </span>
                           ))}
                         </p>
                       </div>
@@ -315,11 +364,13 @@ const ProductItem = ({ productData }) => {
                   <h6 className="fw-bold mb-2 d-flex align-items-center gap-2 text-primary">
                     <i className="bi bi-file-text-fill"></i>Description
                   </h6>
-                  <p className="text-secondary mb-0 small" style={{ lineHeight: 1.8 }}>
+                  <p
+                    className="text-secondary mb-0 small"
+                    style={{ lineHeight: 1.8 }}
+                  >
                     {productInfo.description}
                   </p>
                 </div>
-
               </div>
             </div>
           </div>
@@ -330,21 +381,30 @@ const ProductItem = ({ productData }) => {
         ════════════════════════════════ */}
         <section className="py-4 py-lg-5 bg-white border-top">
           <div className="container">
-
             {/* Section Header */}
             <div className="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
               <div className="d-flex align-items-center gap-3">
                 <div
                   className="d-flex align-items-center justify-content-center rounded-3 text-white flex-shrink-0"
-                  style={{ width: 40, height: 40, background: "linear-gradient(135deg, #4f46e5, #7c3aed)" }}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
+                  }}
                 >
                   <i className="bi bi-grid-fill" style={{ fontSize: 16 }}></i>
                 </div>
-                <h2 className="fw-bold mb-0 text-dark" style={{ fontSize: "clamp(1.1rem, 3vw, 1.5rem)" }}>
+                <h2
+                  className="fw-bold mb-0 text-dark"
+                  style={{ fontSize: "clamp(1.1rem, 3vw, 1.5rem)" }}
+                >
                   Similar Products
                 </h2>
               </div>
-              <span className="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2" style={{ fontSize: "0.75rem" }}>
+              <span
+                className="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2"
+                style={{ fontSize: "0.75rem" }}
+              >
                 {similarProducts?.length || 0} items
               </span>
             </div>
@@ -353,7 +413,11 @@ const ProductItem = ({ productData }) => {
             <div className="d-lg-none">
               <div
                 className="row flex-nowrap overflow-auto pb-3 gx-3"
-                style={{ msOverflowStyle: "none", scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
+                style={{
+                  msOverflowStyle: "none",
+                  scrollbarWidth: "none",
+                  WebkitOverflowScrolling: "touch",
+                }}
               >
                 {similarProducts && similarProducts.length !== 0 ? (
                   similarProducts.map((product) => (
@@ -365,7 +429,9 @@ const ProductItem = ({ productData }) => {
                   <div className="col-12">
                     <div className="text-center py-5 rounded-3 bg-primary-subtle border border-primary-subtle">
                       <i className="bi bi-inbox fs-2 d-block mb-3 text-primary"></i>
-                      <h6 className="fw-semibold text-dark">No similar products found</h6>
+                      <h6 className="fw-semibold text-dark">
+                        No similar products found
+                      </h6>
                     </div>
                   </div>
                 )}
@@ -384,15 +450,15 @@ const ProductItem = ({ productData }) => {
                 <div className="col-12">
                   <div className="text-center py-5 rounded-3 bg-primary-subtle border border-primary-subtle">
                     <i className="bi bi-inbox fs-1 d-block mb-3 text-primary"></i>
-                    <h5 className="fw-semibold text-dark">No similar products found</h5>
+                    <h5 className="fw-semibold text-dark">
+                      No similar products found
+                    </h5>
                   </div>
                 </div>
               )}
             </div>
-
           </div>
         </section>
-
       </main>
     </>
   );
