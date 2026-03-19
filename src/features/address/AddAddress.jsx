@@ -31,6 +31,8 @@ const AddAddress = () => {
     }));
   };
 
+  console.log(formData.name)
+
   const submitAddress = async (e) => {
     e.preventDefault();
     const tostId = toast.loading("Adding Addresses...");
