@@ -15,6 +15,7 @@ import { privateApi } from "../../utils/axios";
 
 const ProductItem = ({ productData }) => {
   const [quantity, setQuantity] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { cart: productCart } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -96,15 +97,24 @@ const ProductItem = ({ productData }) => {
       return navigate("/login");
     }
 
+    const toastId = toast.loading("Going to checkout...");
+
     try {
-      await privateApi.post(`http://localhost/api/order/addItemToBuyNow`, {
+      setIsLoading(true);
+      await privateApi.post(`/order/addItemToBuyNow`, {
         product: productId,
         quantity,
       });
 
-      navigate(`/buyNow`);
+      toast.success("Added to checkout.", { id: toastId });
+      return navigate(`/buyNow`);
     } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to add checkout.", {
+        id: toastId,
+      });
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -312,11 +322,16 @@ const ProductItem = ({ productData }) => {
                 {/* Buy Now Button */}
                 <div className="d-grid mb-4">
                   <button
+                    disabled={isLoading}
                     onClick={handleAddToBuyNow}
                     className="btn btn-warning fw-bold py-2 rounded-3 d-flex align-items-center justify-content-center gap-2"
                   >
                     <i className="bi bi-lightning-charge-fill"></i>
-                    Buy Now
+
+                    {isLoading ? "Buying..." : "Buy Now"}
+                    {isLoading && (
+                      <span className="spinner-border spinner-border-md ms-2"></span>
+                    )}
                   </button>
                 </div>
 

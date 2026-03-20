@@ -37,6 +37,8 @@ const BuyNow = ({ info }) => {
     address.length > 0 &&
     address.find((addr) => addr.isDefault === true);
 
+
+
   const handleSubmitOrder = async (e) => {
     e.preventDefault();
 
@@ -49,6 +51,8 @@ const BuyNow = ({ info }) => {
 
       return;
     }
+
+    
     if (!selectedAddress) {
       setError("Please set a default address to place your order.");
 
