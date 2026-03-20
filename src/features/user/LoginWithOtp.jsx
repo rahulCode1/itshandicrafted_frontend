@@ -37,7 +37,7 @@ const LoginWithOtp = () => {
 
   const handleSetTimer = () => {
     setIsBtnDisabled(true);
-    setTimer(10);
+    setTimer(30);
 
     const interval = setInterval(() => {
       setTimer((prev) => {
@@ -133,7 +133,7 @@ const LoginWithOtp = () => {
   };
 
   return (
-    <main style={{ maxWidth: "1200px", margin: "auto" }}>
+    <main style={{ maxWidth: "1200px", margin: "auto" , marginBottom: "5em"}}>
       {error && (
         <ErrorModal message={error} onClose={() => dispatch(clearError())} />
       )}

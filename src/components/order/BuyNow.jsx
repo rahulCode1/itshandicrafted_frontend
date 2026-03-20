@@ -15,7 +15,7 @@ import ErrorModal from "../ErrorModal";
 
 const BuyNow = ({ info }) => {
   const { address } = useSelector((state) => state.address);
-  const [payment, setPayment] = useState("cod");
+  const [payment, setPayment] = useState("ONLINE");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
@@ -43,6 +43,7 @@ const BuyNow = ({ info }) => {
     if (!token) {
       return navigate("/login");
     }
+
     if (!address || address.length === 0) {
       setError("Please add a delivery address to place your order.");
 
@@ -55,24 +56,56 @@ const BuyNow = ({ info }) => {
     }
 
     const toastId = toast.loading("Placing your order...");
-    const order = {
-      address: selectedAddress.id,
-      summary: { totalPrice, totalDiscount, totalQuantity },
-      paymentMethod: "COD",
-      paymentStatus: payment === "UPI" ? "completed" : "pending",
-    };
 
     try {
       setIsLoading(true);
-      const response = await privateApi.post(
-        `/order/placeOrderViaBuyNow`,
-        order,
-      );
-      toast.success(response.data?.message || "Order placed successfully!", {
-        id: toastId,
-      });
 
-      navigate(`/orders/${response.data.order}`);
+      const order = {
+        address: selectedAddress.id,
+        summary: { totalPrice, totalDiscount, totalQuantity },
+        paymentMethod: payment,
+      };
+
+      if (payment === "ONLINE") {
+        const { data } = await privateApi.post(`/order/create-order`, {
+          amount: totalPrice,
+        });
+
+        const options = {
+          key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+          amount: data.amount,
+          currency: "INR",
+          name: "It's Handicrafted",
+          order_id: data.id,
+          method: {
+            upi: true,
+          },
+
+          handler: async function (response) {
+            const { data } = await privateApi.post(
+              `/order/placeOrderViaBuyNow`,
+              { ...response, ...order },
+            );
+
+            toast.success(data?.message || "Order placed successfully!", {
+              id: toastId,
+            });
+            navigate(`/orders/${data.order}`);
+          },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      } else {
+        const { data } = await privateApi.post(
+          `/order/placeOrderViaBuyNow`,
+          order,
+        );
+        toast.success(data?.message || "Order placed successfully!", {
+          id: toastId,
+        });
+        navigate(`/orders/${data.order}`);
+      }
     } catch (err) {
       const msg =
         err.response?.data?.message ||
@@ -417,33 +450,17 @@ const BuyNow = ({ info }) => {
 
             <div className="card-body px-4 py-3">
               {/* COD Option */}
-              <div
-                role="button"
-                onClick={() => setPayment("cod")}
-                className={`d-flex align-items-center gap-3 p-3 rounded-3 border ${
-                  payment === "cod"
-                    ? "border-primary bg-primary-subtle"
-                    : "border-light bg-light"
-                }`}
+              <select
+                onChange={(e) => setPayment(e.target.value)}
+                className="form-select"
               >
-                <div
-                  className="bg-white border rounded-2 d-flex align-items-center justify-content-center flex-shrink-0"
-                  style={{ width: 40, height: 40 }}
-                >
-                  <i className="bi bi-cash-coin text-success fs-5"></i>
-                </div>
-                <div className="flex-grow-1">
-                  <div className="fw-semibold small text-dark">
-                    Cash on Delivery
-                  </div>
-                  <div className="text-muted" style={{ fontSize: "0.72rem" }}>
-                    Pay when your order arrives at your door
-                  </div>
-                </div>
-                {payment === "cod" && (
-                  <i className="bi bi-check-circle-fill text-primary fs-5 flex-shrink-0"></i>
-                )}
-              </div>
+                <option value="ONLINE" defaultValue>
+                  Pay Online
+                </option>
+                <option value="COD" defaultChecked>
+                  Cash on Delivery
+                </option>
+              </select>
 
               <p
                 className="text-muted d-flex align-items-center gap-1 mt-3 mb-0"

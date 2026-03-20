@@ -1,4 +1,4 @@
-import {  Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ import { privateApi } from "../../utils/axios";
 import ErrorModal from "../../components/ErrorModal";
 
 const Checkout = () => {
-  const [payment, setPayment] = useState("cod");
+  const [payment, setPayment] = useState("ONLINE");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const { cart: productCart } = useSelector((state) => state.cart);
@@ -39,54 +39,6 @@ const Checkout = () => {
     address.length > 0 &&
     address.find((address) => address.isDefault === true);
 
-  const handleMakePayment = async () => {
-    try {
-      const res = await fetch(`http://localhost/api/order/create-order`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount: 1 }),
-      });
-
-      const order = await res.json();
-      openRazorpay(order);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const openRazorpay = (order) => {
-    const options = {
-      key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-      amount: order.amount,
-      currency: "INR",
-      name: "It's Handicrafted",
-      order_id: order.id,
-      method: {
-        upi: true,
-      },
-
-      handler: async function (response) {
-        const res = await fetch(`http://localhost/api/order/verify-payment`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(response),
-        });
-
-        const data = await res.json();
-        console.log(data);
-      },
-    };
-
-    const rzp = new window.Razorpay(options);
-    rzp.open();
-  };
-
-  
-
   const handleSubmitOrder = async () => {
     if (address.length === 0) {
       return setError("Please add address to place order.");
@@ -106,21 +58,52 @@ const Checkout = () => {
         totalQuantity,
       },
 
-      paymentMethod: "COD",
-      paymentStatus: payment === "UPI" ? "completed" : "pending",
+      paymentMethod: payment,
     };
 
     try {
-      setIsLoading(true);
-      const response = await privateApi.post(`/order/placeOrder`, order);
+      if (payment === "ONLINE") {
+        const { data } = await privateApi.post(`/order/create-order`, {
+          amount: totalPrice,
+        });
 
-      dispatch(clearCart());
-      navigate("/orders");
+        const options = {
+          key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+          amount: data.amount,
+          currency: "INR",
+          name: "It's Handicrafted",
+          order_id: data.id,
+          method: {
+            upi: true,
+          },
 
-      toast.success(response.data?.message || "Order place successfully.", {
-        id: toastId,
-      });
+          handler: async function (response) {
+            const { data } = await privateApi.post(`/order/placeOrder`, {
+              ...response,
+              ...order,
+            });
+
+            dispatch(clearCart());
+            toast.success(data?.message || "Order place successfully.", {
+              id: toastId,
+            });
+            navigate(`/orders/${data.order.id}`);
+          },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      } else {
+        setIsLoading(true);
+        const { data } = await privateApi.post(`/order/placeOrder`, order);
+        dispatch(clearCart());
+        navigate(`/orders/${data.order.id}`);
+        toast.success(data?.message || "Order place successfully.", {
+          id: toastId,
+        });
+      }
     } catch (error) {
+      console.log(error);
       setError(
         error.response?.data?.message || "Error occurred while place order.",
       );
@@ -147,12 +130,6 @@ const Checkout = () => {
       }}
     >
       {error && <ErrorModal message={error} onClose={() => setError(null)} />}
-
-      <div>
-        <button className="btn my-5 btn-primary" onClick={handleMakePayment}>
-          Pay Online
-        </button>
-      </div>
 
       <div className="container py-4 py-md-5">
         {isLoading && (
@@ -594,6 +571,9 @@ const Checkout = () => {
                         padding: "10px 14px",
                       }}
                     >
+                      <option defaultChecked value="ONLINE">
+                        Pay Online
+                      </option>
                       <option value="COD">💵 Cash On Delivery</option>
                     </select>
                   </div>
