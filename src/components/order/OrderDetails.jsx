@@ -547,7 +547,7 @@ const OrderDetails = ({ order }) => {
                         ></i>
                         <small className="text-muted">
                           {order.orderStatus === "cancelled"
-                            ? "Order calcelled already."
+                            ? "Order calcelled successfully."
                             : order.orderStatus === "delevered"
                               ? "Order delereved already"
                               : "Cancellation is only available for eligible orders."}
@@ -569,8 +569,14 @@ const OrderDetails = ({ order }) => {
                           transition: "all 0.15s ease",
                         }}
                       >
-                        <i className="bi bi-x-circle me-2"></i>
-                        Cancel Order
+                        {order.orderStatus === "cancelled"
+                          ? "Cancelled"
+                          : isLoading
+                            ? "Canceling..."
+                            : "Cancel Order"}
+                        {isLoading && (
+                          <span className="spinner-border spinner-border-sm ms-2"></span>
+                        )}
                       </button>
                     </div>
                   </div>

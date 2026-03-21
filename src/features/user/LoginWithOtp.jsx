@@ -133,7 +133,10 @@ const LoginWithOtp = () => {
   };
 
   return (
-    <main style={{ maxWidth: "1200px", margin: "auto" , marginBottom: "5em"}}>
+    <main
+      className="container container-fluid py-3"
+      style={{ maxWidth: "1200px", margin: "auto", marginBottom: "5em" }}
+    >
       {error && (
         <ErrorModal message={error} onClose={() => dispatch(clearError())} />
       )}

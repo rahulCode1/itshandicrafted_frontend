@@ -14,8 +14,13 @@ import ErrorModal from "../../components/ErrorModal";
 const AllAddress = () => {
   const [addressId, setAddressId] = useState(null);
   const { handleSelectDefaultAddress } = useEcommerce();
-  const { address, fetchUserAddressLoading, removeAddressLoading, error } =
-    useSelector((state) => state.address);
+  const {
+    address,
+    fetchUserAddressLoading,
+    removeAddressLoading,
+    error,
+    setDefaultAddressLoading,
+  } = useSelector((state) => state.address);
   const dispatch = useDispatch();
 
   const removeAddress = async (addressId) => {
@@ -29,6 +34,11 @@ const AllAddress = () => {
     }
   };
 
+  const selectDefaultAddress = async (addressId) => {
+    setAddressId(addressId);
+    handleSelectDefaultAddress(addressId);
+  };
+
   useEffect(() => {
     dispatch(fetchUserAddressAsync());
   }, [dispatch]);
@@ -39,13 +49,9 @@ const AllAddress = () => {
       ) : (
         <div
           className="min-vh-100 py-4 py-md-5"
-          style={{
-            background:
-              "linear-gradient(160deg, #f0f4ff 0%, #fafafa 60%, #f5f3ff 100%)",
-            marginBottom: "5em",
-          }}
+          style={{ background: "var(--bs-light)", marginBottom: "5em" }}
         >
-          <div className="container">
+          <div className="container-lg px-3 px-md-4">
             {error && (
               <ErrorModal
                 message={error}
@@ -53,18 +59,11 @@ const AllAddress = () => {
               />
             )}
 
-            {/* ── Top nav bar ── */}
-            <div className="d-flex align-items-center justify-content-between mb-4">
+            {/* ── Top Nav ── */}
+            <div className="d-flex align-items-center justify-content-between mb-4 gap-2">
               <Link
                 to="/user"
-                className="btn fw-semibold rounded-3 d-flex align-items-center gap-2"
-                style={{
-                  border: "1.5px solid #ddd6fe",
-                  color: "#4f46e5",
-                  background: "#f5f3ff",
-                  fontSize: "0.85rem",
-                  padding: "8px 16px",
-                }}
+                className="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2 rounded-3 fw-semibold"
               >
                 <i className="bi bi-arrow-left"></i>
                 <span className="d-none d-sm-inline">Back to Profile</span>
@@ -74,14 +73,7 @@ const AllAddress = () => {
               <Link
                 to="addAddress"
                 state={{ from: "/address" }}
-                className="btn fw-semibold rounded-3 d-flex align-items-center gap-2 text-white"
-                style={{
-                  background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                  border: "none",
-                  fontSize: "0.85rem",
-                  padding: "8px 16px",
-                  boxShadow: "0 2px 10px rgba(79,70,229,0.25)",
-                }}
+                className="btn btn-primary btn-sm d-flex align-items-center gap-2 rounded-3 fw-semibold"
               >
                 <i className="bi bi-plus-circle-fill"></i>
                 <span className="d-none d-sm-inline">Add Address</span>
@@ -90,115 +82,100 @@ const AllAddress = () => {
             </div>
 
             {/* ── Page Header ── */}
-            <div className="d-flex align-items-center gap-3 mb-4 mb-md-5">
+            <div className="d-flex align-items-center gap-3 mb-4">
               <div
-                className="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0"
-                style={{
-                  width: 48,
-                  height: 48,
-                  background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                  boxShadow: "0 4px 14px rgba(79,70,229,0.28)",
-                }}
+                className="d-flex align-items-center justify-content-center rounded-3 bg-primary flex-shrink-0"
+                style={{ width: 44, height: 44 }}
               >
                 <i className="bi bi-geo-alt-fill text-white fs-5"></i>
               </div>
               <div>
-                <h4
-                  className="fw-bold mb-0 d-flex align-items-center gap-2"
-                  style={{ color: "#1e1b4b", letterSpacing: "-0.4px" }}
-                >
-                  Delivery Addresses
-                  <span
-                    className="fw-semibold"
-                    style={{ color: "#7c3aed", fontSize: "1rem" }}
-                  >
+                <h5 className="fw-bold mb-0 text-dark">
+                  Delivery Addresses{" "}
+                  <span className="text-primary fw-semibold fs-6">
                     ({address?.length || 0})
                   </span>
-                </h4>
-                <span className="text-muted" style={{ fontSize: "0.83rem" }}>
+                </h5>
+                <small className="text-muted">
                   Manage your shipping addresses
-                </span>
+                </small>
               </div>
             </div>
 
             {/* ── Address Grid ── */}
             {address && address.length > 0 ? (
-              <div className="row row-cols-1 row-cols-md-2 row-cols-xl-2 g-3 g-md-4">
+              <div className="row g-3 g-md-4 row-cols-1 row-cols-md-2">
                 {address.map((userAdd) => (
                   <div className="col" key={userAdd.id}>
                     <div
-                      className="card border-0 h-100 position-relative overflow-hidden rounded-4"
+                      className="card h-100 rounded-4 overflow-hidden"
                       style={{
-                        boxShadow: userAdd.isDefault
-                          ? "0 6px 24px rgba(79,70,229,0.14)"
-                          : "0 2px 10px rgba(79,70,229,0.07)",
                         border: userAdd.isDefault
-                          ? "1.5px solid #a5b4fc"
-                          : "1px solid #ede9fe",
+                          ? "2px solid #4f46e5"
+                          : "1px solid #e5e7eb",
+                        boxShadow: userAdd.isDefault
+                          ? "0 0 0 4px rgba(79,70,229,0.08)"
+                          : "none",
                       }}
                     >
-                      {/* Top accent bar */}
-                      <div
-                        style={{
-                          height: 4,
-                          background: userAdd.isDefault
-                            ? "linear-gradient(90deg, #4f46e5, #7c3aed, #a855f7)"
-                            : "#ede9fe",
-                        }}
-                      />
-
-                      {/* Default ribbon */}
-                      {userAdd.isDefault && (
+                      {/* ── Default banner — full width, hard to miss ── */}
+                      {userAdd.isDefault ? (
                         <div
-                          className="position-absolute text-white px-3 py-1 fw-semibold"
+                          className="d-flex align-items-center justify-content-center gap-2 py-2 fw-semibold"
                           style={{
-                            background:
-                              "linear-gradient(135deg, #10b981, #059669)",
-                            top: 18,
-                            right: -28,
-                            transform: "rotate(45deg)",
-                            width: 110,
-                            textAlign: "center",
-                            fontSize: "0.6rem",
-                            letterSpacing: "0.5px",
-                            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                            background: "#4f46e5",
+                            color: "#fff",
+                            fontSize: "0.78rem",
+                            letterSpacing: "0.03em",
                           }}
                         >
-                          ✓ DEFAULT
+                          <i
+                            className="bi bi-patch-check-fill"
+                            style={{ fontSize: 13 }}
+                          ></i>
+                          Default Delivery Address
                         </div>
+                      ) : (
+                        <div style={{ height: 3, background: "#e5e7eb" }} />
                       )}
 
                       <div className="card-body p-3 p-md-4">
-                        {/* Name + Set Default */}
-                        <div className="d-flex justify-content-between align-items-start mb-3">
-                          <div className="d-flex align-items-center gap-2">
+                        {/* Name row */}
+                        <div className="d-flex align-items-start justify-content-between gap-2 mb-3">
+                          <div className="d-flex align-items-center gap-2 min-w-0">
                             <div
                               className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
                               style={{
-                                width: 36,
-                                height: 36,
-                                background: "#ede9fe",
+                                width: 38,
+                                height: 38,
+                                background: userAdd.isDefault
+                                  ? "#ede9fe"
+                                  : "#f3f4f6",
                               }}
                             >
                               <i
                                 className="bi bi-person-fill"
-                                style={{ color: "#4f46e5", fontSize: 15 }}
+                                style={{
+                                  fontSize: 15,
+                                  color: userAdd.isDefault
+                                    ? "#4f46e5"
+                                    : "#6b7280",
+                                }}
                               ></i>
                             </div>
-                            <div>
-                              <h6
-                                className="mb-0 fw-bold"
-                                style={{ color: "#1e1b4b" }}
+                            <div className="min-w-0">
+                              <p
+                                className="fw-bold mb-0 text-truncate text-dark"
+                                style={{ fontSize: "0.95rem" }}
                               >
                                 {userAdd.name}
-                              </h6>
+                              </p>
                               <span
                                 className="badge rounded-pill"
                                 style={{
-                                  background: "#f5f3ff",
+                                  fontSize: "0.65rem",
+                                  background: "#f0f4ff",
                                   color: "#4f46e5",
-                                  fontSize: "0.62rem",
-                                  fontWeight: 600,
                                   border: "1px solid #ddd6fe",
                                 }}
                               >
@@ -209,42 +186,38 @@ const AllAddress = () => {
 
                           {!userAdd.isDefault && (
                             <button
-                              onClick={() =>
-                                handleSelectDefaultAddress(userAdd.id)
-                              }
-                              className="btn btn-sm fw-semibold rounded-3 flex-shrink-0"
+                              onClick={() => selectDefaultAddress(userAdd.id)}
+                              className="btn btn-outline-success btn-sm rounded-3 flex-shrink-0 fw-semibold"
                               style={{
-                                border: "1.5px solid #10b981",
-                                color: "#10b981",
                                 fontSize: "0.72rem",
-                                background: "#f0fdf4",
                                 whiteSpace: "nowrap",
                               }}
                             >
-                              <i className="bi bi-check2-circle me-1"></i>Set
-                              Default
+                              {userAdd.id === addressId &&
+                              setDefaultAddressLoading === "loading" ? (
+                                <>
+                                  Setting…{" "}
+                                  <span className="spinner-border spinner-border-sm ms-1"></span>
+                                </>
+                              ) : (
+                                "Set default"
+                              )}
                             </button>
                           )}
                         </div>
 
                         {/* Phone */}
-                        <div
-                          className="d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-3"
-                          style={{
-                            background: "#f5f3ff",
-                            border: "1px solid #ede9fe",
-                          }}
-                        >
+                        <div className="d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-3 bg-light border">
                           <i
-                            className="bi bi-telephone-fill"
-                            style={{ color: "#4f46e5", fontSize: 12 }}
+                            className="bi bi-telephone-fill text-primary"
+                            style={{ fontSize: 12 }}
                           ></i>
                           <span className="text-muted small">
                             {userAdd.phoneNumber}
                           </span>
                         </div>
 
-                        {/* ZIP / City / State chips */}
+                        {/* ZIP / City / State */}
                         <div className="row g-2 mb-3">
                           {[
                             { label: "ZIP", value: userAdd.zipCode },
@@ -252,17 +225,11 @@ const AllAddress = () => {
                             { label: "State", value: userAdd.state },
                           ].map(({ label, value }) => (
                             <div className="col-4" key={label}>
-                              <div
-                                className="p-2 rounded-3 text-center"
-                                style={{
-                                  background: "#f5f3ff",
-                                  border: "1px solid #ede9fe",
-                                }}
-                              >
+                              <div className="bg-light border rounded-3 p-2 text-center">
                                 <small
-                                  className="text-muted d-block mb-1"
+                                  className="text-muted d-block"
                                   style={{
-                                    fontSize: "0.6rem",
+                                    fontSize: "0.62rem",
                                     textTransform: "uppercase",
                                     letterSpacing: "0.5px",
                                   }}
@@ -270,11 +237,8 @@ const AllAddress = () => {
                                   {label}
                                 </small>
                                 <span
-                                  className="fw-bold d-block text-truncate"
-                                  style={{
-                                    color: "#1e1b4b",
-                                    fontSize: "0.78rem",
-                                  }}
+                                  className="fw-bold d-block text-truncate text-dark"
+                                  style={{ fontSize: "0.78rem" }}
                                 >
                                   {value}
                                 </span>
@@ -285,15 +249,15 @@ const AllAddress = () => {
 
                         {/* Full Address */}
                         <div
-                          className="d-flex align-items-start gap-2 p-3 rounded-3 mb-4"
+                          className="d-flex align-items-start gap-2 p-3 rounded-3 mb-4 border"
                           style={{
+                            borderStyle: "dashed",
                             background: "#fafafa",
-                            border: "2px dashed #ddd6fe",
                           }}
                         >
                           <i
-                            className="bi bi-geo-alt-fill mt-1 flex-shrink-0"
-                            style={{ color: "#7c3aed", fontSize: 14 }}
+                            className="bi bi-geo-alt-fill text-primary mt-1 flex-shrink-0"
+                            style={{ fontSize: 13 }}
                           ></i>
                           <p
                             className="mb-0 small text-muted"
@@ -303,19 +267,13 @@ const AllAddress = () => {
                           </p>
                         </div>
 
-                        {/* Edit / Delete */}
+                        {/* Actions */}
                         <div className="row g-2">
                           <div className="col-6">
                             <Link
                               to={`${userAdd.id}`}
                               state={{ from: "/user" }}
-                              className="btn btn-sm w-100 fw-semibold rounded-3 d-flex align-items-center justify-content-center gap-1"
-                              style={{
-                                border: "1.5px solid #4f46e5",
-                                color: "#4f46e5",
-                                background: "#f5f3ff",
-                                fontSize: "0.82rem",
-                              }}
+                              className="btn btn-outline-primary btn-sm w-100 rounded-3 fw-semibold d-flex align-items-center justify-content-center gap-1"
                             >
                               <i
                                 className="bi bi-pencil-fill"
@@ -328,26 +286,20 @@ const AllAddress = () => {
                             <button
                               onClick={() => removeAddress(userAdd.id)}
                               disabled={removeAddressLoading === "loading"}
-                              className="btn btn-sm w-100 fw-semibold rounded-3 d-flex align-items-center justify-content-center gap-1"
-                              style={{
-                                border: "1.5px solid #ef4444",
-                                color: "#ef4444",
-                                background: "#fff1f2",
-                                fontSize: "0.82rem",
-                              }}
+                              className="btn btn-outline-danger btn-sm w-100 rounded-3 fw-semibold d-flex align-items-center justify-content-center gap-1"
                             >
                               {removeAddressLoading === "loading" &&
                               addressId === userAdd.id ? (
                                 <>
                                   Deleting…{" "}
-                                  <span className="spinner-border spinner-border-sm"></span>
+                                  <span className="spinner-border spinner-border-sm ms-1"></span>
                                 </>
                               ) : (
                                 <>
                                   <i
                                     className="bi bi-trash3-fill"
                                     style={{ fontSize: 11 }}
-                                  ></i>
+                                  ></i>{" "}
                                   Delete
                                 </>
                               )}
@@ -361,38 +313,24 @@ const AllAddress = () => {
               </div>
             ) : (
               /* ── Empty State ── */
-              <div
-                className="card border-0 text-center rounded-4"
-                style={{
-                  boxShadow: "0 4px 20px rgba(79,70,229,0.08)",
-                  border: "1px solid #ede9fe",
-                }}
-              >
+              <div className="card border-0 text-center rounded-4 shadow-sm">
                 <div className="card-body py-5 px-4">
                   <div
-                    className="d-inline-flex align-items-center justify-content-center rounded-circle mb-4"
-                    style={{ width: 88, height: 88, background: "#f5f3ff" }}
+                    className="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 mb-4"
+                    style={{ width: 80, height: 80 }}
                   >
                     <i
-                      className="bi bi-geo-alt"
-                      style={{ fontSize: 36, color: "#7c3aed" }}
+                      className="bi bi-geo-alt text-primary"
+                      style={{ fontSize: 32 }}
                     ></i>
                   </div>
-                  <h5 className="fw-bold mb-2" style={{ color: "#1e1b4b" }}>
-                    No Addresses Yet
-                  </h5>
+                  <h5 className="fw-bold mb-2 text-dark">No Addresses Yet</h5>
                   <p className="text-muted mb-4 small">
                     Add your first delivery address to start shopping
                   </p>
                   <Link
                     to="addAddress"
-                    className="btn fw-semibold px-4 py-2 text-white rounded-3"
-                    style={{
-                      background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                      border: "none",
-                      fontSize: "0.9rem",
-                      boxShadow: "0 2px 10px rgba(79,70,229,0.25)",
-                    }}
+                    className="btn btn-primary fw-semibold px-4 py-2 rounded-3"
                   >
                     <i className="bi bi-plus-circle-fill me-2"></i>
                     Add Your First Address
