@@ -17,14 +17,19 @@ import {
 } from "./cartSlice";
 import { addToWishlist } from "../wishlist/wishlistSlice";
 import ErrorModal from "../../components/ErrorModal";
+import { useState } from "react";
 
 const Cart = () => {
+  const [productId, setProductId] = useState("");
   const dispatch = useDispatch();
   const {
     cart: productCart,
     increaseQuantityLoading,
+    decreaseQuantityLoading,
     getCartsLoading,
     moveToWishlistLoading,
+    removeFromCartLoading,
+
     error,
   } = useSelector((state) => state.cart);
 
@@ -71,6 +76,7 @@ const Cart = () => {
   const handleRemoveFromCart = async (productId) => {
     const tostId = toast.loading("Remove from cart...");
     try {
+      setProductId(productId);
       const response = await dispatch(removeFromCartAsync(productId)).unwrap();
       toast.success(response.message || "Successfully removed from cart.", {
         id: tostId,
@@ -94,11 +100,12 @@ const Cart = () => {
       });
     }
     try {
+      setProductId(product.id);
       const res = await dispatch(
         moveToWishlistAsync({ productId: product.id }),
       ).unwrap();
       dispatch(addToWishlist(product));
-
+      setProductId("");
       toast.success(res.message || "Successfully moved to wishlist", {
         id: toastId,
       });
@@ -108,8 +115,6 @@ const Cart = () => {
     }
   };
 
-
-  
   return (
     <>
       {error && (
@@ -237,6 +242,10 @@ const Cart = () => {
                                 }}
                               >
                                 <button
+                                  disabled={
+                                    decreaseQuantityLoading === "loading" &&
+                                    product.id === productId
+                                  }
                                   onClick={() =>
                                     handleDecreaseQuantity(product.id)
                                   }
@@ -268,7 +277,8 @@ const Cart = () => {
                                 </span>
                                 <button
                                   disabled={
-                                    increaseQuantityLoading === "loading"
+                                    increaseQuantityLoading === "loading" &&
+                                    product.id === productId
                                   }
                                   onClick={() =>
                                     handleIncreaseQuantity(product.id)
@@ -292,6 +302,10 @@ const Cart = () => {
 
                               <div className="d-flex gap-2">
                                 <button
+                                  disabled={
+                                    removeFromCartLoading === "loading" &&
+                                    product.id === productId
+                                  }
                                   onClick={() =>
                                     handleRemoveFromCart(product.id)
                                   }
@@ -310,8 +324,15 @@ const Cart = () => {
                                     style={{ fontSize: 11 }}
                                   ></i>
                                   <span className="d-none d-sm-inline">
-                                    Remove
+                                    {removeFromCartLoading === "loading" &&
+                                    product.id === productId
+                                      ? "Removing"
+                                      : "Remove"}
                                   </span>
+                                  {removeFromCartLoading === "loading" &&
+                                    product.id === productId && (
+                                      <span className="spinner-border spinner-border-sm ms-2"></span>
+                                    )}
                                 </button>
 
                                 {isExistOnWishlist(product.id) ? (
@@ -339,7 +360,8 @@ const Cart = () => {
                                 ) : (
                                   <button
                                     disabled={
-                                      moveToWishlistLoading === "loading"
+                                      moveToWishlistLoading === "loading" &&
+                                      product.id === productId
                                     }
                                     onClick={() =>
                                       handleCartToWishList(product)
@@ -358,9 +380,17 @@ const Cart = () => {
                                       className="bi bi-heart"
                                       style={{ fontSize: 11 }}
                                     ></i>
+
                                     <span className="d-none d-sm-inline">
-                                      Wishlist
+                                      {moveToWishlistLoading === "loading" &&
+                                      product.id === productId
+                                        ? "Moving..."
+                                        : "Wishlist"}
                                     </span>
+                                    {moveToWishlistLoading === "loading" &&
+                                      product.id === productId && (
+                                        <span className="spinner-border spinner-border-sm ms-2"></span>
+                                      )}
                                   </button>
                                 )}
                               </div>

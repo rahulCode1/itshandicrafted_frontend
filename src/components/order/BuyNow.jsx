@@ -486,8 +486,8 @@ const BuyNow = ({ info }) => {
             >
               {isLoading ? (
                 <>
-                  <span className="spinner-border spinner-border-sm" />
-                  Placing Order…
+                   Placing Order… <span className="spinner-border spinner-border-sm" />
+                
                 </>
               ) : (
                 <>

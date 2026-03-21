@@ -3,11 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCartAsync } from "../../features/cart/cartSlice";
 import { toast } from "react-hot-toast";
 import { addOrRemoveWishlistAsync } from "../../features/wishlist/wishlistSlice";
+import { useState } from "react";
 export default function ProductCard({ product }) {
-  const { cart: productCart } = useSelector((state) => state.cart);
-  const { wishlist, addOrRemoveWishlistLoading } = useSelector(
+  const { cart: productCart, addTocartLoading } = useSelector(
+    (state) => state.cart,
+  );
+  const { wishlist, toggleWishlistLoading } = useSelector(
     (state) => state.wishlist,
   );
+  const [productId, setProductId] = useState("");
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
@@ -21,7 +25,6 @@ export default function ProductCard({ product }) {
   };
 
   const handleAddToCart = async (productId, quantity) => {
-  
     if (!token) {
       return navigate("/login");
     }
@@ -29,10 +32,12 @@ export default function ProductCard({ product }) {
     const tostId = toast.loading("Adding to cart...");
 
     try {
+      setProductId(productId);
       const res = await dispatch(
         addToCartAsync({ productId, quantity }),
       ).unwrap();
 
+      setProductId("");
       toast.success(res.message || "Product added to cart.", { id: tostId });
     } catch (error) {
       toast.error(error || "Failed to add product to cart.", { id: tostId });
@@ -49,6 +54,7 @@ export default function ProductCard({ product }) {
     );
 
     try {
+      setProductId(productId);
       const res = await dispatch(
         addOrRemoveWishlistAsync({ productId }),
       ).unwrap();
@@ -62,6 +68,7 @@ export default function ProductCard({ product }) {
           id: tostId,
         },
       );
+      setProductId("");
     } catch (error) {
       toast.error(
         error ||
@@ -87,7 +94,9 @@ export default function ProductCard({ product }) {
     >
       {/* ── Wishlist Button ── */}
       <button
-        disabled={addOrRemoveWishlistLoading === "loading"}
+        disabled={
+          toggleWishlistLoading === "loading" && product.id === productId
+        }
         onClick={() =>
           handleAddToWishList(
             product.id,
@@ -213,6 +222,9 @@ export default function ProductCard({ product }) {
             </Link>
           ) : (
             <button
+              disabled={
+                product.id === productId && addTocartLoading === "loading"
+              }
               onClick={() => handleAddToCart(product.id, 1)}
               className="btn w-100 fw-semibold d-flex align-items-center justify-content-center gap-2 text-white"
               style={{
@@ -224,7 +236,12 @@ export default function ProductCard({ product }) {
               }}
             >
               <i className="bi bi-cart-plus-fill" style={{ fontSize: 14 }}></i>
-              Add to Cart
+              {addTocartLoading === "loading" && product.id === productId
+                ? "Adding to cart"
+                : "Add to Cart"}
+              {addTocartLoading === "loading" && product.id === productId && (
+                <span className="spinner-border spinner-border-sm ms-2"></span>
+              )}
             </button>
           )}
         </div>

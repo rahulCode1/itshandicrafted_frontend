@@ -339,8 +339,8 @@ const AllAddress = () => {
                               {removeAddressLoading === "loading" &&
                               addressId === userAdd.id ? (
                                 <>
+                                  Deleting…{" "}
                                   <span className="spinner-border spinner-border-sm"></span>
-                                  Deleting…
                                 </>
                               ) : (
                                 <>

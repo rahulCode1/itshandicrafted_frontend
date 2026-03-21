@@ -62,6 +62,7 @@ const Checkout = () => {
     };
 
     try {
+      setIsLoading(true);
       if (payment === "ONLINE") {
         const { data } = await privateApi.post(`/order/create-order`, {
           amount: totalPrice,

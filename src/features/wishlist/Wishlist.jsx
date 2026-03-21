@@ -9,14 +9,16 @@ import {
 import { toast } from "react-hot-toast";
 import { addToCart } from "../cart/cartSlice";
 import ErrorModal from "../../components/ErrorModal";
+import { useState } from "react";
 
 const Wishlist = () => {
+  const [productId, setProductId] = useState("");
   const dispatch = useDispatch();
 
   const {
     wishlist,
     getWishlistLoading,
-    addOrRemoveWishlistLoading,
+    toggleWishlistLoading,
     moveToCartLoading,
     error,
   } = useSelector((state) => state.wishlist);
@@ -24,9 +26,11 @@ const Wishlist = () => {
   const handleRemoveToWishList = async (productId) => {
     const toastId = toast.loading("Removing from wishlist...");
     try {
+      setProductId(productId);
       const res = await dispatch(
         addOrRemoveWishlistAsync({ productId }),
       ).unwrap();
+      setProductId("");
       toast.success(res.message || "Product removed from wishlist.", {
         id: toastId,
       });
@@ -41,10 +45,12 @@ const Wishlist = () => {
   const handleWishListToCart = async (product) => {
     const toastId = toast.loading("Moving to cart...");
     try {
+      setProductId(product.id);
       dispatch(addToCart({ ...product, quantity: 1 }));
       const res = await dispatch(
         wishlistToCartAsync({ productId: product.id }),
       ).unwrap();
+      setProductId("");
       toast.success(res.message || "Product moved to Cart.", {
         id: toastId,
       });
@@ -195,7 +201,10 @@ const Wishlist = () => {
                       {/* Actions */}
                       <div className="d-flex flex-column gap-2 mt-auto">
                         <button
-                          disabled={moveToCartLoading === "loading"}
+                          disabled={
+                            moveToCartLoading === "loading" &&
+                            product.id === productId
+                          }
                           onClick={() => handleWishListToCart(product)}
                           className="btn w-100 fw-semibold rounded-3"
                           style={{
@@ -207,11 +216,21 @@ const Wishlist = () => {
                             padding: "0.5rem",
                           }}
                         >
-                          Move to Cart
+                          {moveToCartLoading === "loading" &&
+                          product.id === productId
+                            ? "Moving to cart"
+                            : "Move to Cart"}
+                          {moveToCartLoading === "loading" &&
+                            product.id === productId && (
+                              <span className="spinner-border spinner-border-sm ms-2"></span>
+                            )}
                         </button>
 
                         <button
-                          disabled={addOrRemoveWishlistLoading === "loading"}
+                          disabled={
+                            toggleWishlistLoading === "loading" &&
+                            product.id === productId
+                          }
                           onClick={() => handleRemoveToWishList(product.id)}
                           className="btn w-100 fw-semibold rounded-3"
                           style={{
@@ -222,7 +241,15 @@ const Wishlist = () => {
                             padding: "0.5rem",
                           }}
                         >
-                          Remove
+                          {toggleWishlistLoading === "loading" &&
+                          product.id === productId
+                            ? "Removing from wishlist"
+                            : "Remove from wishlist"}
+
+                          {toggleWishlistLoading === "loading" &&
+                            product.id === productId && (
+                              <span className="spinner-border spinner-border-sm  ms-2"></span>
+                            )}
                         </button>
                       </div>
                     </div>

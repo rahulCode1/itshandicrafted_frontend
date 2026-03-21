@@ -56,7 +56,7 @@ const wishlistSlice = createSlice({
   initialState: {
     wishlist: [],
     getWishlistLoading: "idle",
-    addOrRemoveWishlistLoading: "idle",
+    toggleWishlistLoading: "idle",
     moveToCartLoading: "idle",
     error: null,
   },
@@ -95,7 +95,7 @@ const wishlistSlice = createSlice({
     });
 
     builder.addCase(addOrRemoveWishlistAsync.pending, (state) => {
-      state.addOrRemoveWishlistLoading = "loading";
+      state.toggleWishlistLoading = "loading";
     });
 
     builder.addCase(addOrRemoveWishlistAsync.fulfilled, (state, action) => {
@@ -111,11 +111,11 @@ const wishlistSlice = createSlice({
 
         state.wishlist.splice(productIndex, 1);
       }
-      state.addOrRemoveWishlistLoading = "success";
+      state.toggleWishlistLoading = "success";
     });
 
     builder.addCase(addOrRemoveWishlistAsync.rejected, (state, action) => {
-      state.addOrRemoveWishlistLoading = "error";
+      state.toggleWishlistLoading = "error";
       state.error = action.payload;
     });
 

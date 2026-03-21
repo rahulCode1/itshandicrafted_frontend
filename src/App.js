@@ -1,7 +1,5 @@
 import './App.css';
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import "swiper/swiper-bundle.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import Home from './pages/Home';
 import Layout from './components/layout/Layout';

@@ -17,8 +17,12 @@ const ProductItem = ({ productData }) => {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { cart: productCart } = useSelector((state) => state.cart);
-  const { wishlist } = useSelector((state) => state.wishlist);
+  const { cart: productCart, addTocartLoading } = useSelector(
+    (state) => state.cart,
+  );
+  const { wishlist, toggleWishlistLoading } = useSelector(
+    (state) => state.wishlist,
+  );
   const dispatch = useDispatch();
   const productId = useParams().id;
   const productInfo = productData?.product;
@@ -49,6 +53,7 @@ const ProductItem = ({ productData }) => {
       const res = await dispatch(
         addToCartAsync({ productId, quantity }),
       ).unwrap();
+
       toast.success(res.message || "Product added to cart.", { id: toastId });
     } catch (error) {
       toast.error(error || "Failed to add cart.", { id: toastId });
@@ -149,7 +154,7 @@ const ProductItem = ({ productData }) => {
                   }}
                 >
                   <div className="card-body p-0 d-flex flex-column h-100">
-                    <ProductImageCarousel images={productInfo.images} />
+                    <ProductImageCarousel images={productInfo?.images || []} />
                   </div>
                 </div>
               </div>
@@ -290,17 +295,24 @@ const ProductItem = ({ productData }) => {
                         </Link>
                       ) : (
                         <button
+                          disabled={addTocartLoading === "loading"}
                           onClick={() =>
                             handleAddToCart(productInfo.id, quantity)
                           }
                           className="btn btn-dark flex-grow-1 fw-semibold py-2 rounded-3"
                         >
-                          <i className="bi bi-cart-plus-fill me-2"></i>Add to
-                          Cart
+                          <i className="bi bi-cart-plus-fill me-2"></i>
+                          {addTocartLoading === "loading"
+                            ? "Adding to cart"
+                            : "Add to Cart"}
+                          {addTocartLoading === "loading" && (
+                            <span className="spinner-border spinner-border-sm ms-2"></span>
+                          )}
                         </button>
                       )}
                       (
                       <button
+                        disabled={toggleWishlistLoading === "loading"}
                         onClick={() =>
                           handleAddToWishList(
                             productInfo.id,
@@ -309,10 +321,27 @@ const ProductItem = ({ productData }) => {
                               : "add",
                           )
                         }
-                        className="btn btn-outline-danger fw-semibold py-2 px-3 rounded-3"
+                        className="btn border-danger fw-semibold py-2 px-3 rounded-3"
                         style={{ minWidth: 48 }}
                       >
-                        <i className="bi bi-heart-fill"></i>
+                        {toggleWishlistLoading !== "loading" ? (
+                          checkProductIsWishlist(productInfo.id) ? (
+                            <i
+                              className="bi bi-heart-fill"
+                              style={{ color: "#ef4444", fontSize: 15 }}
+                            ></i>
+                          ) : (
+                            <i
+                              className="bi bi-heart"
+                              style={{ color: "#7c3aed", fontSize: 15 }}
+                            ></i>
+                          )
+                        ) : (
+                          ""
+                        )}
+                        {toggleWishlistLoading === "loading" && (
+                          <span className="spinner-border spinner-border-sm ms-2"></span>
+                        )}
                       </button>
                       )
                     </div>
@@ -330,7 +359,7 @@ const ProductItem = ({ productData }) => {
 
                     {isLoading ? "Buying..." : "Buy Now"}
                     {isLoading && (
-                      <span className="spinner-border spinner-border-md ms-2"></span>
+                      <span className="spinner-border spinner-border-sm ms-2"></span>
                     )}
                   </button>
                 </div>
