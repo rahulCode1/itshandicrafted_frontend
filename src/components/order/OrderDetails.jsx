@@ -8,6 +8,8 @@ const OrderDetails = ({ order }) => {
     ...product.product,
     quantity: product.quantity,
   }));
+  const discountedPrice =
+    order.summary.totalPrice.toFixed(2) - order.summary.totalDiscount;
 
   const revalidator = useRevalidator();
 
@@ -25,13 +27,16 @@ const OrderDetails = ({ order }) => {
     return statusColors[status] || "secondary";
   };
 
+  console.log(order);
+
   return (
     <>
       <div
-        className="container-fluid px-3 px-md-4 py-3 mb-5 mb-md-3"
+        className="container-fluid px-3 px-md-4 py-3"
         style={{
           background: "linear-gradient(135deg, #f0f4ff 0%, #fafafa 100%)",
           minHeight: "100vh",
+          marginBottom: "5em",
         }}
       >
         <Link
@@ -319,35 +324,12 @@ const OrderDetails = ({ order }) => {
                           {order.summary.totalQuantity}
                         </span>
                       </div>
-
-                      <div
-                        className="d-flex justify-content-between align-items-center mb-2"
-                        style={{ fontSize: "0.875rem" }}
-                      >
-                        <span className="text-muted">
-                          <i className="bi bi-cart me-1"></i>Subtotal
-                        </span>
-                        <span style={{ color: "#1e1b4b" }}>
-                          ₹
-                          {(
-                            order.summary.totalPrice +
-                            order.summary.totalDiscount
-                          ).toFixed(2)}
-                        </span>
+                      <div>
+                        <p>
+                          Delivery Charge:
+                          {order.paymentMethod === "COD" ? 60 : 0}
+                        </p>
                       </div>
-
-                      <div
-                        className="d-flex justify-content-between align-items-center mb-3"
-                        style={{ fontSize: "0.875rem" }}
-                      >
-                        <span className="text-success fw-semibold">
-                          <i className="bi bi-tag me-1"></i>Discount
-                        </span>
-                        <span className="text-success fw-semibold">
-                          -₹{order.summary.totalDiscount.toFixed(2)}
-                        </span>
-                      </div>
-
                       <div
                         className="d-flex justify-content-between align-items-center pt-3"
                         style={{ borderTop: "2px dashed #c4b5fd" }}
@@ -359,7 +341,10 @@ const OrderDetails = ({ order }) => {
                           className="fw-bold fs-5"
                           style={{ color: "#4f46e5" }}
                         >
-                          ₹{order.summary.totalPrice.toFixed(2)}
+                          ₹
+                          {order.paymentMethod === "COD"
+                            ? order.summary.totalPrice + 60
+                            : order.summary.totalPrice}
                         </span>
                       </div>
                     </div>

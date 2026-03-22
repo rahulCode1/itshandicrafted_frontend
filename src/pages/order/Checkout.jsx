@@ -30,9 +30,13 @@ const Checkout = () => {
   );
 
   const totalDiscount = productCart.reduce(
-    (acc, curr) => acc + (Number(curr.price) - Number(curr.discountPrice)),
+    (acc, curr) =>
+      acc + (Number(curr.price) - Number(curr.discountPrice)) * curr.quantity,
     0,
   );
+
+  
+ 
 
   const selectedAddress =
     address &&
@@ -49,6 +53,8 @@ const Checkout = () => {
     }
 
     const toastId = toast.loading("Place order...");
+
+
 
     const order = {
       address: selectedAddress.id,
@@ -123,16 +129,12 @@ const Checkout = () => {
 
   return (
     <main
-      style={{
-        background:
-          "linear-gradient(160deg, #f0f4ff 0%, #fafafa 60%, #f5f3ff 100%)",
-        minHeight: "100vh",
-        marginBottom: "5em",
-      }}
+      className="min-vh-100 py-4 py-md-5 bg-light"
+      style={{ marginBottom: "5em" }}
     >
       {error && <ErrorModal message={error} onClose={() => setError(null)} />}
 
-      <div className="container py-4 py-md-5">
+      <div className="container" style={{ maxWidth: 1000 }}>
         {isLoading && (
           <div className="overlay">
             <Loading />
@@ -142,151 +144,187 @@ const Checkout = () => {
         {/* ── Page Header ── */}
         <div className="d-flex align-items-center gap-3 mb-4 mb-md-5">
           <div
-            className="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0"
-            style={{
-              width: 48,
-              height: 48,
-              background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-              boxShadow: "0 4px 14px rgba(79,70,229,0.3)",
-            }}
+            className="d-flex align-items-center justify-content-center rounded-3 bg-primary flex-shrink-0"
+            style={{ width: 46, height: 46 }}
           >
             <i className="bi bi-bag-check-fill text-white fs-5"></i>
           </div>
           <div>
-            <h4
-              className="fw-bold mb-0"
-              style={{ color: "#1e1b4b", letterSpacing: "-0.4px" }}
-            >
-              Checkout
-            </h4>
+            <h4 className="fw-bold mb-0 text-dark">Checkout</h4>
             <span className="text-muted" style={{ fontSize: "0.83rem" }}>
               Review your order and place it securely
             </span>
           </div>
         </div>
 
-        <div className="row g-4 align-items-start">
-          {/* LEFT: Delivery Address */}
-          <div className="col-12 col-lg-6">
-            <p
-              className="fw-semibold mb-2 d-flex align-items-center gap-2"
-              style={{
-                color: "#4f46e5",
-                fontSize: "0.78rem",
-                textTransform: "uppercase",
-                letterSpacing: "0.6px",
-              }}
+        {/* ── Step indicators ── */}
+        <div className="d-flex align-items-center gap-2 mb-4 pb-2">
+          {[
+            { step: 1, label: "Address", icon: "bi-geo-alt-fill", done: true },
+            {
+              step: 2,
+              label: "Review",
+              icon: "bi-clipboard2-check-fill",
+              done: true,
+            },
+            {
+              step: 3,
+              label: "Payment",
+              icon: "bi-credit-card-fill",
+              done: false,
+            },
+          ].map(({ step, label, icon, done }, i, arr) => (
+            <div
+              key={step}
+              className="d-flex align-items-center gap-2 flex-shrink-0"
             >
-              <i className="bi bi-geo-alt-fill"></i> Delivery Address
-            </p>
+              <div className="d-flex align-items-center gap-2">
+                <div
+                  className={`d-flex align-items-center justify-content-center rounded-circle fw-bold ${done ? "bg-primary text-white" : "bg-white text-primary border border-primary"}`}
+                  style={{ width: 32, height: 32, fontSize: "0.78rem" }}
+                >
+                  {done ? (
+                    <i className={`bi ${icon}`} style={{ fontSize: 13 }}></i>
+                  ) : (
+                    step
+                  )}
+                </div>
+                <span
+                  className={`fw-semibold d-none d-sm-inline ${done ? "text-primary" : "text-muted"}`}
+                  style={{ fontSize: "0.82rem" }}
+                >
+                  {label}
+                </span>
+              </div>
+              {i < arr.length - 1 && (
+                <div
+                  className="flex-grow-1 mx-1"
+                  style={{
+                    height: 1.5,
+                    width: 32,
+                    background: done ? "#4f46e5" : "#dee2e6",
+                  }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="row g-4 align-items-start">
+          {/* ════════════════════════════
+          LEFT: Delivery Address
+      ════════════════════════════ */}
+          <div className="col-12 col-lg-6">
+            <div className="d-flex align-items-center justify-content-between mb-3">
+              <p
+                className="fw-bold mb-0 text-dark d-flex align-items-center gap-2"
+                style={{ fontSize: "0.88rem" }}
+              >
+                <span
+                  className="d-inline-flex align-items-center justify-content-center rounded-2 bg-primary"
+                  style={{ width: 24, height: 24 }}
+                >
+                  <i
+                    className="bi bi-geo-alt-fill text-white"
+                    style={{ fontSize: 11 }}
+                  ></i>
+                </span>
+                Delivery Address
+              </p>
+              <Link
+                to="/address/addAddress"
+                state={{ from: "/checkout" }}
+                className="btn btn-outline-primary btn-sm rounded-3 fw-semibold d-flex align-items-center gap-1"
+                style={{ fontSize: "0.75rem" }}
+              >
+                <i className="bi bi-plus-lg"></i>
+                <span className="d-none d-sm-inline">Add New</span>
+              </Link>
+            </div>
 
             {selectedAddress ? (
               <div
-                className="card border-0 rounded-4 overflow-hidden"
+                className="card rounded-4 overflow-hidden mb-3"
                 style={{
-                  boxShadow: selectedAddress.isDefault
-                    ? "0 6px 24px rgba(79,70,229,0.14)"
-                    : "0 2px 10px rgba(79,70,229,0.07)",
-                  border: selectedAddress.isDefault
-                    ? "1.5px solid #a5b4fc"
-                    : "1px solid #ede9fe",
+                  border: "2px solid #4f46e5",
+                  boxShadow: "0 0 0 4px rgba(79,70,229,0.07)",
                 }}
               >
-                <div
-                  style={{
-                    height: 4,
-                    background:
-                      "linear-gradient(90deg, #4f46e5, #7c3aed, #a855f7)",
-                  }}
-                />
+                {/* Top accent */}
+                <div style={{ height: 3, background: "#4f46e5" }} />
 
                 <div className="card-body p-3 p-md-4">
+                  {/* Name + default badge */}
                   <div className="d-flex align-items-center justify-content-between mb-3">
                     <div className="d-flex align-items-center gap-2">
                       <div
-                        className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
-                        style={{ width: 36, height: 36, background: "#ede9fe" }}
+                        className="d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 flex-shrink-0"
+                        style={{ width: 38, height: 38 }}
                       >
                         <i
-                          className="bi bi-person-fill"
-                          style={{ color: "#4f46e5", fontSize: 15 }}
+                          className="bi bi-person-fill text-primary"
+                          style={{ fontSize: 15 }}
                         ></i>
                       </div>
-                      <h6 className="fw-bold mb-0" style={{ color: "#1e1b4b" }}>
-                        {selectedAddress.name}
-                      </h6>
+                      <div>
+                        <p
+                          className="fw-bold mb-0 text-dark"
+                          style={{ fontSize: "0.95rem" }}
+                        >
+                          {selectedAddress.name}
+                        </p>
+                        {selectedAddress.isDefault && (
+                          <span
+                            className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill"
+                            style={{ fontSize: "0.62rem" }}
+                          >
+                            <i className="bi bi-patch-check-fill me-1"></i>
+                            Default
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    {selectedAddress.isDefault && (
-                      <span
-                        className="badge rounded-pill d-flex align-items-center gap-1"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                          fontSize: "0.68rem",
-                          padding: "4px 10px",
-                        }}
-                      >
-                        <i className="bi bi-check-circle-fill"></i> Default
-                      </span>
-                    )}
+                    <span
+                      className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill"
+                      style={{ fontSize: "0.65rem" }}
+                    >
+                      <i className="bi bi-truck me-1"></i>Shipping
+                    </span>
                   </div>
 
-                  <div
-                    className="d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-3"
-                    style={{
-                      background: "#f5f3ff",
-                      border: "1px solid #ede9fe",
-                    }}
-                  >
+                  {/* Phone */}
+                  <div className="d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-3 bg-light border">
                     <i
-                      className="bi bi-telephone-fill"
-                      style={{ color: "#4f46e5", fontSize: 12 }}
+                      className="bi bi-telephone-fill text-primary"
+                      style={{ fontSize: 12 }}
                     ></i>
                     <span className="small text-muted">
                       {selectedAddress.phoneNumber}
                     </span>
                   </div>
 
+                  {/* ZIP / City / State */}
                   <div className="row g-2 mb-3">
                     {[
-                      {
-                        label: "ZIP",
-                        value: selectedAddress.zipCode,
-                        icon: "bi-mailbox",
-                      },
-                      {
-                        label: "City",
-                        value: selectedAddress.city,
-                        icon: "bi-building",
-                      },
-                      {
-                        label: "State",
-                        value: selectedAddress.state,
-                        icon: "bi-flag",
-                      },
-                    ].map(({ label, value, icon }) => (
+                      { label: "ZIP", value: selectedAddress.zipCode },
+                      { label: "City", value: selectedAddress.city },
+                      { label: "State", value: selectedAddress.state },
+                    ].map(({ label, value }) => (
                       <div className="col-4" key={label}>
-                        <div
-                          className="p-2 rounded-3 text-center"
-                          style={{
-                            background: "#f5f3ff",
-                            border: "1px solid #ede9fe",
-                          }}
-                        >
+                        <div className="bg-light border rounded-3 p-2 text-center">
                           <small
-                            className="text-muted d-block mb-1"
+                            className="text-muted d-block"
                             style={{
                               fontSize: "0.6rem",
                               textTransform: "uppercase",
                               letterSpacing: "0.5px",
                             }}
                           >
-                            <i className={`bi ${icon} me-1`}></i>
                             {label}
                           </small>
                           <span
-                            className="fw-bold d-block"
-                            style={{ color: "#1e1b4b", fontSize: "0.8rem" }}
+                            className="fw-bold d-block text-truncate text-dark"
+                            style={{ fontSize: "0.78rem" }}
                           >
                             {value}
                           </span>
@@ -295,16 +333,14 @@ const Checkout = () => {
                     ))}
                   </div>
 
+                  {/* Full address */}
                   <div
-                    className="d-flex align-items-start gap-2 p-3 rounded-3 mb-3"
-                    style={{
-                      background: "#fafafa",
-                      border: "2px dashed #ddd6fe",
-                    }}
+                    className="d-flex align-items-start gap-2 p-3 rounded-3 mb-3 border"
+                    style={{ borderStyle: "dashed", background: "#fafafa" }}
                   >
                     <i
-                      className="bi bi-geo-alt-fill mt-1 flex-shrink-0"
-                      style={{ color: "#7c3aed", fontSize: 14 }}
+                      className="bi bi-geo-alt-fill text-primary mt-1 flex-shrink-0"
+                      style={{ fontSize: 13 }}
                     ></i>
                     <p
                       className="mb-0 small text-muted"
@@ -314,333 +350,352 @@ const Checkout = () => {
                     </p>
                   </div>
 
-                  {!selectedAddress.isDefault && (
-                    <button
-                      className="btn btn-sm w-100 fw-semibold rounded-3"
-                      onClick={() =>
-                        handleSelectDefaultAddress(selectedAddress.id)
-                      }
-                      style={{
-                        border: "1.5px solid #10b981",
-                        color: "#10b981",
-                        background: "#f0fdf4",
-                        fontSize: "0.82rem",
-                      }}
-                    >
-                      <i className="bi bi-check2-circle me-1"></i>Set as Default
-                    </button>
-                  )}
+                  {/* Actions row */}
+                  <div className="d-flex gap-2">
+                    {!selectedAddress.isDefault && (
+                      <button
+                        className="btn btn-outline-success btn-sm rounded-3 fw-semibold flex-grow-1"
+                        onClick={() =>
+                          handleSelectDefaultAddress(selectedAddress.id)
+                        }
+                        style={{ fontSize: "0.8rem" }}
+                      >
+                        <i className="bi bi-check2-circle me-1"></i>Set as
+                        Default
+                      </button>
+                    )}
+                    {address && address.length > 1 && (
+                      <Link
+                        to="/address"
+                        state={{ from: "/checkout" }}
+                        className="btn btn-outline-primary btn-sm rounded-3 fw-semibold flex-grow-1"
+                        style={{ fontSize: "0.8rem" }}
+                      >
+                        <i className="bi bi-arrow-left-right me-1"></i>Change
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </div>
             ) : (
-              <div
-                className="card border-0 text-center py-4 rounded-4"
-                style={{
-                  border: "1px solid #ede9fe",
-                  background: "#fff",
-                  boxShadow: "0 2px 10px rgba(79,70,229,0.06)",
-                }}
-              >
-                <div className="card-body">
+              <div className="card border text-center rounded-4 mb-3">
+                <div className="card-body py-5 px-4">
                   <div
-                    className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
-                    style={{ width: 64, height: 64, background: "#f5f3ff" }}
+                    className="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 mb-3"
+                    style={{ width: 64, height: 64 }}
                   >
                     <i
-                      className="bi bi-geo-alt"
-                      style={{ fontSize: 28, color: "#7c3aed" }}
+                      className="bi bi-geo-alt text-primary"
+                      style={{ fontSize: 28 }}
                     ></i>
                   </div>
-                  <h6 className="fw-bold mb-1" style={{ color: "#1e1b4b" }}>
-                    No Address Found
-                  </h6>
+                  <h6 className="fw-bold mb-1 text-dark">No Address Found</h6>
                   <p className="text-muted small mb-3">
                     Add a delivery address to continue.
                   </p>
                   <Link
                     to="/address/addAddress"
                     state={{ from: "/checkout" }}
-                    className="btn fw-semibold px-4 py-2 text-white rounded-3"
-                    style={{
-                      background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                      border: "none",
-                      fontSize: "0.85rem",
-                      boxShadow: "0 2px 10px rgba(79,70,229,0.25)",
-                    }}
+                    className="btn btn-primary fw-semibold px-4 py-2 rounded-3"
+                    style={{ fontSize: "0.85rem" }}
                   >
-                    <i className="bi bi-plus-circle-fill me-2"></i>Add New
-                    Address
+                    <i className="bi bi-plus-circle-fill me-2"></i>Add Address
                   </Link>
                 </div>
               </div>
             )}
 
-            <div className="d-flex flex-column gap-2 mt-3">
-              <Link
-                to="/address/addAddress"
-                state={{ from: "/checkout" }}
-                className="btn fw-semibold d-flex align-items-center justify-content-center gap-2 rounded-3"
-                style={{
-                  border: "1.5px dashed #a5b4fc",
-                  color: "#4f46e5",
-                  background: "#f5f3ff",
-                  fontSize: "0.85rem",
-                  padding: "10px",
-                }}
-              >
-                <i className="bi bi-plus-circle-fill"></i>Add New Address
-              </Link>
-              {address && address.length > 1 && (
-                <Link
-                  to="/address"
-                  state={{ from: "/checkout" }}
-                  className="btn fw-semibold d-flex align-items-center justify-content-center gap-2 rounded-3"
-                  style={{
-                    border: "1.5px dashed #a5b4fc",
-                    color: "#4f46e5",
-                    background: "#f5f3ff",
-                    fontSize: "0.85rem",
-                    padding: "10px",
-                  }}
-                >
-                  <i className="bi bi-arrow-left-right"></i>Change Address
-                </Link>
-              )}
+            {/* Trust badges */}
+            <div className="card border-0 bg-white rounded-4 p-3">
+              <div className="row g-2 text-center">
+                {[
+                  {
+                    icon: "bi-shield-lock-fill",
+                    label: "Secure Checkout",
+                    color: "text-success",
+                  },
+                  {
+                    icon: "bi-truck",
+                    label: "Fast Delivery",
+                    color: "text-primary",
+                  },
+                  {
+                    icon: "bi-arrow-counterclockwise",
+                    label: "Easy Returns",
+                    color: "text-warning",
+                  },
+                ].map(({ icon, label, color }) => (
+                  <div className="col-4" key={label}>
+                    <i
+                      className={`bi ${icon} ${color} d-block mb-1`}
+                      style={{ fontSize: 18 }}
+                    ></i>
+                    <span
+                      className="text-muted"
+                      style={{ fontSize: "0.68rem" }}
+                    >
+                      {label}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* RIGHT: Order Summary */}
+          {/* ════════════════════════════
+          RIGHT: Order Summary
+      ════════════════════════════ */}
           <div className="col-12 col-lg-6">
             <p
-              className="fw-semibold mb-2 d-flex align-items-center gap-2"
-              style={{
-                color: "#4f46e5",
-                fontSize: "0.78rem",
-                textTransform: "uppercase",
-                letterSpacing: "0.6px",
-              }}
+              className="fw-bold mb-3 text-dark d-flex align-items-center gap-2"
+              style={{ fontSize: "0.88rem" }}
             >
-              <i className="bi bi-clipboard2-check-fill"></i> Order Summary
+              <span
+                className="d-inline-flex align-items-center justify-content-center rounded-2 bg-primary"
+                style={{ width: 24, height: 24 }}
+              >
+                <i
+                  className="bi bi-receipt text-white"
+                  style={{ fontSize: 11 }}
+                ></i>
+              </span>
+              Order Summary
             </p>
 
             {productCart && productCart.length > 0 ? (
-              <div
-                className="card border-0 rounded-4 overflow-hidden"
-                style={{
-                  boxShadow: "0 8px 32px rgba(79,70,229,0.1)",
-                  border: "1px solid #ede9fe",
-                }}
-              >
-                <div
-                  className="px-4 py-3 d-flex align-items-center gap-2"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-                  }}
-                >
-                  <i className="bi bi-clipboard2-check-fill text-white fs-6"></i>
-                  <h6 className="fw-bold text-white mb-0">Review Your Order</h6>
-                </div>
-
-                <div className="p-3 p-md-4" style={{ background: "#fff" }}>
-                  <div className="row g-2 mb-4">
+              <div className="card border rounded-4 overflow-hidden">
+                {/* Summary stats */}
+                <div className="p-3 p-md-4 border-bottom">
+                  <div className="row g-2 mb-3">
                     {[
                       {
-                        label: "Quantity",
+                        label: "Items",
                         value: totalQuantity,
                         icon: "bi-stack",
-                        color: "#4f46e5",
-                        bg: "#f5f3ff",
-                        border: "#ede9fe",
+                        variant: "primary",
                       },
-                      {
-                        label: "Total Price",
-                        value: `₹${totalPrice}`,
-                        icon: "bi-currency-rupee",
-                        color: "#4f46e5",
-                        bg: "#f5f3ff",
-                        border: "#ede9fe",
-                      },
-                      {
-                        label: "Discount",
-                        value: `₹${totalDiscount}`,
-                        icon: "bi-tag-fill",
-                        color: "#16a34a",
-                        bg: "#f0fdf4",
-                        border: "#bbf7d0",
-                      },
+
                       {
                         label: "Delivery",
-                        value: "2 days",
+                        value: payment === "ONLINE" ? "FREE" : "+ ₹60",
                         icon: "bi-truck",
-                        color: "#4f46e5",
-                        bg: "#f5f3ff",
-                        border: "#ede9fe",
+                        variant: payment === "ONLINE" ? "success" : "warning",
                       },
-                    ].map(({ label, value, icon, color, bg, border }) => (
+                    ].map(({ label, value, icon, variant }) => (
                       <div className="col-6" key={label}>
                         <div
-                          className="p-3 rounded-3 h-100"
-                          style={{
-                            background: bg,
-                            border: `1px solid ${border}`,
-                          }}
+                          className={`d-flex align-items-center gap-2 p-2 rounded-3 bg-${variant === "secondary" ? "light" : `${variant}-subtle`} border border-${variant === "secondary" ? "light" : `${variant}`} border-opacity-25`}
                         >
-                          <div className="d-flex align-items-center gap-2 mb-1">
-                            <i
-                              className={`bi ${icon}`}
-                              style={{ color, fontSize: 13 }}
-                            ></i>
+                          <i
+                            className={`bi ${icon} text-${variant === "secondary" ? "muted" : variant}`}
+                            style={{ fontSize: 13 }}
+                          ></i>
+                          <div className="min-w-0">
                             <small
-                              className="text-muted"
+                              className="text-muted d-block"
                               style={{
-                                fontSize: "0.68rem",
+                                fontSize: "0.62rem",
                                 textTransform: "uppercase",
                                 letterSpacing: "0.4px",
                               }}
                             >
                               {label}
                             </small>
+                            <span
+                              className={`fw-bold text-${variant === "secondary" ? "dark" : variant} d-block`}
+                              style={{ fontSize: "0.85rem" }}
+                            >
+                              {value}
+                            </span>
                           </div>
-                          <span
-                            className="fw-bold d-block"
-                            style={{ color: "#1e1b4b", fontSize: "0.95rem" }}
-                          >
-                            {value}
-                          </span>
                         </div>
                       </div>
                     ))}
                   </div>
 
                   {/* Net payable */}
-                  <div
-                    className="d-flex align-items-center justify-content-between px-3 py-3 rounded-3 mb-4"
-                    style={{
-                      background: "linear-gradient(135deg, #f5f3ff, #ede9fe)",
-                      border: "1.5px solid #c4b5fd",
-                    }}
-                  >
-                    <span
-                      className="fw-semibold"
-                      style={{ color: "#4f46e5", fontSize: "0.88rem" }}
-                    >
-                      <i className="bi bi-receipt me-2"></i>Net Payable
-                    </span>
-                    <span
-                      className="fw-bold"
-                      style={{ color: "#1e1b4b", fontSize: "1.1rem" }}
-                    >
-                      ₹{totalPrice - totalDiscount}
-                    </span>
-                  </div>
-
-                  <div
-                    style={{
-                      borderTop: "2px dashed #ddd6fe",
-                      marginBottom: 20,
-                    }}
-                  />
-
-                  <div className="mb-4">
-                    <label
-                      htmlFor="payment"
-                      className="form-label fw-bold d-flex align-items-center gap-2 mb-2"
-                      style={{ color: "#1e1b4b", fontSize: "0.875rem" }}
-                    >
-                      <span
-                        className="d-inline-flex align-items-center justify-content-center rounded-2"
-                        style={{ width: 26, height: 26, background: "#ede9fe" }}
+                  <div className="d-flex align-items-center justify-content-between p-3 rounded-3 bg-primary bg-opacity-10 border border-primary border-opacity-25">
+                    <div>
+                      <small
+                        className="text-muted d-block"
+                        style={{
+                          fontSize: "0.7rem",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.4px",
+                        }}
                       >
-                        <i
-                          className="bi bi-credit-card-fill"
-                          style={{ fontSize: 12, color: "#4f46e5" }}
-                        ></i>
+                        Net Payable
+                      </small>
+                      <span
+                        className="text-muted"
+                        style={{ fontSize: "0.75rem" }}
+                      >
+                        {payment === "ONLINE"
+                          ? "incl. free delivery"
+                          : "incl. ₹60 delivery"}
                       </span>
-                      Payment Method
-                    </label>
-                    <select
-                      onChange={(e) => setPayment(e.target.value)}
-                      required
-                      id="payment"
-                      className="form-select rounded-3"
-                      style={{
-                        border: "1.5px solid #ddd6fe",
-                        background: "#f5f3ff",
-                        color: "#1e1b4b",
-                        fontSize: "0.9rem",
-                        padding: "10px 14px",
-                      }}
+                    </div>
+                    <span
+                      className="fw-bold text-primary"
+                      style={{ fontSize: "1.4rem" }}
                     >
-                      <option defaultChecked value="ONLINE">
-                        Pay Online
-                      </option>
-                      <option value="COD">💵 Cash On Delivery</option>
-                    </select>
+                      ₹
+                      {payment === "ONLINE"
+                        ? totalPrice
+                        : totalPrice + 60}
+                    </span>
                   </div>
+                </div>
 
+                {/* Payment method */}
+                <div className="p-3 p-md-4 border-bottom">
+                  <label
+                    className="form-label fw-semibold text-dark d-flex align-items-center gap-2 mb-2"
+                    style={{ fontSize: "0.85rem" }}
+                  >
+                    <i className="bi bi-credit-card-fill text-primary"></i>
+                    Payment Method
+                    <span
+                      className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill ms-1"
+                      style={{ fontSize: "0.65rem", fontWeight: 500 }}
+                    >
+                      Save ₹60 online
+                    </span>
+                  </label>
+
+                  <div className="d-flex flex-column gap-2">
+                    {[
+                      {
+                        value: "ONLINE",
+                        label: "Pay Online",
+                        sub: "UPI / Card / Net Banking — Free delivery",
+                        icon: "bi-lightning-charge-fill",
+                        accent: "primary",
+                      },
+                      {
+                        value: "COD",
+                        label: "Cash on Delivery",
+                        sub: "Pay when your order arrives — ₹60 charge",
+                        icon: "bi-cash-coin",
+                        accent: "warning",
+                      },
+                    ].map(({ value, label, sub, icon, accent }) => (
+                      <label
+                        key={value}
+                        className={`d-flex align-items-center gap-3 p-3 rounded-3 border cursor-pointer ${payment === value ? `border-${accent} bg-${accent} bg-opacity-10` : "border bg-light"}`}
+                        style={{ cursor: "pointer", transition: "all 0.15s" }}
+                      >
+                        <input
+                          type="radio"
+                          name="payment"
+                          value={value}
+                          checked={payment === value}
+                          onChange={(e) => setPayment(e.target.value)}
+                          className="form-check-input mt-0 flex-shrink-0"
+                        />
+                        <div
+                          className={`d-flex align-items-center justify-content-center rounded-2 flex-shrink-0 bg-${accent} bg-opacity-10`}
+                          style={{ width: 34, height: 34 }}
+                        >
+                          <i
+                            className={`bi ${icon} text-${accent}`}
+                            style={{ fontSize: 15 }}
+                          ></i>
+                        </div>
+                        <div>
+                          <p
+                            className="fw-semibold mb-0 text-dark"
+                            style={{ fontSize: "0.88rem" }}
+                          >
+                            {label}
+                          </p>
+                          <small
+                            className="text-muted"
+                            style={{ fontSize: "0.72rem" }}
+                          >
+                            {sub}
+                          </small>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Place order */}
+                <div className="p-3 p-md-4">
                   <button
                     onClick={handleSubmitOrder}
                     disabled={isLoading}
-                    className="btn w-100 fw-bold py-3 text-white d-flex align-items-center justify-content-center gap-2 rounded-3"
-                    style={{
-                      background: "linear-gradient(135deg, #1e1b4b, #4f46e5)",
-                      border: "none",
-                      fontSize: "1rem",
-                      letterSpacing: "0.3px",
-                      boxShadow: "0 4px 16px rgba(79,70,229,0.3)",
-                    }}
+                    className="btn btn-primary w-100 fw-bold py-3 rounded-3 d-flex align-items-center justify-content-center gap-2 mb-3"
+                    style={{ fontSize: "1rem", letterSpacing: "0.2px" }}
                   >
-                    <i className="bi bi-bag-check-fill fs-5"></i>
-                    {isLoading ? "Placing Order…" : "Place Order"}
-                    {isLoading && (
-                      <span className="spinner-border spinner-border-sm ms-1" />
+                    {isLoading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm" />
+                        Placing Order…
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-bag-check-fill fs-5"></i>
+                        Place Order — ₹
+                        {payment === "ONLINE"
+                          ? totalPrice
+                          : totalPrice + 60}
+                      </>
                     )}
                   </button>
 
-                  <p
-                    className="text-center text-muted mt-3 mb-0"
-                    style={{ fontSize: "0.72rem" }}
-                  >
-                    <i
-                      className="bi bi-shield-lock-fill me-1"
-                      style={{ color: "#4f46e5" }}
-                    ></i>
-                    Secure &amp; encrypted checkout
-                  </p>
+                  <div className="d-flex align-items-center justify-content-center gap-3">
+                    {[
+                      {
+                        icon: "bi-shield-lock-fill",
+                        label: "SSL Secured",
+                        color: "text-success",
+                      },
+                      {
+                        icon: "bi-lock-fill",
+                        label: "Encrypted",
+                        color: "text-primary",
+                      },
+                      {
+                        icon: "bi-patch-check-fill",
+                        label: "Verified",
+                        color: "text-warning",
+                      },
+                    ].map(({ icon, label, color }) => (
+                      <span
+                        key={label}
+                        className={`d-flex align-items-center gap-1 ${color}`}
+                        style={{ fontSize: "0.72rem" }}
+                      >
+                        <i
+                          className={`bi ${icon}`}
+                          style={{ fontSize: 12 }}
+                        ></i>
+                        <span className="text-muted">{label}</span>
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             ) : (
-              <div
-                className="card border-0 text-center rounded-4"
-                style={{
-                  border: "1px solid #ede9fe",
-                  boxShadow: "0 4px 20px rgba(79,70,229,0.08)",
-                }}
-              >
+              <div className="card border text-center rounded-4">
                 <div className="card-body py-5 px-4">
                   <div
-                    className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
-                    style={{ width: 72, height: 72, background: "#f5f3ff" }}
+                    className="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 mb-3"
+                    style={{ width: 72, height: 72 }}
                   >
                     <i
-                      className="bi bi-cart-x"
-                      style={{ fontSize: 30, color: "#7c3aed" }}
+                      className="bi bi-cart-x text-primary"
+                      style={{ fontSize: 30 }}
                     ></i>
                   </div>
-                  <h6 className="fw-bold mb-1" style={{ color: "#1e1b4b" }}>
-                    Cart is Empty
-                  </h6>
+                  <h6 className="fw-bold mb-1 text-dark">Cart is Empty</h6>
                   <p className="text-muted small mb-3">No products in cart.</p>
                   <Link
                     to="/cart"
-                    className="btn fw-semibold px-4 py-2 text-white rounded-3"
-                    style={{
-                      background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                      border: "none",
-                      fontSize: "0.85rem",
-                      boxShadow: "0 2px 10px rgba(79,70,229,0.25)",
-                    }}
+                    className="btn btn-primary fw-semibold px-4 py-2 rounded-3"
+                    style={{ fontSize: "0.85rem" }}
                   >
                     <i className="bi bi-cart3 me-2"></i>Go to Cart
                   </Link>

@@ -115,6 +115,10 @@ const Cart = () => {
     }
   };
 
+  const totalDiscountOnCart = productCart.reduce((acc, curr) => {
+    return acc + (curr.price - curr.discountPrice) * curr.quantity;
+  }, 0);
+
   return (
     <>
       {error && (
@@ -484,7 +488,7 @@ const Cart = () => {
                             className="fw-bold d-block"
                             style={{ color: "#16a34a", fontSize: "1.05rem" }}
                           >
-                            ₹{totalDiscount(productCart)}
+                            ₹{totalDiscountOnCart}
                           </span>
                         </div>
                       </div>

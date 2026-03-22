@@ -42,6 +42,8 @@ const UserOrders = ({ userOrders }) => {
     },
   ];
 
+  console.log(userOrders);
+
   return (
     <>
       <div
@@ -437,34 +439,11 @@ const UserOrders = ({ userOrders }) => {
                           </span>
                         </div>
 
-                        <div
-                          className="d-flex justify-content-between align-items-center mb-2"
-                          style={{
-                            fontSize: "clamp(0.75rem, 1.8vw, 0.855rem)",
-                          }}
-                        >
-                          <span className="text-muted">Subtotal</span>
-                          <span style={{ color: "#1e1b4b" }}>
-                            ₹
-                            {(
-                              order.summary.totalPrice +
-                              order.summary.totalDiscount
-                            ).toFixed(2)}
-                          </span>
-                        </div>
-
-                        <div
-                          className="d-flex justify-content-between align-items-center mb-2"
-                          style={{
-                            fontSize: "clamp(0.75rem, 1.8vw, 0.855rem)",
-                          }}
-                        >
-                          <span className="text-success fw-semibold">
-                            <i className="bi bi-tag me-1"></i>Discount
-                          </span>
-                          <span className="text-success fw-semibold">
-                            -₹{order.summary.totalDiscount.toFixed(2)}
-                          </span>
+                        <div>
+                          <p>
+                            Delivery Charge:{" "}
+                            {order.paymentMethod === "COD" ? 60 : 0}
+                          </p>
                         </div>
 
                         <div
@@ -487,7 +466,12 @@ const UserOrders = ({ userOrders }) => {
                               fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
                             }}
                           >
-                            ₹{order.summary.totalPrice.toFixed(2)}
+                            ₹
+                            {order.paymentMethod === "COD"
+                              ? (order.summary.totalPrice + Number(60)).toFixed(
+                                  2,
+                                )
+                              : order.summary.totalPrice.toFixed(2)}
                           </span>
                         </div>
                       </div>
