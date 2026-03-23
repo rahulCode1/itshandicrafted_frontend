@@ -5,7 +5,6 @@ import Loading from "../../components/Loading";
 import {
   totalPrice,
   totalQuantity,
-  totalDiscount,
 } from "../../functions/reUseFunctions";
 import { useSelector, useDispatch } from "react-redux";
 import {
