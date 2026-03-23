@@ -14,160 +14,205 @@ const VerifyOtp = ({
   );
 
   return (
-    <>
-      {/* Header */}
-      <div className="text-center mb-4">
-        <h2 className="h5 fw-bold mb-1 text-dark">Verify OTP</h2>
-        <p className="text-muted mb-0" style={{ fontSize: "0.88rem" }}>
-          Code sent to{" "}
-          <span className="fw-semibold text-primary">
-            +91 {formData.phoneNumber}
+    <div className="container d-flex align-items-center justify-content-center min-vh-100">
+      <div className="w-100" style={{ maxWidth: 480 }}>
+
+        {/* Brand mark */}
+        <div className="mb-4 text-center">
+          <span
+            className="fw-bold d-inline-block mb-2"
+            style={{
+              fontSize: "1.5rem",
+              letterSpacing: "0.12em",
+              background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            It's Handicrafted
           </span>
-        </p>
-      </div>
+          <h2
+            className="h5 fw-bold mb-1"
+            style={{ color: "#1e1b4b", letterSpacing: "-0.01em" }}
+          >
+            Verify your number
+          </h2>
+          <p className="text-muted mb-0" style={{ fontSize: "0.88rem" }}>
+            OTP sent to{" "}
+            <span className="fw-semibold" style={{ color: "#4f46e5" }}>
+              +91 {formData.phoneNumber}
+            </span>
+          </p>
+        </div>
 
-      {/* Warning notice */}
-      <div
-        className="alert alert-warning d-flex align-items-center gap-2 py-2 px-3 rounded-3 mb-3"
-        style={{ fontSize: "0.8rem" }}
-      >
-        <i className="bi bi-exclamation-triangle-fill text-warning flex-shrink-0"></i>
-        <span>Do not refresh the page until OTP is verified.</span>
-      </div>
+        {/* Warning notice */}
+        <div
+          className="d-flex align-items-center gap-2 rounded-3 mb-3 px-3 py-2"
+          style={{
+            background: "#fffbeb",
+            border: "1.5px solid #fde68a",
+            fontSize: "0.8rem",
+            color: "#92400e",
+          }}
+        >
+          <i className="bi bi-exclamation-triangle-fill flex-shrink-0" style={{ color: "#f59e0b" }} />
+          <span>Do not refresh the page until OTP is verified.</span>
+        </div>
 
-      {/* Form card */}
-      <div className="card border rounded-4 shadow-sm">
-        <div className="card-body p-4">
+        {/* Card */}
+        <div
+          className="w-100 rounded-4 p-4 p-md-5"
+          style={{
+            background: "#fff",
+            border: "1.5px solid #ede9fe",
+            boxShadow: "0 4px 24px rgba(79,70,229,0.08)",
+          }}
+        >
           <form onSubmit={handleVerifyOtp}>
-            {/* OTP input */}
+
+            {/* OTP label */}
             <div className="mb-4">
-              {/* Label */}
               <label
                 htmlFor="otp"
-                className="form-label fw-semibold text-dark mb-1"
-                style={{ fontSize: "0.85rem" }}
+                className="form-label fw-semibold mb-2"
+                style={{ fontSize: "0.85rem", color: "#374151" }}
               >
-                <i className="bi bi-123 me-2 text-primary"></i>
-                Enter your 4-digit OTP
+                Enter 4-digit OTP
               </label>
 
-              {/* Input */}
+              {/* OTP input */}
               <input
-                type="number"
+                type="text"
                 required
-                onChange={(e) => setOtp(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, "").slice(0, 4);
+                  setOtp(val);
+                }}
                 value={otp}
                 id="otp"
                 name="otp"
                 inputMode="numeric"
-                placeholder="0  0  0  0"
-                minLength={4}
-                maxLength={4}
-                className="form-control form-control-lg rounded-3 text-center fw-bold border-primary"
+                placeholder="0 0 0 0"
+                className="form-control text-center fw-bold rounded-3"
                 style={{
+                  border: "1.5px solid #ddd6fe",
+                  background: "#f5f3ff",
                   fontSize: "2rem",
-                  letterSpacing: "0.5em",
-                  background: "#f8f7ff",
+                  letterSpacing: "0.6em",
+                  padding: "0.7rem 1rem",
                   color: "#1e1b4b",
+                  caretColor: "#4f46e5",
                 }}
               />
 
-              {/* Below-input hints */}
-              <div className="d-flex align-items-center justify-content-between mt-2 px-1">
-                <span className="text-muted" style={{ fontSize: "0.75rem" }}>
-                  <i className="bi bi-info-circle me-1 text-primary"></i>
-                  Enter digits only, no spaces
-                </span>
-                <span className="text-muted" style={{ fontSize: "0.75rem" }}>
-                  <i className="bi bi-shield-lock me-1 text-success"></i>
-                  Expires shortly
-                </span>
-              </div>
-
-              {/* 4 dot indicators */}
+              {/* Dot progress indicators */}
               <div className="d-flex justify-content-center gap-2 mt-3">
                 {[0, 1, 2, 3].map((i) => (
                   <div
                     key={i}
                     className="rounded-circle"
                     style={{
-                      width: 10,
-                      height: 10,
-                      background: otp?.length > i ? "#4f46e5" : "#e5e7eb",
+                      width: 9,
+                      height: 9,
+                      background: (otp?.length ?? 0) > i ? "#4f46e5" : "#ddd6fe",
                       transition: "background 0.2s",
                     }}
                   />
                 ))}
               </div>
               <p
-                className="text-center text-muted mt-1 mb-0"
-                style={{ fontSize: "0.72rem" }}
+                className="text-center mt-1 mb-0"
+                style={{ fontSize: "0.72rem", color: "#9ca3af" }}
               >
                 {otp?.length || 0} of 4 digits entered
               </p>
             </div>
 
-            <hr className="text-muted opacity-25 mb-3" />
+            {/* Verify button */}
+            <button
+              disabled={verifyOtpLoading === "loading"}
+              type="submit"
+              className="btn w-100 fw-bold rounded-3 py-2 mb-2 d-flex align-items-center justify-content-center gap-2"
+              style={{
+                background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
+                border: "none",
+                color: "#fff",
+                fontSize: "0.95rem",
+                letterSpacing: "0.02em",
+                boxShadow: "0 2px 12px rgba(79,70,229,0.25)",
+              }}
+            >
+              {verifyOtpLoading === "loading" ? (
+                <>
+                  <span className="spinner-border spinner-border-sm" />
+                  Verifying…
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-patch-check-fill" />
+                  Verify OTP
+                </>
+              )}
+            </button>
 
-            {/* Actions */}
-            <div className="d-flex flex-column gap-2">
-              <button
-                disabled={verifyOtpLoading === "loading"}
-                type="submit"
-                className="btn btn-primary w-100 fw-bold rounded-3 py-2 d-flex align-items-center justify-content-center gap-2"
-              >
-                {verifyOtpLoading === "loading" ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm" />
-                    Verifying…
-                  </>
-                ) : (
-                  <>
-                    <i className="bi bi-patch-check-fill"></i>
-                    Verify OTP
-                  </>
-                )}
-              </button>
+            {/* Resend button */}
+            <button
+              disabled={resendOtpLoading === "loading" || isDisabledBtn}
+              onClick={handleResentOtp}
+              type="button"
+              className="btn w-100 fw-semibold rounded-3 py-2 d-flex align-items-center justify-content-center gap-2"
+              style={{
+                background: "transparent",
+                border: "1.5px solid #ddd6fe",
+                color: isDisabledBtn ? "#a5b4fc" : "#4f46e5",
+                fontSize: "0.92rem",
+              }}
+            >
+              {resendOtpLoading === "loading" ? (
+                <>
+                  <span className="spinner-border spinner-border-sm" />
+                  Resending…
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-arrow-clockwise" />
+                  Resend OTP
+                  {isDisabledBtn && timer > 0 && (
+                    <span
+                      className="ms-1 px-2 py-0 rounded-2 fw-bold"
+                      style={{
+                        background: "#ede9fe",
+                        color: "#4f46e5",
+                        fontSize: "0.78rem",
+                      }}
+                    >
+                      {timer}s
+                    </span>
+                  )}
+                </>
+              )}
+            </button>
 
-              <button
-                disabled={resendOtpLoading === "loading" || isDisabledBtn}
-                onClick={handleResentOtp}
-                type="button"
-                className="btn btn-outline-primary w-100 fw-semibold rounded-3 py-2 d-flex align-items-center justify-content-center gap-2"
-              >
-                {resendOtpLoading === "loading" ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm" />
-                    Resending…
-                  </>
-                ) : (
-                  <>
-                    <i className="bi bi-arrow-clockwise"></i>
-                    Resend OTP
-                  </>
-                )}
-              </button>
-            </div>
           </form>
         </div>
-      </div>
 
-      {/* Timer */}
-      {timer < 10 && (
-        <div className="d-flex align-items-center justify-content-center gap-2 mt-3">
-          <i
-            className="bi bi-clock text-primary"
-            style={{ fontSize: "0.85rem" }}
-          ></i>
-          <span className="text-muted" style={{ fontSize: "0.82rem" }}>
-            Resend available in{" "}
-            <span className="badge bg-primary bg-opacity-10 text-primary fw-bold px-2 py-1 rounded-2">
-              {timer}s
-            </span>
+        {/* Footer note */}
+        <p
+          className="text-muted text-center mt-4 mb-0"
+          style={{ fontSize: "0.78rem" }}
+        >
+          By continuing, you agree to our{" "}
+          <span style={{ color: "#4f46e5", cursor: "pointer" }}>
+            Terms of Service
+          </span>{" "}
+          &amp;{" "}
+          <span style={{ color: "#4f46e5", cursor: "pointer" }}>
+            Privacy Policy
           </span>
-        </div>
-      )}
-    </>
+        </p>
+
+      </div>
+    </div>
   );
 };
 

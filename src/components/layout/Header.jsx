@@ -104,72 +104,11 @@ const Header = () => {
               Handicrafted
             </NavLink>
 
-            {/* ── CENTRE: Search (hidden on xs, visible from sm) ── */}
-            <div
-              className="d-none d-sm-flex flex-grow-1 mx-2 mx-md-4"
-              style={{ maxWidth: 480 }}
-            >
-              <div
-                className="input-group w-100 rounded-pill overflow-hidden"
-                style={{ border: "1.5px solid #ddd6fe", background: "#f5f3ff" }}
-              >
-                <input
-                  type="text"
-                  className="form-control border-0 shadow-none ps-4"
-                  placeholder="Search products..."
-                  style={{
-                    backgroundColor: "transparent",
-                    fontSize: "0.9rem",
-                    color: "#1e1b4b",
-                  }}
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter" && searchText.length > 0) {
-                      updateQuaryParam("search", searchText);
-                    }
-                  }}
-                />
-                {searchText.length > 0 && (
-                  <button
-                    onClick={clearSearch}
-                    className="btn border-0 px-2"
-                    style={{ backgroundColor: "transparent" }}
-                    title="Clear search"
-                  >
-                    <FiX className="text-muted" size={17} />
-                  </button>
-                )}
-                <button
-                  onClick={() => updateQuaryParam("search", searchText)}
-                  className="btn border-0 px-3"
-                  disabled={searchText.length === 0}
-                  style={{ backgroundColor: "transparent" }}
-                >
-                  <FiSearch
-                    size={18}
-                    style={{
-                      color: searchText.length === 0 ? "#a5b4fc" : "#4f46e5",
-                    }}
-                  />
-                </button>
-              </div>
-            </div>
+            
 
             {/* ── RIGHT: Icon Nav ── */}
             <ul className="navbar-nav d-flex flex-row align-items-center gap-1 gap-md-2 mb-0">
-              {/* Mobile search toggle – visible only on xs */}
-              <li className="nav-item d-sm-none">
-                <button
-                  className="btn border-0 p-2 rounded-circle"
-                  style={{ color: "#4f46e5", background: "#f5f3ff" }}
-                  data-bs-toggle="collapse"
-                  data-bs-target="#mobileSearch"
-                  aria-expanded="false"
-                >
-                  <FiSearch size={20} />
-                </button>
-              </li>
+            
 
               {/* ── Home — visible on md+ only (footer handles mobile) ── */}
               <li className="nav-item d-none d-md-block">
@@ -297,54 +236,7 @@ const Header = () => {
             </ul>
           </div>
 
-          {/* ── Mobile Search (collapse panel) ── */}
-          <div className="collapse d-sm-none mt-2" id="mobileSearch">
-            <div
-              className="input-group rounded-pill overflow-hidden"
-              style={{ border: "1.5px solid #ddd6fe", background: "#f5f3ff" }}
-            >
-              <input
-                type="text"
-                className="form-control border-0 shadow-none ps-4"
-                placeholder="Search products..."
-                style={{
-                  backgroundColor: "transparent",
-                  fontSize: "0.9rem",
-                  color: "#1e1b4b",
-                }}
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter" && searchText.length > 0) {
-                    updateQuaryParam("search", searchText);
-                  }
-                }}
-              />
-              {searchText.length > 0 && (
-                <button
-                  onClick={clearSearch}
-                  className="btn border-0 px-2"
-                  style={{ backgroundColor: "transparent" }}
-                  title="Clear search"
-                >
-                  <FiX className="text-muted" size={17} />
-                </button>
-              )}
-              <button
-                onClick={() => updateQuaryParam("search", searchText)}
-                className="btn border-0 px-3"
-                disabled={searchText.length === 0}
-                style={{ backgroundColor: "transparent" }}
-              >
-                <FiSearch
-                  size={18}
-                  style={{
-                    color: searchText.length === 0 ? "#a5b4fc" : "#4f46e5",
-                  }}
-                />
-              </button>
-            </div>
-          </div>
+     
         </div>
       </nav>
     </>

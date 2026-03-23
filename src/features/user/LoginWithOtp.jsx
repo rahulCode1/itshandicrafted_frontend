@@ -22,7 +22,7 @@ const LoginWithOtp = () => {
 
   const [formData, setFormData] = useState(initialValue);
   const [otp, setOtp] = useState("");
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(30);
   const [isDisabledBtn, setIsBtnDisabled] = useState(true);
   const { isOtpSent, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -134,8 +134,8 @@ const LoginWithOtp = () => {
 
   return (
     <main
-      className="container container-fluid py-3"
-      style={{ maxWidth: "1200px", margin: "auto", marginBottom: "5em" }}
+      className="container container-fluid"
+      style={{ maxWidth: "1200px", minHeight: "100dvh" }}
     >
       {error && (
         <ErrorModal message={error} onClose={() => dispatch(clearError())} />

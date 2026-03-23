@@ -4,12 +4,9 @@ const SentOtp = ({ handleOnChange, handleSentOtp, formData }) => {
   const { sentOtpLoading } = useSelector((state) => state.user);
 
   return (
-    <div className="d-flex vh-100 overflow-hidden">
-      {/* ── LEFT: Form Panel ── */}
-      <div
-        className="d-flex flex-column justify-content-center align-items-center px-4 px-md-5 py-5 w-100 h-100 overflow-auto"
-        style={{ maxWidth: 480, margin: "0 auto" }}
-      >
+    <div className="container d-flex align-items-center justify-content-center min-vh-100">
+      <div className="w-100" style={{ maxWidth: 480 }}>
+
         {/* Brand mark */}
         <div className="mb-4 text-center">
           <span
@@ -22,7 +19,7 @@ const SentOtp = ({ handleOnChange, handleSentOtp, formData }) => {
               WebkitTextFillColor: "transparent",
             }}
           >
-            Handicrafted
+            It's Handicrafted
           </span>
           <h2
             className="h5 fw-bold mb-1"
@@ -153,142 +150,6 @@ const SentOtp = ({ handleOnChange, handleSentOtp, formData }) => {
             Privacy Policy
           </span>
         </p>
-      </div>
-
-      {/* ── RIGHT: Decorative Panel — hidden on mobile ── */}
-      <div
-        className="d-none d-md-flex flex-column justify-content-end align-items-start p-5 flex-grow-1 position-relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(145deg, #4f46e5 0%, #7c3aed 50%, #a855f7 100%)",
-          minHeight: "unset",
-          height: "100%",
-        }}
-      >
-        {/* Decorative circles */}
-        <div
-          className="position-absolute rounded-circle"
-          style={{
-            width: 420,
-            height: 420,
-            top: -100,
-            right: -100,
-            background: "rgba(255,255,255,0.07)",
-          }}
-        />
-        <div
-          className="position-absolute rounded-circle"
-          style={{
-            width: 260,
-            height: 260,
-            top: 120,
-            right: 80,
-            background: "rgba(255,255,255,0.06)",
-          }}
-        />
-        <div
-          className="position-absolute rounded-circle"
-          style={{
-            width: 180,
-            height: 180,
-            bottom: 180,
-            left: -60,
-            background: "rgba(255,255,255,0.05)",
-          }}
-        />
-
-        {/* Floating craft icons */}
-        <div
-          className="position-absolute d-flex flex-column gap-3"
-          style={{
-            top: "12%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            opacity: 0.18,
-          }}
-        >
-          {["✦", "◈", "❋", "◇", "✦"].map((s, i) => (
-            <span
-              key={i}
-              style={{ fontSize: "2.5rem", color: "#fff", lineHeight: 1 }}
-            >
-              {s}
-            </span>
-          ))}
-        </div>
-
-        {/* Big image replacement — craft-themed SVG illustration */}
-        <div
-          className="position-absolute top-50 start-50 translate-middle"
-          style={{ opacity: 0.13 }}
-        >
-          <svg
-            width="340"
-            height="340"
-            viewBox="0 0 340 340"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="170" cy="170" r="160" stroke="white" strokeWidth="2" />
-            <circle
-              cx="170"
-              cy="170"
-              r="120"
-              stroke="white"
-              strokeWidth="1.5"
-            />
-            <circle cx="170" cy="170" r="80" stroke="white" strokeWidth="1" />
-            <path
-              d="M170 10 L170 330 M10 170 L330 170"
-              stroke="white"
-              strokeWidth="1"
-            />
-            <path
-              d="M57 57 L283 283 M283 57 L57 283"
-              stroke="white"
-              strokeWidth="1"
-            />
-          </svg>
-        </div>
-
-        {/* Bottom text */}
-        <div className="position-relative" style={{ zIndex: 2 }}>
-          <p
-            className="fw-bold mb-2"
-            style={{
-              color: "rgba(255,255,255,0.5)",
-              fontSize: "0.75rem",
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-            }}
-          >
-            Authentic · Handmade · Unique
-          </p>
-          <h3
-            className="fw-bold mb-2"
-            style={{
-              color: "#fff",
-              fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
-              lineHeight: 1.2,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Discover handcrafted
-            <br />
-            treasures from artisans
-          </h3>
-          <p
-            style={{
-              color: "rgba(255,255,255,0.65)",
-              fontSize: "0.9rem",
-              maxWidth: 340,
-              lineHeight: 1.6,
-            }}
-          >
-            Every piece tells a story. Shop one-of-a-kind creations made with
-            care, tradition, and love.
-          </p>
-        </div>
       </div>
     </div>
   );

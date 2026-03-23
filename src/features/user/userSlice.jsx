@@ -17,27 +17,11 @@ export const sentOtpAsync = createAsyncThunk(
   },
 );
 
-export const reSentOtpAsync = createAsyncThunk(
-  "user/resend-otp",
-  async (data, { rejectWithValue }) => {
-    try {
-      const res = await API.patch(`/user/resend-otp`, data);
-
-      console.log(res.data);
-      return res.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Failed to resend otp.",
-      );
-    }
-  },
-);
-
 export const verifyOtpAsync = createAsyncThunk(
   "user/verify-otp",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await API.patch(`/user/verify-otp`, data);
+      const res = await API.post(`/user/verify-otp`, data);
 
       // console.log(res.data);
       const token = res.data?.token;
@@ -52,7 +36,6 @@ export const verifyOtpAsync = createAsyncThunk(
     }
   },
 );
-
 
 const userSlice = createSlice({
   name: "user",
@@ -75,10 +58,9 @@ const userSlice = createSlice({
       state.isOtpSent = false;
     },
 
-    clearError: (state)=>{
-      state.error = null 
-    }
-  
+    clearError: (state) => {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(sentOtpAsync.pending, (state) => {
@@ -95,18 +77,6 @@ const userSlice = createSlice({
       state.error = action.payload;
     });
 
-    builder.addCase(reSentOtpAsync.pending, (state) => {
-      state.resendOtpLoading = "loading";
-    });
-
-    builder.addCase(reSentOtpAsync.fulfilled, (state) => {
-      state.resendOtpLoading = "success";
-    });
-
-    builder.addCase(reSentOtpAsync.rejected, (state, action) => {
-      state.resendOtpLoading = "error";
-      state.error = action.payload;
-    });
     builder.addCase(verifyOtpAsync.pending, (state) => {
       state.verifyOtpLoading = "loading";
     });
@@ -123,5 +93,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setIsOtpSent , clearError} = userSlice.actions;
+export const { setIsOtpSent, clearError } = userSlice.actions;
 export default userSlice;

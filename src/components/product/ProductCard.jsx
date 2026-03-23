@@ -138,7 +138,7 @@ export default function ProductCard({ product }) {
           alt={product.name}
           className="card-img-top"
           style={{
-            height: 220,
+            height: 400,
             width: "100%",
             objectFit: "cover",
             display: "block",

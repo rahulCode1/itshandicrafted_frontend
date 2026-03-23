@@ -139,7 +139,7 @@ const Wishlist = () => {
                     {/* Image */}
                     <div
                       className="position-relative overflow-hidden"
-                      style={{ height: "220px" }}
+                      style={{ height: "350px" }}
                     >
                       <Link to={`/product/${product.id}`}>
                         <img
