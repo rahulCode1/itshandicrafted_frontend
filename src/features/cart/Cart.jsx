@@ -128,34 +128,22 @@ const Cart = () => {
         <Loading />
       ) : (
         <main
-          style={{
-            background: "linear-gradient(135deg, #f0f4ff 0%, #fafafa 100%)",
-            minHeight: "100vh",
-            marginBottom: "5em",
-          }}
+          className="min-vh-100 py-4 py-md-5 bg-light"
+          style={{ marginBottom: "6em" }}
         >
-          <div className="container py-4 py-md-5">
+          <div className="container">
             {productCart && productCart.length > 0 ? (
               <>
                 {/* ── Page Header ── */}
                 <div className="d-flex align-items-center gap-3 mb-4">
                   <div
-                    className="d-flex align-items-center justify-content-center rounded-3 text-white flex-shrink-0"
-                    style={{
-                      width: 48,
-                      height: 48,
-                      background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                    }}
+                    className="d-flex align-items-center justify-content-center rounded-3 bg-primary flex-shrink-0"
+                    style={{ width: 46, height: 46 }}
                   >
-                    <i className="bi bi-cart3 fs-5"></i>
+                    <i className="bi bi-cart3 text-white fs-5"></i>
                   </div>
                   <div>
-                    <h4
-                      className="fw-bold mb-0"
-                      style={{ color: "#1e1b4b", letterSpacing: "-0.4px" }}
-                    >
-                      My Cart
-                    </h4>
+                    <h4 className="fw-bold mb-0 text-dark">My Cart</h4>
                     <span className="text-muted small">
                       {productCart.length}{" "}
                       {productCart.length === 1 ? "item" : "items"} in your cart
@@ -163,420 +151,335 @@ const Cart = () => {
                   </div>
                 </div>
 
-                {/* ── Cart Items ── */}
-                <div className="d-flex flex-column gap-3 mb-4">
-                  {productCart.map((product) => (
-                    <div
-                      key={product.id}
-                      className="card border-0"
-                      style={{
-                        borderRadius: 14,
-                        boxShadow: "0 2px 12px rgba(79,70,229,0.07)",
-                        border: "1px solid #ede9fe",
-                        overflow: "hidden",
-                      }}
-                    >
-                      <div className="row g-0">
-                        {/* Product Image */}
-                        <div className="col-3 col-md-2">
-                          <Link to={`/products/${product.id}`}>
-                            <img
-                              src={product?.images[0]?.url}
-                              className="w-100 h-100"
-                              style={{
-                                objectFit: "cover",
-                                minHeight: 130,
-                                display: "block",
-                              }}
-                              alt={product.name}
-                            />
-                          </Link>
-                        </div>
-                        {/* Product Info */}
-                        <div className="col-9 col-md-10">
-                          <div className="p-3 p-md-4 h-100 d-flex flex-column justify-content-between">
-                            {/* Top: name + savings badge */}
-                            <div className="d-flex align-items-start justify-content-between gap-2 mb-2">
-                              <h6
-                                className="fw-bold mb-0"
-                                style={{
-                                  color: "#1e1b4b",
-                                  fontSize: "clamp(0.85rem, 2vw, 1rem)",
-                                  lineHeight: 1.4,
-                                }}
-                              >
-                                {product.name}
-                              </h6>
-                              <span
-                                className="badge rounded-pill flex-shrink-0"
-                                style={{
-                                  background: "#d1fae5",
-                                  color: "#065f46",
-                                  fontSize: "0.65rem",
-                                  fontWeight: 600,
-                                }}
-                              >
-                                <i className="bi bi-tag-fill me-1"></i>
-                                Save ₹{product.price - product.discountPrice}
-                              </span>
+                <div className="row g-4 align-items-start">
+                  {/* ════════════════════════
+                  LEFT — Cart Items
+              ════════════════════════ */}
+                  <div className="col-12 col-lg-7">
+                    <div className="d-flex flex-column gap-3">
+                      {productCart.map((product) => (
+                        <div
+                          key={product.id}
+                          className="card border rounded-4 overflow-hidden"
+                        >
+                          <div className="row g-0">
+                            {/* Image */}
+                            <div className="col-4 col-sm-3">
+                              <Link to={`/products/${product.id}`}>
+                                <img
+                                  src={product?.images[0]?.url}
+                                  className="w-100 h-100"
+                                  style={{
+                                    objectFit: "cover",
+                                    minHeight: 130,
+                                    display: "block",
+                                  }}
+                                  alt={product.name}
+                                />
+                              </Link>
                             </div>
 
-                            {/* Price */}
-                            <div className="d-flex align-items-center gap-2 mb-3">
-                              <span
-                                className="fw-bold"
-                                style={{ color: "#4f46e5", fontSize: "1.1rem" }}
-                              >
-                                ₹{product.discountPrice}
-                              </span>
-                              <span className="text-muted small text-decoration-line-through">
-                                ₹{product.price}
-                              </span>
-                            </div>
-
-                            {/* Bottom: stepper + actions */}
-                            <div className="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                              <div
-                                className="d-flex align-items-center rounded-pill"
-                                style={{
-                                  background: "#f5f3ff",
-                                  border: "1.5px solid #ddd6fe",
-                                  padding: "3px 6px",
-                                  gap: 4,
-                                }}
-                              >
-                                <button
-                                  disabled={
-                                    decreaseQuantityLoading === "loading" &&
-                                    product.id === productId
-                                  }
-                                  onClick={() =>
-                                    handleDecreaseQuantity(product.id)
-                                  }
-                                  className="btn d-flex align-items-center justify-content-center rounded-circle"
-                                  style={{
-                                    width: 28,
-                                    height: 28,
-                                    padding: 0,
-                                    background: "#fff",
-                                    border: "1px solid #ddd6fe",
-                                    color: "#4f46e5",
-                                    fontWeight: 700,
-                                    fontSize: 15,
-                                    lineHeight: 1,
-                                  }}
-                                >
-                                  −
-                                </button>
-                                <span
-                                  className="fw-bold"
-                                  style={{
-                                    minWidth: 26,
-                                    textAlign: "center",
-                                    color: "#1e1b4b",
-                                    fontSize: "0.9rem",
-                                  }}
-                                >
-                                  {product.quantity}
-                                </span>
-                                <button
-                                  disabled={
-                                    increaseQuantityLoading === "loading" &&
-                                    product.id === productId
-                                  }
-                                  onClick={() =>
-                                    handleIncreaseQuantity(product.id)
-                                  }
-                                  className="btn d-flex align-items-center justify-content-center rounded-circle"
-                                  style={{
-                                    width: 28,
-                                    height: 28,
-                                    padding: 0,
-                                    background: "#fff",
-                                    border: "1px solid #ddd6fe",
-                                    color: "#4f46e5",
-                                    fontWeight: 700,
-                                    fontSize: 15,
-                                    lineHeight: 1,
-                                  }}
-                                >
-                                  +
-                                </button>
-                              </div>
-
-                              <div className="d-flex gap-2">
-                                <button
-                                  disabled={
-                                    removeFromCartLoading === "loading" &&
-                                    product.id === productId
-                                  }
-                                  onClick={() =>
-                                    handleRemoveFromCart(product.id)
-                                  }
-                                  className="btn btn-sm fw-semibold d-flex align-items-center gap-1"
-                                  style={{
-                                    border: "1.5px solid #ef4444",
-                                    color: "#ef4444",
-                                    borderRadius: 8,
-                                    background: "transparent",
-                                    fontSize: "0.78rem",
-                                    padding: "5px 10px",
-                                  }}
-                                >
-                                  <i
-                                    className="bi bi-trash3-fill"
-                                    style={{ fontSize: 11 }}
-                                  ></i>
-                                  <span className="d-none d-sm-inline">
-                                    {removeFromCartLoading === "loading" &&
-                                    product.id === productId
-                                      ? "Removing"
-                                      : "Remove"}
+                            {/* Info */}
+                            <div className="col-8 col-sm-9">
+                              <div className="p-3 h-100 d-flex flex-column justify-content-between">
+                                {/* Name + savings badge */}
+                                <div className="d-flex align-items-start justify-content-between gap-2 mb-2">
+                                  <p
+                                    className="fw-semibold mb-0 text-dark lh-sm"
+                                    style={{
+                                      fontSize: "clamp(0.82rem, 2vw, 0.95rem)",
+                                    }}
+                                  >
+                                    {product.name}
+                                  </p>
+                                  <span
+                                    className="badge bg-success-subtle text-success rounded-pill flex-shrink-0"
+                                    style={{ fontSize: "0.62rem" }}
+                                  >
+                                    <i className="bi bi-tag-fill me-1"></i>
+                                    Save ₹
+                                    {product.price - product.discountPrice}
                                   </span>
-                                  {removeFromCartLoading === "loading" &&
-                                    product.id === productId && (
-                                      <span className="spinner-border spinner-border-sm ms-2"></span>
-                                    )}
-                                </button>
+                                </div>
 
-                                {isExistOnWishlist(product.id) ? (
-                                  <Link
-                                    to="/wishlist"
-                                    className="btn btn-sm fw-semibold d-flex align-items-center gap-1"
-                                    style={{
-                                      background:
-                                        "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                                      color: "#fff",
-                                      border: "none",
-                                      borderRadius: 8,
-                                      fontSize: "0.78rem",
-                                      padding: "5px 10px",
-                                    }}
+                                {/* Price */}
+                                <div className="d-flex align-items-baseline gap-2 mb-3">
+                                  <span
+                                    className="fw-bold text-primary"
+                                    style={{ fontSize: "1.05rem" }}
                                   >
-                                    <i
-                                      className="bi bi-heart-fill"
-                                      style={{ fontSize: 11 }}
-                                    ></i>
-                                    <span className="d-none d-sm-inline">
-                                      Wishlisted
-                                    </span>
-                                  </Link>
-                                ) : (
-                                  <button
-                                    disabled={
-                                      moveToWishlistLoading === "loading" &&
-                                      product.id === productId
-                                    }
-                                    onClick={() =>
-                                      handleCartToWishList(product)
-                                    }
-                                    className="btn btn-sm fw-semibold d-flex align-items-center gap-1"
-                                    style={{
-                                      border: "1.5px solid #7c3aed",
-                                      color: "#7c3aed",
-                                      borderRadius: 8,
-                                      background: "transparent",
-                                      fontSize: "0.78rem",
-                                      padding: "5px 10px",
-                                    }}
-                                  >
-                                    <i
-                                      className="bi bi-heart"
-                                      style={{ fontSize: 11 }}
-                                    ></i>
+                                    ₹{product.discountPrice}
+                                  </span>
+                                  <span className="text-muted small text-decoration-line-through">
+                                    ₹{product.price}
+                                  </span>
+                                </div>
 
-                                    <span className="d-none d-sm-inline">
-                                      {moveToWishlistLoading === "loading" &&
-                                      product.id === productId
-                                        ? "Moving..."
-                                        : "Wishlist"}
+                                {/* Stepper + actions */}
+                                <div className="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                  {/* Quantity stepper */}
+                                  <div
+                                    className="d-flex align-items-center gap-1 rounded-pill px-2 py-1 border bg-light"
+                                    style={{ width: "fit-content" }}
+                                  >
+                                    <button
+                                      disabled={
+                                        decreaseQuantityLoading === "loading" &&
+                                        product.id === productId
+                                      }
+                                      onClick={() =>
+                                        handleDecreaseQuantity(product.id)
+                                      }
+                                      className="btn btn-sm d-flex align-items-center justify-content-center rounded-circle border bg-white text-primary fw-bold p-0"
+                                      style={{
+                                        width: 26,
+                                        height: 26,
+                                        fontSize: 15,
+                                        lineHeight: 1,
+                                      }}
+                                    >
+                                      −
+                                    </button>
+                                    <span
+                                      className="fw-bold text-dark px-1"
+                                      style={{
+                                        minWidth: 22,
+                                        textAlign: "center",
+                                        fontSize: "0.88rem",
+                                      }}
+                                    >
+                                      {product.quantity}
                                     </span>
-                                    {moveToWishlistLoading === "loading" &&
-                                      product.id === productId && (
-                                        <span className="spinner-border spinner-border-sm ms-2"></span>
+                                    <button
+                                      disabled={
+                                        increaseQuantityLoading === "loading" &&
+                                        product.id === productId
+                                      }
+                                      onClick={() =>
+                                        handleIncreaseQuantity(product.id)
+                                      }
+                                      className="btn btn-sm d-flex align-items-center justify-content-center rounded-circle border bg-white text-primary fw-bold p-0"
+                                      style={{
+                                        width: 26,
+                                        height: 26,
+                                        fontSize: 15,
+                                        lineHeight: 1,
+                                      }}
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+
+                                  {/* Action buttons */}
+                                  <div className="d-flex gap-2">
+                                    {/* Remove button */}
+                                    <button
+                                      disabled={
+                                        removeFromCartLoading === "loading" &&
+                                        product.id === productId
+                                      }
+                                      onClick={() =>
+                                        handleRemoveFromCart(product.id)
+                                      }
+                                      className="btn btn-outline-danger btn-sm rounded-3 fw-semibold d-flex align-items-center justify-content-center"
+                                      style={{
+                                        fontSize: "0.75rem",
+                                        padding: "4px 10px",
+                                        minWidth: 36,
+                                      }}
+                                    >
+                                      {removeFromCartLoading === "loading" &&
+                                      product.id === productId ? (
+                                        <span className="spinner-border spinner-border-sm"></span>
+                                      ) : (
+                                        <>
+                                          <i
+                                            className="bi bi-trash3-fill"
+                                            style={{ fontSize: 11 }}
+                                          ></i>
+                                          <span className="d-none d-sm-inline ms-1">
+                                            Remove
+                                          </span>
+                                        </>
                                       )}
-                                  </button>
-                                )}
+                                    </button>
+
+                                    {/* Wishlist button */}
+                                    {isExistOnWishlist(product.id) ? (
+                                      <Link
+                                        to="/wishlist"
+                                        className="btn btn-primary btn-sm rounded-3 fw-semibold d-flex align-items-center justify-content-center gap-1"
+                                        style={{
+                                          fontSize: "0.75rem",
+                                          padding: "4px 10px",
+                                        }}
+                                      >
+                                        <i
+                                          className="bi bi-heart-fill"
+                                          style={{ fontSize: 11 }}
+                                        ></i>
+                                        <span className="d-none d-sm-inline">
+                                          Wishlisted
+                                        </span>
+                                      </Link>
+                                    ) : (
+                                      <button
+                                        disabled={
+                                          moveToWishlistLoading === "loading" &&
+                                          product.id === productId
+                                        }
+                                        onClick={() =>
+                                          handleCartToWishList(product)
+                                        }
+                                        className="btn btn-outline-primary btn-sm rounded-3 fw-semibold d-flex align-items-center justify-content-center"
+                                        style={{
+                                          fontSize: "0.75rem",
+                                          padding: "4px 10px",
+                                          minWidth: 36,
+                                        }}
+                                      >
+                                        {moveToWishlistLoading === "loading" &&
+                                        product.id === productId ? (
+                                          <span className="spinner-border spinner-border-sm"></span>
+                                        ) : (
+                                          <>
+                                            <i
+                                              className="bi bi-heart"
+                                              style={{ fontSize: 11 }}
+                                            ></i>
+                                            <span className="d-none d-sm-inline ms-1">
+                                              Wishlist
+                                            </span>
+                                          </>
+                                        )}
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-
-                {/* ── Order Summary (below products) ── */}
-                <div
-                  className="card border-0"
-                  style={{
-                    borderRadius: 16,
-                    overflow: "hidden",
-                    boxShadow: "0 8px 32px rgba(79,70,229,0.1)",
-                    border: "1px solid #ede9fe",
-                  }}
-                >
-                  {/* Header */}
-                  <div
-                    className="px-4 py-3 d-flex align-items-center gap-2"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-                    }}
-                  >
-                    <i className="bi bi-receipt-cutoff text-white fs-6"></i>
-                    <h6 className="fw-bold text-white mb-0">Order Summary</h6>
                   </div>
 
-                  <div className="p-4" style={{ background: "#fff" }}>
-                    {/* 3 stat boxes */}
-                    <div className="row g-3 mb-4">
-                      <div className="col-4">
-                        <div
-                          className="p-3 rounded-3 text-center"
-                          style={{
-                            background: "#f5f3ff",
-                            border: "1px solid #ede9fe",
-                          }}
+                  {/* ════════════════════════
+                  RIGHT — Order Summary
+              ════════════════════════ */}
+                  <div className="col-12 col-lg-5">
+                    <div
+                      className="card border-0 shadow-sm rounded-4 overflow-hidden position-lg-sticky"
+                      style={{ top: 24 }}
+                    >
+                      {/* Card header */}
+                      <div className="card-header bg-white border-bottom px-4 py-3 d-flex align-items-center gap-2">
+                        <i className="bi bi-receipt-cutoff text-primary"></i>
+                        <span className="fw-semibold text-dark">
+                          Order Summary
+                        </span>
+                        <span
+                          className="badge bg-primary-subtle text-primary rounded-pill ms-auto"
+                          style={{ fontSize: "0.7rem" }}
                         >
-                          <i
-                            className="bi bi-stack d-block mb-1"
-                            style={{ color: "#4f46e5", fontSize: 20 }}
-                          ></i>
-                          <small
-                            className="text-muted d-block mb-1"
-                            style={{
-                              fontSize: "0.65rem",
-                              textTransform: "uppercase",
-                              letterSpacing: "0.4px",
-                            }}
-                          >
-                            Items
-                          </small>
-                          <span
-                            className="fw-bold d-block"
-                            style={{ color: "#1e1b4b", fontSize: "1.05rem" }}
-                          >
-                            {totalQuantity(productCart)}
-                          </span>
-                        </div>
+                          {totalQuantity(productCart)}{" "}
+                          {totalQuantity(productCart) > 1 ? "items" : "item"}
+                        </span>
                       </div>
 
-                      <div className="col-4">
-                        <div
-                          className="p-3 rounded-3 text-center"
-                          style={{
-                            background: "#f0fdf4",
-                            border: "1px solid #bbf7d0",
-                          }}
-                        >
-                          <i
-                            className="bi bi-tag-fill d-block mb-1"
-                            style={{ color: "#16a34a", fontSize: 20 }}
-                          ></i>
-                          <small
-                            className="text-muted d-block mb-1"
-                            style={{
-                              fontSize: "0.65rem",
-                              textTransform: "uppercase",
-                              letterSpacing: "0.4px",
-                            }}
-                          >
-                            You Save
-                          </small>
-                          <span
-                            className="fw-bold d-block"
-                            style={{ color: "#16a34a", fontSize: "1.05rem" }}
-                          >
-                            ₹{totalDiscountOnCart}
-                          </span>
+                      <div className="card-body px-4 py-3">
+                        {/* Price breakdown rows */}
+                        <div className="d-flex flex-column gap-2 mb-3">
+                          <div className="d-flex justify-content-between small text-muted">
+                            <span>
+                              MRP ({totalQuantity(productCart)}{" "}
+                              {totalQuantity(productCart) > 1
+                                ? "items"
+                                : "item"}
+                              )
+                            </span>
+                            <span>₹{totalPrice(productCart)}</span>
+                          </div>
+                          <div className="d-flex justify-content-between small">
+                            <span className="text-muted">Discount</span>
+                            <span className="text-success fw-semibold">
+                              − ₹{totalDiscountOnCart}
+                            </span>
+                          </div>
+                          <div className="d-flex justify-content-between small">
+                            <span className="text-muted">Delivery Charges</span>
+                            <span className="text-success fw-semibold">
+                              <i className="bi bi-truck me-1"></i>FREE
+                            </span>
+                          </div>
+                          <hr className="my-1" />
+                          <div className="d-flex justify-content-between align-items-center">
+                            <span className="fw-bold text-dark">
+                              Total Payable
+                            </span>
+                            <span className="fw-bold fs-5 text-dark">
+                              ₹{totalPrice(productCart) - totalDiscountOnCart}
+                            </span>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="col-4">
-                        <div
-                          className="p-3 rounded-3 text-center"
-                          style={{
-                            background:
-                              "linear-gradient(135deg, #ede9fe, #ddd6fe)",
-                            border: "1px solid #c4b5fd",
-                          }}
-                        >
-                          <i
-                            className="bi bi-wallet2 d-block mb-1"
-                            style={{ color: "#4f46e5", fontSize: 20 }}
-                          ></i>
-                          <small
-                            className="text-muted d-block mb-1"
+                        {/* Savings alert */}
+                        {totalDiscountOnCart > 0 && (
+                          <div className="alert alert-success d-flex align-items-center gap-2 py-2 px-3 mb-3 rounded-3 small">
+                            <i className="bi bi-piggy-bank-fill fs-5"></i>
+                            You're saving{" "}
+                            <strong className="ms-1">
+                              ₹{totalDiscountOnCart}
+                            </strong>{" "}
+                            on this order!
+                          </div>
+                        )}
+
+                        {/* CTA */}
+                        <div className="d-grid mb-2">
+                          <Link
+                            to="/checkout"
+                            className="btn btn-dark fw-bold py-3 rounded-3 d-flex align-items-center justify-content-center gap-2"
                             style={{
-                              fontSize: "0.65rem",
-                              textTransform: "uppercase",
-                              letterSpacing: "0.4px",
+                              fontSize: "1rem",
+                              letterSpacing: "0.02em",
                             }}
                           >
-                            Total
-                          </small>
-                          <span
-                            className="fw-bold d-block"
-                            style={{ color: "#4f46e5", fontSize: "1.05rem" }}
-                          >
-                            ₹{totalPrice(productCart)}
-                          </span>
+                            <i className="bi bi-bag-check-fill text-warning fs-5"></i>
+                            Proceed to Checkout &nbsp;·&nbsp; ₹
+                            {totalPrice(productCart) - totalDiscountOnCart}
+                          </Link>
                         </div>
+
+                        {/* Secure note */}
+                        <p
+                          className="text-center text-muted d-flex align-items-center justify-content-center gap-1 mb-0"
+                          style={{ fontSize: "0.72rem" }}
+                        >
+                          <i className="bi bi-shield-lock-fill text-success"></i>
+                          100% Secure &amp; Encrypted Checkout
+                        </p>
                       </div>
                     </div>
-
-                    {/* CTA */}
-                    <Link
-                      to="/checkout"
-                      className="btn w-100 fw-bold py-3 text-white d-flex align-items-center justify-content-center gap-2"
-                      style={{
-                        background: "linear-gradient(135deg, #1e1b4b, #4f46e5)",
-                        border: "none",
-                        borderRadius: 12,
-                        fontSize: "1rem",
-                        letterSpacing: "0.3px",
-                      }}
-                    >
-                      <i className="bi bi-bag-check-fill fs-5"></i>
-                      Proceed to Checkout
-                    </Link>
-
-                    <p
-                      className="text-center text-muted mt-3 mb-0"
-                      style={{ fontSize: "0.72rem" }}
-                    >
-                      <i
-                        className="bi bi-shield-lock-fill me-1"
-                        style={{ color: "#4f46e5" }}
-                      ></i>
-                      Secure &amp; encrypted checkout
-                    </p>
                   </div>
                 </div>
               </>
             ) : (
+              /* ── Empty State ── */
               <div className="row justify-content-center">
                 <div className="col-12 col-md-7 col-lg-5">
-                  <div
-                    className="card border-0 text-center"
-                    style={{
-                      borderRadius: 20,
-                      boxShadow: "0 4px 20px rgba(79,70,229,0.08)",
-                      border: "1px solid #ede9fe",
-                    }}
-                  >
+                  <div className="card border-0 shadow-sm text-center rounded-4">
                     <div className="card-body py-5 px-4">
                       <div
-                        className="d-inline-flex align-items-center justify-content-center rounded-circle mb-4"
-                        style={{ width: 88, height: 88, background: "#f5f3ff" }}
+                        className="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 mb-4"
+                        style={{ width: 88, height: 88 }}
                       >
                         <i
-                          className="bi bi-cart-x"
-                          style={{ fontSize: 36, color: "#7c3aed" }}
+                          className="bi bi-cart-x text-primary"
+                          style={{ fontSize: 36 }}
                         ></i>
                       </div>
-                      <h4 className="fw-bold mb-2" style={{ color: "#1e1b4b" }}>
+                      <h4 className="fw-bold mb-2 text-dark">
                         Your Cart is Empty
                       </h4>
                       <p className="text-muted mb-4 small">
@@ -584,13 +487,7 @@ const Cart = () => {
                       </p>
                       <Link
                         to="/products"
-                        className="btn fw-semibold px-4 py-2 text-white"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                          border: "none",
-                          borderRadius: 10,
-                        }}
+                        className="btn btn-primary fw-semibold px-4 py-2 rounded-3"
                       >
                         <i className="bi bi-shop me-2"></i>Browse Products
                       </Link>

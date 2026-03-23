@@ -8,8 +8,6 @@ const OrderDetails = ({ order }) => {
     ...product.product,
     quantity: product.quantity,
   }));
-  const discountedPrice =
-    order.summary.totalPrice.toFixed(2) - order.summary.totalDiscount;
 
   const revalidator = useRevalidator();
 
@@ -26,8 +24,6 @@ const OrderDetails = ({ order }) => {
     };
     return statusColors[status] || "secondary";
   };
-
-  console.log(order);
 
   return (
     <>
@@ -173,7 +169,9 @@ const OrderDetails = ({ order }) => {
                     >
                       <table
                         className="table align-middle mb-0"
-                        style={{ fontSize: "0.875rem" }}
+                        style={{
+                          fontSize: "clamp(0.72rem, 1.8vw, 0.855rem)",
+                        }}
                       >
                         <thead style={{ background: "#f5f3ff" }}>
                           <tr>
@@ -185,15 +183,6 @@ const OrderDetails = ({ order }) => {
                               }}
                             >
                               Product
-                            </th>
-                            <th
-                              className="py-2 px-3 fw-semibold"
-                              style={{
-                                color: "#4f46e5",
-                                borderBottom: "1px solid #e8e4ff",
-                              }}
-                            >
-                              Material Type
                             </th>
                             <th
                               className="py-2 px-3 fw-semibold text-center"
@@ -223,25 +212,25 @@ const OrderDetails = ({ order }) => {
                             >
                               <td className="py-2 px-3">
                                 <div className="d-flex align-items-center gap-2">
-                                  <Link to={`/products/${product.id}`}>
-                                    <img
-                                      src={product.images[0].url}
-                                      alt={product.name}
-                                      className="rounded-2 flex-shrink-0"
-                                      style={{
-                                        width: 52,
-                                        height: 52,
-                                        objectFit: "cover",
-                                        border: "2px solid #ede9fe",
-                                      }}
-                                    />
-                                  </Link>
+                                  <img
+                                    src={product.images[0].url}
+                                    alt={product.name}
+                                    className="rounded-2 flex-shrink-0"
+                                    style={{
+                                      width: "clamp(36px, 5vw, 48px)",
+                                      height: "clamp(36px, 5vw, 48px)",
+                                      objectFit: "cover",
+                                      border: "2px solid #ede9fe",
+                                    }}
+                                  />
+
                                   <div>
                                     <div
                                       className="fw-semibold"
                                       style={{
                                         color: "#1e1b4b",
-                                        fontSize: "0.8rem",
+                                        fontSize:
+                                          "clamp(0.7rem, 1.7vw, 0.8rem)",
                                         lineHeight: 1.3,
                                       }}
                                     >
@@ -252,18 +241,6 @@ const OrderDetails = ({ order }) => {
                                     </small>
                                   </div>
                                 </div>
-                              </td>
-                              <td className="py-2 px-3">
-                                <span
-                                  className="badge rounded-pill"
-                                  style={{
-                                    background: "#ede9fe",
-                                    color: "#4f46e5",
-                                    fontWeight: 600,
-                                  }}
-                                >
-                                  {product.materialType}
-                                </span>
                               </td>
                               <td className="py-2 px-3 text-center">
                                 <span
@@ -277,13 +254,11 @@ const OrderDetails = ({ order }) => {
                                   {product.quantity}
                                 </span>
                               </td>
-                              <td className="py-2 px-3 text-end">
-                                <span
-                                  className="fw-bold"
-                                  style={{ color: "#4f46e5" }}
-                                >
-                                  ₹{product?.discountPrice.toFixed(2)}
-                                </span>
+                              <td
+                                className="py-2 px-3 text-end fw-bold"
+                                style={{ color: "#4f46e5" }}
+                              >
+                                ₹{product.discountPrice.toFixed(2)}
                               </td>
                             </tr>
                           ))}
@@ -294,58 +269,120 @@ const OrderDetails = ({ order }) => {
 
                   {/* ── Bottom 3-col grid: Summary | Placed By | Address ── */}
                   <div className="col-12 col-md-6 col-xl-4">
-                    {/* Order Summary */}
-                    <div
-                      className="p-4 rounded-3 h-100"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)",
-                        border: "1px solid #ddd6fe",
-                      }}
-                    >
-                      <h6
-                        className="fw-bold mb-3 d-flex align-items-center gap-2"
-                        style={{ color: "#4f46e5" }}
-                      >
-                        <i className="bi bi-receipt"></i> Order Summary
-                      </h6>
+                    <div className="card border rounded-3 h-100">
+                      <div className="card-header bg-white border-bottom px-3 py-2 d-flex align-items-center gap-2">
+                        <i
+                          className="bi bi-receipt text-primary"
+                          style={{ fontSize: 14 }}
+                        ></i>
+                        <span
+                          className="fw-semibold text-dark"
+                          style={{ fontSize: "0.88rem" }}
+                        >
+                          Order Summary
+                        </span>
+                      </div>
 
-                      <div
-                        className="d-flex justify-content-between align-items-center mb-2"
-                        style={{ fontSize: "0.875rem" }}
-                      >
-                        <span className="text-muted">
-                          <i className="bi bi-stack me-1"></i>Total Items
-                        </span>
-                        <span
-                          className="fw-semibold"
-                          style={{ color: "#1e1b4b" }}
+                      <div className="card-body p-3 d-flex flex-column gap-2">
+                        {/* Total Items */}
+                        <div
+                          className="d-flex justify-content-between align-items-center py-1 border-bottom"
+                          style={{ fontSize: "0.85rem" }}
                         >
-                          {order.summary.totalQuantity}
-                        </span>
-                      </div>
-                      <div>
-                        <p>
-                          Delivery Charge:
-                          {order.paymentMethod === "COD" ? 60 : 0}
-                        </p>
-                      </div>
-                      <div
-                        className="d-flex justify-content-between align-items-center pt-3"
-                        style={{ borderTop: "2px dashed #c4b5fd" }}
-                      >
-                        <span className="fw-bold" style={{ color: "#1e1b4b" }}>
-                          Total
-                        </span>
-                        <span
-                          className="fw-bold fs-5"
-                          style={{ color: "#4f46e5" }}
+                          <span className="text-muted d-flex align-items-center gap-2">
+                            <i
+                              className="bi bi-stack text-primary"
+                              style={{ fontSize: 13 }}
+                            ></i>
+                            Total Items
+                          </span>
+                          <span className="fw-semibold text-dark">
+                            {order.summary.totalQuantity}
+                          </span>
+                        </div>
+
+                        {/* MRP */}
+                        <div
+                          className="d-flex justify-content-between align-items-center py-1 border-bottom"
+                          style={{ fontSize: "0.85rem" }}
                         >
-                          ₹
-                          {order.paymentMethod === "COD"
-                            ? order.summary.totalPrice + 60
-                            : order.summary.totalPrice}
-                        </span>
+                          <span className="text-muted d-flex align-items-center gap-2">
+                            <i
+                              className="bi bi-tag text-primary"
+                              style={{ fontSize: 13 }}
+                            ></i>
+                            MRP
+                          </span>
+                          <span className="fw-semibold text-dark">
+                            ₹
+                            {order.summary.totalPrice +
+                              (order.summary.totalDiscount || 0)}
+                          </span>
+                        </div>
+
+                        {/* Discount */}
+                        {order.summary.totalDiscount > 0 && (
+                          <div
+                            className="d-flex justify-content-between align-items-center py-1 border-bottom"
+                            style={{ fontSize: "0.85rem" }}
+                          >
+                            <span className="text-muted d-flex align-items-center gap-2">
+                              <i
+                                className="bi bi-percent text-success"
+                                style={{ fontSize: 13 }}
+                              ></i>
+                              Discount
+                            </span>
+                            <span className="fw-semibold text-success">
+                              − ₹{order.summary.totalDiscount}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Delivery */}
+                        <div
+                          className="d-flex justify-content-between align-items-center py-1 border-bottom"
+                          style={{ fontSize: "0.85rem" }}
+                        >
+                          <span className="text-muted d-flex align-items-center gap-2">
+                            <i
+                              className="bi bi-truck text-primary"
+                              style={{ fontSize: 13 }}
+                            ></i>
+                            Delivery
+                          </span>
+                          {order.paymentMethod === "COD" ? (
+                            <span className="fw-semibold text-warning">
+                              + ₹60
+                            </span>
+                          ) : (
+                            <span className="fw-semibold text-success">
+                              FREE
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Total */}
+                        <div
+                          className="d-flex justify-content-between align-items-center mt-auto pt-2"
+                          style={{ borderTop: "2px dashed #dee2e6" }}
+                        >
+                          {order.paymentMethod === "COD" ? (
+                            <span className="fw-bold text-dark">
+                              Total Payable
+                            </span>
+                          ) : (
+                            <span className="fw-bold text-dark">
+                              Paied amount
+                            </span>
+                          )}
+                          <span className="fw-bold text-primary fs-5">
+                            ₹
+                            {order.paymentMethod === "COD"
+                              ? order.summary.totalPrice + 60
+                              : order.summary.totalPrice}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>

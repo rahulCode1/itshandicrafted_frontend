@@ -1,12 +1,5 @@
 import { fetchUserAddressAsync } from "../../features/address/addressSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { MdLocationOn, MdPhone, MdHome, MdPinDrop } from "react-icons/md";
-import {
-  RiAddCircleFill,
-  RiSwapLine,
-  RiCheckboxCircleFill,
-  RiAddLine,
-} from "react-icons/ri";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -37,8 +30,6 @@ const BuyNow = ({ info }) => {
     address.length > 0 &&
     address.find((addr) => addr.isDefault === true);
 
-
-
   const handleSubmitOrder = async (e) => {
     e.preventDefault();
 
@@ -48,14 +39,11 @@ const BuyNow = ({ info }) => {
 
     if (!address || address.length === 0) {
       setError("Please add a delivery address to place your order.");
-
       return;
     }
 
-    
     if (!selectedAddress) {
       setError("Please set a default address to place your order.");
-
       return;
     }
 
@@ -81,16 +69,12 @@ const BuyNow = ({ info }) => {
           currency: "INR",
           name: "It's Handicrafted",
           order_id: data.id,
-          method: {
-            upi: true,
-          },
-
+          method: { upi: true },
           handler: async function (response) {
             const { data } = await privateApi.post(
               `/order/placeOrderViaBuyNow`,
               { ...response, ...order },
             );
-
             toast.success(data?.message || "Order placed successfully!", {
               id: toastId,
             });
@@ -135,10 +119,12 @@ const BuyNow = ({ info }) => {
         <span className="text-white-50 small">Secure Checkout</span>
         <i className="bi bi-shield-lock-fill text-success ms-auto small"></i>
       </div>
+
       {error && <ErrorModal message={error} onClose={() => setError(null)} />}
+
       <div
-        style={{ marginBottom: "5em" }}
         className="bg-light min-vh-100 py-3 pb-5"
+        style={{ marginBottom: "5em" }}
       >
         <div className="container" style={{ maxWidth: 540 }}>
           {/* Page heading */}
@@ -164,55 +150,60 @@ const BuyNow = ({ info }) => {
 
             <div className="card-body px-4 py-3">
               {/* Product row */}
-              <div className="d-flex gap-3 align-items-start">
-                <img
-                  src={info.product.images[0].url}
-                  alt={info.product.name}
-                  className="rounded-3 border object-fit-cover flex-shrink-0"
-                  style={{ width: 88, height: 88 }}
-                />
-                <div className="flex-grow-1">
-                  <p
-                    className="fw-semibold text-dark mb-1 lh-sm"
-                    style={{ fontSize: "0.92rem" }}
-                  >
-                    {info.product.name}
-                  </p>
+              <Link
+                to={`/products/${info.product._id}`}
+                className="text-decoration-none"
+              >
+                <div className="d-flex gap-3 align-items-start">
+                  <img
+                    src={info.product.images[0].url}
+                    alt={info.product.name}
+                    className="rounded-3 border flex-shrink-0"
+                    style={{ width: 88, height: 88, objectFit: "cover" }}
+                  />
+                  <div className="flex-grow-1">
+                    <p
+                      className="fw-semibold text-dark mb-1 lh-sm"
+                      style={{ fontSize: "0.92rem" }}
+                    >
+                      {info.product.name}
+                    </p>
 
-                  <div className="d-flex flex-wrap gap-1 mb-2">
-                    <span
-                      className="badge bg-secondary-subtle text-secondary rounded-pill"
-                      style={{ fontSize: "0.68rem" }}
-                    >
-                      {info.product.category}
-                    </span>
-                    <span
-                      className="badge bg-light text-muted border rounded-pill"
-                      style={{ fontSize: "0.68rem" }}
-                    >
-                      <i className="bi bi-layers me-1"></i>Qty: {info.quantity}
-                    </span>
-                    {discountPct > 0 && (
+                    <div className="d-flex flex-wrap gap-1 mb-2">
                       <span
-                        className="badge bg-success-subtle text-success rounded-pill"
+                        className="badge bg-secondary-subtle text-secondary rounded-pill"
                         style={{ fontSize: "0.68rem" }}
                       >
-                        {discountPct}% OFF
+                        {info.product.category}
                       </span>
-                    )}
-                  </div>
+                      <span
+                        className="badge bg-light text-muted border rounded-pill"
+                        style={{ fontSize: "0.68rem" }}
+                      >
+                        <i className="bi bi-layers me-1"></i>Qty:{" "}
+                        {info.quantity}
+                      </span>
+                      {discountPct > 0 && (
+                        <span
+                          className="badge bg-success-subtle text-success rounded-pill"
+                          style={{ fontSize: "0.68rem" }}
+                        >
+                          {discountPct}% OFF
+                        </span>
+                      )}
+                    </div>
 
-                  <div className="d-flex align-items-baseline gap-2">
-                    <span className="fw-bold fs-6 text-dark">
-                      ₹{info.product.discountPrice}
-                    </span>
-                    <span className="text-decoration-line-through text-muted small">
-                      ₹{info.product.price}
-                    </span>
+                    <div className="d-flex align-items-baseline gap-2">
+                      <span className="fw-bold fs-6 text-dark">
+                        ₹{info.product.discountPrice}
+                      </span>
+                      <span className="text-decoration-line-through text-muted small">
+                        ₹{info.product.price}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-
+              </Link>
               <hr className="my-3" />
 
               {/* Price breakdown */}
@@ -231,14 +222,22 @@ const BuyNow = ({ info }) => {
                 </div>
                 <div className="d-flex justify-content-between small">
                   <span className="text-muted">Delivery Charges</span>
-                  <span className="text-success fw-medium">
-                    <i className="bi bi-truck me-1"></i>FREE
-                  </span>
+                  {payment === "ONLINE" ? (
+                    <span className="text-success fw-medium">
+                      <i className="bi bi-truck me-1"></i>FREE
+                    </span>
+                  ) : (
+                    <span className="text-warning fw-medium">
+                      <i className="bi bi-truck me-1"></i>+ ₹60
+                    </span>
+                  )}
                 </div>
                 <hr className="my-1" />
                 <div className="d-flex justify-content-between align-items-center">
                   <span className="fw-bold text-dark">Total Payable</span>
-                  <span className="fw-bold fs-5 text-dark">₹{finalTotal}</span>
+                  <span className="fw-bold fs-5 text-dark">
+                    ₹{payment === "ONLINE" ? finalTotal : finalTotal + 60}
+                  </span>
                 </div>
               </div>
 
@@ -257,28 +256,29 @@ const BuyNow = ({ info }) => {
               CARD 2 — Delivery Address
           ════════════════════════════ */}
           <div className="card border-0 shadow-sm rounded-4 mb-3 overflow-hidden">
-            {/* Header */}
             <div className="card-header bg-white border-bottom px-4 py-3 d-flex align-items-center gap-2">
-              <MdLocationOn
-                className="text-danger"
-                style={{ fontSize: "1.1rem" }}
-              />
+              <i className="bi bi-geo-alt-fill text-danger"></i>
               <span
                 className="fw-semibold text-dark"
                 style={{ fontSize: "0.92rem" }}
               >
                 Delivery Address
               </span>
+              <Link
+                to="/address/addAddress"
+                state={{ from: "/buyNow" }}
+                className="btn btn-outline-primary btn-sm rounded-3 fw-semibold ms-auto d-flex align-items-center gap-1"
+                style={{ fontSize: "0.72rem" }}
+              >
+                <i className="bi bi-plus-lg"></i> Add New
+              </Link>
             </div>
 
             <div className="card-body px-4 py-3">
               {selectedAddress ? (
                 <div
-                  className="rounded-3 p-3"
-                  style={{
-                    background: "#f9fafb",
-                    border: "0.5px solid #e5e7eb",
-                  }}
+                  className="rounded-3 p-3 border"
+                  style={{ background: "#f9fafb" }}
                 >
                   {/* Name + Default badge */}
                   <div className="d-flex justify-content-between align-items-center mb-3">
@@ -290,28 +290,21 @@ const BuyNow = ({ info }) => {
                     </span>
                     {selectedAddress.isDefault && (
                       <span
-                        className="d-flex align-items-center gap-1 rounded-pill px-2 py-1"
-                        style={{
-                          background: "#dbeafe",
-                          color: "#1d4ed8",
-                          fontSize: "0.65rem",
-                          fontWeight: 600,
-                          border: "0.5px solid #bfdbfe",
-                        }}
+                        className="badge bg-primary-subtle text-primary border border-primary border-opacity-25 rounded-pill d-flex align-items-center gap-1"
+                        style={{ fontSize: "0.65rem" }}
                       >
-                        <RiCheckboxCircleFill style={{ fontSize: "0.75rem" }} />
-                        Default
+                        <i className="bi bi-patch-check-fill"></i> Default
                       </span>
                     )}
                   </div>
 
                   {/* Detail rows */}
-                  <div className="d-flex flex-column gap-2">
+                  <div className="d-flex flex-column gap-2 mb-3">
                     <div className="d-flex align-items-center gap-2">
-                      <MdPhone
-                        className="text-muted flex-shrink-0"
-                        style={{ fontSize: "0.9rem" }}
-                      />
+                      <i
+                        className="bi bi-telephone-fill text-muted flex-shrink-0"
+                        style={{ fontSize: "0.82rem" }}
+                      ></i>
                       <span
                         className="text-muted"
                         style={{ fontSize: "0.82rem" }}
@@ -319,12 +312,11 @@ const BuyNow = ({ info }) => {
                         {selectedAddress.phoneNumber}
                       </span>
                     </div>
-
                     <div className="d-flex align-items-center gap-2">
-                      <MdPinDrop
-                        className="text-muted flex-shrink-0"
-                        style={{ fontSize: "0.9rem" }}
-                      />
+                      <i
+                        className="bi bi-mailbox text-muted flex-shrink-0"
+                        style={{ fontSize: "0.82rem" }}
+                      ></i>
                       <span
                         className="text-muted"
                         style={{ fontSize: "0.82rem" }}
@@ -332,12 +324,11 @@ const BuyNow = ({ info }) => {
                         {selectedAddress.zipCode}
                       </span>
                     </div>
-
                     <div className="d-flex align-items-start gap-2">
-                      <MdHome
-                        className="text-muted flex-shrink-0 mt-1"
-                        style={{ fontSize: "0.9rem" }}
-                      />
+                      <i
+                        className="bi bi-house-fill text-muted flex-shrink-0 mt-1"
+                        style={{ fontSize: "0.82rem" }}
+                      ></i>
                       <span
                         className="text-muted"
                         style={{ fontSize: "0.82rem", lineHeight: 1.5 }}
@@ -351,45 +342,33 @@ const BuyNow = ({ info }) => {
                   </div>
 
                   {/* Action buttons */}
-                  <div className="d-flex gap-2 mt-3">
+                  <div className="d-flex gap-2">
                     {address.length > 1 && (
                       <Link
                         to="/address"
-                        className="btn btn-sm flex-fill d-flex align-items-center justify-content-center gap-1 rounded-3"
-                        style={{
-                          border: "0.5px solid #e5e7eb",
-                          background: "#fff",
-                          color: "#374151",
-                          fontSize: "0.78rem",
-                          padding: "6px 0",
-                        }}
+                        state={{ from: "/buyNow" }}
+                        className="btn btn-outline-secondary btn-sm flex-fill rounded-3 d-flex align-items-center justify-content-center gap-1"
+                        style={{ fontSize: "0.78rem" }}
                       >
-                        <RiSwapLine style={{ fontSize: "0.85rem" }} />
-                        Change
+                        <i className="bi bi-arrow-left-right"></i> Change
                       </Link>
                     )}
                     <Link
                       to="/address/addAddress"
-                      className="btn btn-sm flex-fill d-flex align-items-center justify-content-center gap-1 rounded-3"
-                      style={{
-                        border: "0.5px solid #e5e7eb",
-                        background: "#fff",
-                        color: "#374151",
-                        fontSize: "0.78rem",
-                        padding: "6px 0",
-                      }}
+                      state={{ from: "/buyNow" }}
+                      className="btn btn-outline-primary btn-sm flex-fill rounded-3 d-flex align-items-center justify-content-center gap-1"
+                      style={{ fontSize: "0.78rem" }}
                     >
-                      <RiAddLine style={{ fontSize: "0.85rem" }} />
-                      Add New
+                      <i className="bi bi-plus-lg"></i> Add New
                     </Link>
                   </div>
                 </div>
               ) : (
                 <div className="text-center py-4">
-                  <MdLocationOn
-                    className="text-muted mb-2"
+                  <i
+                    className="bi bi-geo-alt text-muted d-block mb-2"
                     style={{ fontSize: "2.5rem", opacity: 0.3 }}
-                  />
+                  ></i>
                   <p className="text-muted small mb-3">
                     No delivery address found
                   </p>
@@ -398,8 +377,7 @@ const BuyNow = ({ info }) => {
                     state={{ from: "/buyNow" }}
                     className="btn btn-primary btn-sm rounded-pill px-4 d-inline-flex align-items-center gap-1"
                   >
-                    <RiAddCircleFill style={{ fontSize: "0.85rem" }} />
-                    Add Address
+                    <i className="bi bi-plus-circle-fill"></i> Add Address
                   </Link>
                 </div>
               )}
@@ -418,10 +396,8 @@ const BuyNow = ({ info }) => {
                     padding: "9px",
                   }}
                 >
-                  <RiAddCircleFill style={{ fontSize: "0.9rem" }} />
-                  Add New Address
+                  <i className="bi bi-plus-circle-fill"></i> Add New Address
                 </Link>
-
                 {address && address.length > 1 && (
                   <Link
                     to="/address"
@@ -435,8 +411,7 @@ const BuyNow = ({ info }) => {
                       padding: "9px",
                     }}
                   >
-                    <RiSwapLine style={{ fontSize: "0.9rem" }} />
-                    Switch Address
+                    <i className="bi bi-arrow-left-right"></i> Switch Address
                   </Link>
                 )}
               </div>
@@ -450,21 +425,75 @@ const BuyNow = ({ info }) => {
             <div className="card-header bg-white border-bottom px-4 py-3 d-flex align-items-center gap-2">
               <i className="bi bi-wallet2 text-success"></i>
               <span className="fw-semibold text-dark">Payment Method</span>
+              <span
+                className="badge bg-success-subtle text-success border border-success border-opacity-25 rounded-pill ms-auto"
+                style={{ fontSize: "0.65rem" }}
+              >
+                Save ₹60 online
+              </span>
             </div>
 
             <div className="card-body px-4 py-3">
-              {/* COD Option */}
-              <select
-                onChange={(e) => setPayment(e.target.value)}
-                className="form-select"
-              >
-                <option value="ONLINE" defaultValue>
-                  Pay Online
-                </option>
-                <option value="COD" defaultChecked>
-                  Cash on Delivery
-                </option>
-              </select>
+              <div className="d-flex flex-column gap-2">
+                {[
+                  {
+                    value: "ONLINE",
+                    label: "Pay Online",
+                    sub: "UPI / Card / Net Banking — Free delivery",
+                    icon: "bi-lightning-charge-fill",
+                    accent: "primary",
+                  },
+                  {
+                    value: "COD",
+                    label: "Cash on Delivery",
+                    sub: "Pay when your order arrives — ₹60 charge",
+                    icon: "bi-cash-coin",
+                    accent: "warning",
+                  },
+                ].map(({ value, label, sub, icon, accent }) => (
+                  <label
+                    key={value}
+                    className={`d-flex align-items-center gap-3 p-3 rounded-3 border ${
+                      payment === value
+                        ? `border-${accent} bg-${accent} bg-opacity-10`
+                        : "border bg-light"
+                    }`}
+                    style={{ cursor: "pointer", transition: "all 0.15s" }}
+                  >
+                    <input
+                      type="radio"
+                      name="payment"
+                      value={value}
+                      checked={payment === value}
+                      onChange={(e) => setPayment(e.target.value)}
+                      className="form-check-input mt-0 flex-shrink-0"
+                    />
+                    <div
+                      className={`d-flex align-items-center justify-content-center rounded-2 flex-shrink-0 bg-${accent} bg-opacity-10`}
+                      style={{ width: 34, height: 34 }}
+                    >
+                      <i
+                        className={`bi ${icon} text-${accent}`}
+                        style={{ fontSize: 15 }}
+                      ></i>
+                    </div>
+                    <div>
+                      <p
+                        className="fw-semibold mb-0 text-dark"
+                        style={{ fontSize: "0.88rem" }}
+                      >
+                        {label}
+                      </p>
+                      <small
+                        className="text-muted"
+                        style={{ fontSize: "0.72rem" }}
+                      >
+                        {sub}
+                      </small>
+                    </div>
+                  </label>
+                ))}
+              </div>
 
               <p
                 className="text-muted d-flex align-items-center gap-1 mt-3 mb-0"
@@ -486,13 +515,14 @@ const BuyNow = ({ info }) => {
             >
               {isLoading ? (
                 <>
-                   Placing Order… <span className="spinner-border spinner-border-sm" />
-                
+                  Placing Order…{" "}
+                  <span className="spinner-border spinner-border-sm" />
                 </>
               ) : (
                 <>
                   <i className="bi bi-bag-check-fill text-warning"></i>
-                  Place Order &nbsp;·&nbsp; ₹{finalTotal}
+                  Place Order &nbsp;·&nbsp; ₹
+                  {payment === "ONLINE" ? finalTotal : finalTotal + 60}
                 </>
               )}
             </button>

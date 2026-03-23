@@ -29,11 +29,11 @@ const Footer = () => {
         borderTop: "1px solid #f1f5f9",
         zIndex: 1030,
         // safe-area padding for modern notch phones
-        paddingBottom: "calc(env(safe-area-inset-bottom) + 5px)",
+        paddingBottom: "calc(env(safe-area-inset-bottom) + 2px)",
       }}
     >
       <div className="container-fluid">
-        <ul className="nav d-flex flex-row justify-content-around align-items-center py-2 mb-0 list-unstyled">
+        <ul className="nav d-flex flex-row justify-content-around align-items-center py-1 mb-0 list-unstyled">
           {/* Home */}
           <li className="nav-item">
             <NavLink to="/" end className="nav-link p-0">

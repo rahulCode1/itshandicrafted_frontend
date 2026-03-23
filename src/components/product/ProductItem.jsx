@@ -129,13 +129,6 @@ const ProductItem = ({ productData }) => {
 
   return (
     <>
-      <button
-        onClick={handleAddToBuyNow}
-        className="btn btn-warning fw-semibold px-4 py-2 rounded-pill d-none"
-      >
-        <i className="bi bi-lightning-fill me-1"></i>Buy Now
-      </button>
-
       <main className="bg-light min-vh-100 pb-5">
         {/* ════════════════════════════════
             PRODUCT DETAIL SECTION

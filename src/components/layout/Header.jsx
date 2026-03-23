@@ -79,7 +79,7 @@ const Header = () => {
   return (
     <>
       <nav
-        className="py-2 shadow-sm overflow-x-hidden sticky-top py-md-3"
+        className="pt-2 shadow-sm overflow-x-hidden sticky-top py-md-3"
         style={{
           background: "#fff",
           borderBottom: "1px solid #ede9fe",
