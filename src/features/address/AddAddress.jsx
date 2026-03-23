@@ -31,7 +31,7 @@ const AddAddress = () => {
     }));
   };
 
-  console.log(formData.name)
+  
 
   const submitAddress = async (e) => {
     e.preventDefault();

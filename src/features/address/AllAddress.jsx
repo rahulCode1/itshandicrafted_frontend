@@ -40,8 +40,19 @@ const AllAddress = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchUserAddressAsync());
+    const handleGetUserAddress = async () => {
+      try {
+        await dispatch(fetchUserAddressAsync()).unwrap();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    handleGetUserAddress();
   }, [dispatch]);
+
+
+
   return (
     <>
       {fetchUserAddressLoading === "loading" ? (
