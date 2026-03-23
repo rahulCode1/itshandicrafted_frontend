@@ -1,6 +1,5 @@
 import {
-  FiSearch,
-  FiX,
+
   FiHeart,
   FiShoppingCart,
   FiLock,
@@ -10,15 +9,15 @@ import {
   FiLogOut,
 } from "react-icons/fi";
 import { useEffect } from "react";
-import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useEcommerce } from "../../context/EcommerceContext";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllCartAsync } from "../../features/cart/cartSlice";
 import { getAllWishlistAsync } from "../../features/wishlist/wishlistSlice";
 
 const Header = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { setSearchText, searchText, handleLogout } = useEcommerce();
+ 
+  const {   handleLogout } = useEcommerce();
   const { cart: productCart } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
   const navigate = useNavigate();
@@ -30,21 +29,8 @@ const Header = () => {
       ? productCart.reduce((acc, curr) => acc + curr.quantity, 0)
       : 0;
 
-  const updateQuaryParam = (key, value) => {
-    const params = new URLSearchParams(searchParams);
-    if (!value) {
-      params.delete(key);
-    } else {
-      params.set(key, value);
-    }
-    setSearchParams(params);
-    navigate(`/products?${params}`);
-  };
 
-  const clearSearch = () => {
-    setSearchText("");
-    updateQuaryParam("search", "");
-  };
+ 
 
   useEffect(() => {
     if (token) {
