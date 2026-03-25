@@ -3,8 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useEffect, useState } from "react";
 
-
-
+import ProductImageCarousel from "./ProductImageCarousel";
 import { addToCartAsync, getAllCartAsync } from "../../features/cart/cartSlice";
 import { addOrRemoveWishlistAsync } from "../../features/wishlist/wishlistSlice";
 import { privateApi } from "../../utils/axios";
@@ -29,7 +28,6 @@ const ProductItem = ({ productData }) => {
   const checkProductIsWishlist = (id) => {
     return wishlist.some((product) => product.id === id);
   };
-
 
   useEffect(() => {
     if (token) {
@@ -134,6 +132,7 @@ const ProductItem = ({ productData }) => {
               <img
                 src={productInfo?.images[0].url}
                 className={styles.imgStyle}
+                alt={productInfo.name}
               />
             </div>
             {/* RIGHT DETAILS */}
