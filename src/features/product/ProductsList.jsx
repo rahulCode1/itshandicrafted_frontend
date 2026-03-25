@@ -10,7 +10,6 @@ const ProductsList = ({ productsList }) => {
   const [category, setCategory] = useState([]);
   const [productRating, setProductRating] = useState(0);
 
-
   const ratingArr = [
     { name: "4 Stars & Above", value: 4, id: "4star", radioName: "rating" },
     { name: "3 Stars & Above", value: 3, id: "3star", radioName: "rating" },
@@ -114,9 +113,14 @@ const ProductsList = ({ productsList }) => {
           minHeight: "100vh",
         }}
       >
-        <div className="row g-0 position-relative">
-     
-        <ScrollToTopBtn />
+        <div
+          className="row g-0 position-relative"
+          style={{
+            maxWidth: "1400px",
+            margin: "auto",
+          }}
+        >
+          <ScrollToTopBtn />
 
           {/* ══════════════════════════════
         MOBILE: Offcanvas filter panel
@@ -319,7 +323,6 @@ const ProductsList = ({ productsList }) => {
           {/* ══════════════════════════════
         DESKTOP: Sidebar filter panel
     ══════════════════════════════ */}
-    
 
           <div
             className="col-md-3 d-none d-md-block"
@@ -508,7 +511,6 @@ const ProductsList = ({ productsList }) => {
           <ProductGrid
             filteredProducts={filteredProducts}
             handleClearFilter={handleClearFilter}
-            
           />
         </div>
       </main>

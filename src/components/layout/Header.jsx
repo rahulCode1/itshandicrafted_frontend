@@ -1,5 +1,4 @@
 import {
-
   FiHeart,
   FiShoppingCart,
   FiLock,
@@ -14,10 +13,10 @@ import { useEcommerce } from "../../context/EcommerceContext";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllCartAsync } from "../../features/cart/cartSlice";
 import { getAllWishlistAsync } from "../../features/wishlist/wishlistSlice";
+import { fetchAllProductsAsync } from "../../features/product/productSlice";
 
 const Header = () => {
- 
-  const {   handleLogout } = useEcommerce();
+  const { handleLogout } = useEcommerce();
   const { cart: productCart } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
   const navigate = useNavigate();
@@ -29,203 +28,227 @@ const Header = () => {
       ? productCart.reduce((acc, curr) => acc + curr.quantity, 0)
       : 0;
 
-
- 
-
   useEffect(() => {
     if (token) {
       dispatch(getAllCartAsync());
       dispatch(getAllWishlistAsync());
     }
-  }, [token, dispatch ]);
+  }, [token, dispatch]);
 
-  // Shared styles for nav tab items
-  const tabStyle = (isActive) => ({
-    color: isActive ? "#4f46e5" : "#9ca3af",
-    background: isActive ? "#f5f3ff" : "transparent",
-    minWidth: 56,
+  const navLinkClass =
+    "nav-link d-flex flex-column align-items-center justify-content-center pb-1 px-2 px-md-3";
+
+  const getLinkStyle = (isActive) => ({
+    color: isActive ? "#4f46e5" : "#6b7280",
+    background: "transparent",
+    borderBottom: isActive ? "2.5px solid #4f46e5" : "2.5px solid transparent",
+    borderRadius: 0,
+    transition: "color 0.18s, border-color 0.18s",
+    minWidth: 48,
   });
 
-  const tabLabelStyle = {
-    fontSize: "0.62rem",
+  const labelStyle = {
+    fontSize: "0.6rem",
     fontWeight: 600,
     marginTop: 3,
-    letterSpacing: "0.3px",
+    letterSpacing: "0.4px",
+    lineHeight: 1,
+  };
+
+  // Icon wrapper — relative so badge can sit inside
+  const iconWrap = {
+    position: "relative",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
   };
 
   const badgeStyle = {
-    fontSize: "0.58rem",
-    padding: "0.22em 0.45em",
-    minWidth: 16,
+    position: "absolute",
+    top: -6,
+    right: -8,
+    fontSize: "0.55rem",
+    fontWeight: 700,
+    lineHeight: 1,
+    padding: "2px 5px",
+    borderRadius: 99,
     background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-    top: "0.3em",
-    right: "1em",
+    color: "#fff",
+    minWidth: 16,
+    textAlign: "center",
+    boxShadow: "0 1px 4px rgba(79,70,229,0.35)",
+    pointerEvents: "none",
   };
 
+  useEffect(() => {
+    const handleFetchProducts = async () => {
+      try {
+        dispatch(fetchAllProductsAsync());
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    handleFetchProducts();
+  }, [dispatch]);
+
   return (
-    <>
-      <nav
-        className="pt-2 shadow-sm overflow-x-hidden sticky-top py-md-3"
-        style={{
-          background: "#fff",
-          borderBottom: "1px solid #ede9fe",
-          zIndex: 1030,
-        }}
+    <nav
+      className="sticky-top shadow-sm"
+      style={{
+        background: "#fff",
+        borderBottom: "1px solid #ede9fe",
+        zIndex: 1030,
+      }}
+    >
+      <div
+        className="container-fluid px-3 px-md-4 d-flex align-items-center justify-content-between"
+        style={{ height: 56 }}
       >
-        <div className="container-fluid  px-3 px-md-4">
-          <div className="d-flex align-items-center justify-content-between gap-3">
-            {/* ── LEFT: Logo ── */}
+        {/* ── Logo ── */}
+        <NavLink
+          to="/"
+          style={{
+            fontSize: "clamp(1.05rem, 3vw, 1.3rem)",
+            letterSpacing: "0.1em",
+            background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            textDecoration: "none",
+            fontWeight: 800,
+            flexShrink: 0,
+          }}
+        >
+          It's Handicrafted
+        </NavLink>
+
+        {/* ── Nav items ── */}
+        <ul className="navbar-nav d-flex flex-row align-items-stretch mb-0 h-100">
+          {/* Home — md+ only */}
+          <li className="nav-item d-none d-md-flex align-items-stretch">
             <NavLink
-              className="navbar-brand fw-bold mb-0 flex-shrink-0"
               to="/"
-              style={{
-                fontSize: "clamp(1.1rem, 3vw, 1.4rem)",
-                letterSpacing: "0.12em",
-                background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                textDecoration: "none",
-              }}
+              end
+              className={navLinkClass}
+              style={({ isActive }) => getLinkStyle(isActive)}
             >
-              Handicrafted
+              <span style={iconWrap}>
+                <FiHome size={20} />
+              </span>
+              <span style={labelStyle}>Home</span>
             </NavLink>
+          </li>
 
-            
+          {/* Shop — md+ only */}
+          <li className="nav-item d-none d-md-flex align-items-stretch">
+            <NavLink
+              to="/products"
+              className={navLinkClass}
+              style={({ isActive }) => getLinkStyle(isActive)}
+            >
+              <span style={iconWrap}>
+                <FiShoppingBag size={20} />
+              </span>
+              <span style={labelStyle}>Shop</span>
+            </NavLink>
+          </li>
 
-            {/* ── RIGHT: Icon Nav ── */}
-            <ul className="navbar-nav d-flex flex-row align-items-center gap-1 gap-md-2 mb-0">
-            
+          {/* Wishlist — logged in */}
+          {token && (
+            <li className="nav-item d-flex align-items-stretch">
+              <NavLink
+                to="/wishlist"
+                className={navLinkClass}
+                style={({ isActive }) => getLinkStyle(isActive)}
+              >
+                <span style={iconWrap}>
+                  <FiHeart size={20} />
+                  {wishlist.length > 0 && (
+                    <span style={badgeStyle}>{wishlist.length}</span>
+                  )}
+                </span>
+                <span style={labelStyle}>Wishlist</span>
+              </NavLink>
+            </li>
+          )}
 
-              {/* ── Home — visible on md+ only (footer handles mobile) ── */}
-              <li className="nav-item d-none d-md-block">
-                <NavLink
-                  to="/"
-                  end
-                  className={({ isActive }) =>
-                    `nav-link d-flex flex-column align-items-center justify-content-center py-2 rounded-3 ${isActive ? "active-tab" : ""}`
-                  }
-                  style={({ isActive }) => tabStyle(isActive)}
-                >
-                  <FiHome size={21} />
-                  <span style={tabLabelStyle}>Home</span>
-                </NavLink>
-              </li>
+          {/* Cart — logged in */}
+          {token && (
+            <li className="nav-item d-flex align-items-stretch">
+              <NavLink
+                to="/cart"
+                className={navLinkClass}
+                style={({ isActive }) => getLinkStyle(isActive)}
+              >
+                <span style={iconWrap}>
+                  <FiShoppingCart size={20} />
+                  {totalItemsInCart > 0 && (
+                    <span style={badgeStyle}>{totalItemsInCart}</span>
+                  )}
+                </span>
+                <span style={labelStyle}>Cart</span>
+              </NavLink>
+            </li>
+          )}
 
-              {/* ── Shop — visible on md+ only ── */}
-              <li className="nav-item d-none d-md-block">
-                <NavLink
-                  to="/products"
-                  className={({ isActive }) =>
-                    `nav-link d-flex flex-column align-items-center justify-content-center py-2 rounded-3 ${isActive ? "active-tab" : ""}`
-                  }
-                  style={({ isActive }) => tabStyle(isActive)}
-                >
-                  <FiShoppingBag size={21} />
-                  <span style={tabLabelStyle}>Shop</span>
-                </NavLink>
-              </li>
+          {/* Profile — logged in, md+ only */}
+          {token && (
+            <li className="nav-item d-none d-md-flex align-items-stretch">
+              <NavLink
+                to="/user"
+                className={navLinkClass}
+                style={({ isActive }) => getLinkStyle(isActive)}
+              >
+                <span style={iconWrap}>
+                  <FiUser size={20} />
+                </span>
+                <span style={labelStyle}>Profile</span>
+              </NavLink>
+            </li>
+          )}
 
-              {/* ── Wishlist — only when logged in ── */}
-              {token && (
-                <li className="nav-item">
-                  <NavLink
-                    to="/wishlist"
-                    className={({ isActive }) =>
-                      `nav-link position-relative d-flex flex-column align-items-center justify-content-center py-2 rounded-3 ${isActive ? "active-tab" : ""}`
-                    }
-                    style={({ isActive }) => tabStyle(isActive)}
-                  >
-                    <FiHeart size={21} />
-                    {wishlist.length > 0 && (
-                      <span
-                        className="position-absolute translate-middle badge rounded-pill"
-                        style={{ ...badgeStyle, top: "0.3em", right: "1em" }}
-                      >
-                        {wishlist.length}
-                      </span>
-                    )}
-                    <span style={tabLabelStyle}>Wishlist</span>
-                  </NavLink>
-                </li>
-              )}
+          {/* Logout — logged in, md+ only */}
+          {token && (
+            <li className="nav-item d-none d-md-flex align-items-stretch">
+              <button
+                onClick={() => handleLogout(navigate)}
+                className="btn border-0 p-0 d-flex flex-column align-items-center justify-content-center pb-1 px-2 px-md-3"
+                style={{
+                  color: "#6b7280",
+                  background: "transparent",
+                  borderBottom: "2.5px solid transparent",
+                  borderRadius: 0,
+                  minWidth: 48,
+                  transition: "color 0.18s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "#ef4444")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "#6b7280")}
+              >
+                <FiLogOut size={20} />
+                <span style={labelStyle}>Logout</span>
+              </button>
+            </li>
+          )}
 
-              {/* ── Cart — only when logged in ── */}
-              {token && (
-                <li className="nav-item">
-                  <NavLink
-                    to="/cart"
-                    className={({ isActive }) =>
-                      `nav-link position-relative d-flex flex-column align-items-center justify-content-center py-2 rounded-3 ${isActive ? "active-tab" : ""}`
-                    }
-                    style={({ isActive }) => tabStyle(isActive)}
-                  >
-                    <FiShoppingCart size={21} />
-                    {totalItemsInCart > 0 && (
-                      <span
-                        className="position-absolute translate-middle badge rounded-pill"
-                        style={{ ...badgeStyle, top: "0.4em", right: "0.9em" }}
-                      >
-                        {totalItemsInCart}
-                      </span>
-                    )}
-                    <span style={tabLabelStyle}>Cart</span>
-                  </NavLink>
-                </li>
-              )}
-
-              {/* ── Profile — logged in, md+ only ── */}
-              {token && (
-                <li className="nav-item d-none d-md-block">
-                  <NavLink
-                    to="/user"
-                    className={({ isActive }) =>
-                      `nav-link d-flex flex-column align-items-center justify-content-center py-2 rounded-3 ${isActive ? "active-tab" : ""}`
-                    }
-                    style={({ isActive }) => tabStyle(isActive)}
-                  >
-                    <FiUser size={21} />
-                    <span style={tabLabelStyle}>Profile</span>
-                  </NavLink>
-                </li>
-              )}
-
-              {/* ── Logout — logged in, md+ only ── */}
-              {token && (
-                <li className="nav-item d-none d-md-block">
-                  <button
-                    onClick={() => handleLogout(navigate)}
-                    className="btn border-0 p-0 d-flex flex-column align-items-center justify-content-center py-2 rounded-3"
-                    style={{ color: "#9ca3af", minWidth: 56 }}
-                  >
-                    <FiLogOut size={21} />
-                    <span style={tabLabelStyle}>Logout</span>
-                  </button>
-                </li>
-              )}
-
-              {/* ── Login — not logged in ── */}
-              {!token && (
-                <li className="nav-item">
-                  <NavLink
-                    to="/login"
-                    end
-                    className={({ isActive }) =>
-                      `nav-link d-flex flex-column align-items-center justify-content-center px-3 py-2 rounded-3 ${isActive ? "active-tab" : ""}`
-                    }
-                    style={({ isActive }) => tabStyle(isActive)}
-                  >
-                    <FiLock size={21} />
-                    <span style={tabLabelStyle}>Login</span>
-                  </NavLink>
-                </li>
-              )}
-            </ul>
-          </div>
-
-     
-        </div>
-      </nav>
-    </>
+          {/* Login — not logged in */}
+          {!token && (
+            <li className="nav-item d-flex align-items-stretch">
+              <NavLink
+                to="/login"
+                end
+                className={navLinkClass}
+                style={({ isActive }) => getLinkStyle(isActive)}
+              >
+                <span style={iconWrap}>
+                  <FiLock size={20} />
+                </span>
+                <span style={labelStyle}>Login</span>
+              </NavLink>
+            </li>
+          )}
+        </ul>
+      </div>
+    </nav>
   );
 };
 

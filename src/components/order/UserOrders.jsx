@@ -443,30 +443,11 @@ const UserOrders = ({ userOrders }) => {
                                 MRP
                               </span>
                               <span className="fw-semibold text-dark">
-                                ₹
-                                {order.summary.totalPrice +
-                                  (order.summary.totalDiscount || 0)}
+                                ₹{order.summary.totalPrice}
                               </span>
                             </div>
 
-                            {/* Discount */}
-                            {order.summary.totalDiscount > 0 && (
-                              <div
-                                className="d-flex justify-content-between align-items-center py-1 border-bottom"
-                                style={{ fontSize: "0.85rem" }}
-                              >
-                                <span className="text-muted d-flex align-items-center gap-2">
-                                  <i
-                                    className="bi bi-percent text-success"
-                                    style={{ fontSize: 13 }}
-                                  ></i>
-                                  Discount
-                                </span>
-                                <span className="fw-semibold text-success">
-                                  − ₹{order.summary.totalDiscount}
-                                </span>
-                              </div>
-                            )}
+                          
 
                             {/* Delivery */}
                             <div

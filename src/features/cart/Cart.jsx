@@ -2,10 +2,7 @@ import { Link } from "react-router-dom";
 
 import { toast } from "react-hot-toast";
 import Loading from "../../components/Loading";
-import {
-  totalPrice,
-  totalQuantity,
-} from "../../functions/reUseFunctions";
+import { totalPrice, totalQuantity } from "../../functions/reUseFunctions";
 import { useSelector, useDispatch } from "react-redux";
 import {
   increaseCartQuantityAsync,
@@ -28,7 +25,6 @@ const Cart = () => {
     getCartsLoading,
     moveToWishlistLoading,
     removeFromCartLoading,
-
     error,
   } = useSelector((state) => state.cart);
 
@@ -181,28 +177,18 @@ const Cart = () => {
                             {/* Info */}
                             <div className="col-8 col-sm-9">
                               <div className="p-3 h-100 d-flex flex-column justify-content-between">
-                                {/* Name + savings badge */}
-                                <div className="d-flex align-items-start justify-content-between gap-2 mb-2">
-                                  <p
-                                    className="fw-semibold mb-0 text-dark lh-sm"
-                                    style={{
-                                      fontSize: "clamp(0.82rem, 2vw, 0.95rem)",
-                                    }}
-                                  >
-                                    {product.name}
-                                  </p>
-                                  <span
-                                    className="badge bg-success-subtle text-success rounded-pill flex-shrink-0"
-                                    style={{ fontSize: "0.62rem" }}
-                                  >
-                                    <i className="bi bi-tag-fill me-1"></i>
-                                    Save ₹
-                                    {product.price - product.discountPrice}
-                                  </span>
-                                </div>
+                                {/* Name */}
+                                <p
+                                  className="fw-semibold mb-2 text-dark lh-sm"
+                                  style={{
+                                    fontSize: "clamp(0.82rem, 2vw, 0.95rem)",
+                                  }}
+                                >
+                                  {product.name}
+                                </p>
 
-                                {/* Price */}
-                                <div className="d-flex align-items-baseline gap-2 mb-3">
+                                {/* Price + Save badge */}
+                                <div className="d-flex align-items-center gap-2 mb-3 flex-wrap">
                                   <span
                                     className="fw-bold text-primary"
                                     style={{ fontSize: "1.05rem" }}
@@ -211,6 +197,14 @@ const Cart = () => {
                                   </span>
                                   <span className="text-muted small text-decoration-line-through">
                                     ₹{product.price}
+                                  </span>
+                                  <span
+                                    className="badge bg-success-subtle text-success rounded-pill"
+                                    style={{ fontSize: "0.62rem" }}
+                                  >
+                                    <i className="bi bi-tag-fill me-1" />
+                                    Save ₹
+                                    {product.price - product.discountPrice}
                                   </span>
                                 </div>
 
@@ -271,7 +265,7 @@ const Cart = () => {
 
                                   {/* Action buttons */}
                                   <div className="d-flex gap-2">
-                                    {/* Remove button */}
+                                    {/* Remove */}
                                     <button
                                       disabled={
                                         removeFromCartLoading === "loading" &&
@@ -289,13 +283,13 @@ const Cart = () => {
                                     >
                                       {removeFromCartLoading === "loading" &&
                                       product.id === productId ? (
-                                        <span className="spinner-border spinner-border-sm"></span>
+                                        <span className="spinner-border spinner-border-sm" />
                                       ) : (
                                         <>
                                           <i
                                             className="bi bi-trash3-fill"
                                             style={{ fontSize: 11 }}
-                                          ></i>
+                                          />
                                           <span className="d-none d-sm-inline ms-1">
                                             Remove
                                           </span>
@@ -303,7 +297,7 @@ const Cart = () => {
                                       )}
                                     </button>
 
-                                    {/* Wishlist button */}
+                                    {/* Wishlist */}
                                     {isExistOnWishlist(product.id) ? (
                                       <Link
                                         to="/wishlist"
@@ -316,7 +310,7 @@ const Cart = () => {
                                         <i
                                           className="bi bi-heart-fill"
                                           style={{ fontSize: 11 }}
-                                        ></i>
+                                        />
                                         <span className="d-none d-sm-inline">
                                           Wishlisted
                                         </span>
@@ -339,13 +333,13 @@ const Cart = () => {
                                       >
                                         {moveToWishlistLoading === "loading" &&
                                         product.id === productId ? (
-                                          <span className="spinner-border spinner-border-sm"></span>
+                                          <span className="spinner-border spinner-border-sm" />
                                         ) : (
                                           <>
                                             <i
                                               className="bi bi-heart"
                                               style={{ fontSize: 11 }}
-                                            ></i>
+                                            />
                                             <span className="d-none d-sm-inline ms-1">
                                               Wishlist
                                             </span>
@@ -417,7 +411,7 @@ const Cart = () => {
                               Total Payable
                             </span>
                             <span className="fw-bold fs-5 text-dark">
-                              ₹{totalPrice(productCart) - totalDiscountOnCart}
+                              ₹{totalPrice(productCart)}
                             </span>
                           </div>
                         </div>
@@ -446,7 +440,7 @@ const Cart = () => {
                           >
                             <i className="bi bi-bag-check-fill text-warning fs-5"></i>
                             Proceed to Checkout &nbsp;·&nbsp; ₹
-                            {totalPrice(productCart) - totalDiscountOnCart}
+                            {totalPrice(productCart)}
                           </Link>
                         </div>
 

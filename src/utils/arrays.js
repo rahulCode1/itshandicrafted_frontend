@@ -27,13 +27,7 @@ export const inputFields = [
     type: "number",
     placeholder: "Enter discount price",
   },
-  {
-    id: "costPrice",
-    name: "costPrice",
-    label: "Cost Price",
-    type: "number",
-    placeholder: "Enter cost price",
-  },
+  
   {
     id: "length",
     name: "length",

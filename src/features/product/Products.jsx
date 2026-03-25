@@ -1,41 +1,22 @@
-import { Await, useLoaderData } from "react-router-dom";
-import { API } from "../../utils/axios";
-
 import ProductsList from "./ProductsList";
-import { Suspense } from "react";
 import Loading from "../../components/Loading";
+import { useSelector } from "react-redux";
 
 const Products = () => {
-  const { products } = useLoaderData();
+  const { products, fetchAllProductLoading } = useSelector(
+    (state) => state.product,
+  );
 
   return (
     <>
-      <Suspense fallback={<Loading />}>
-        <Await resolve={products}>
-          {(isLoadProducts) => (
-            <ProductsList productsList={isLoadProducts} />
-          )}
-        </Await>
-      </Suspense>
+      {fetchAllProductLoading === "loading" ? (
+        <Loading />
+      ) : (
+        <ProductsList productsList={products} />
+      )}
     </>
   );
 };
 
 export default Products;
 
-const products = async () => {
-  try {
-    const res = await API.get("/products");
-
-    const products = res.data?.products;
-    return products;
-  } catch (error) {
-    console.error(error || "Failed to fetch products:");
-  }
-};
-
-export const loader = async () => {
-  return {
-    products: products(),
-  };
-};

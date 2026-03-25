@@ -21,166 +21,132 @@ const Footer = () => {
       ? productCart.reduce((acc, curr) => acc + curr.quantity, 0)
       : 0;
 
+  const getLinkStyle = (isActive) => ({
+    color: isActive ? "#4f46e5" : "#6b7280",
+    background: "transparent",
+    borderTop: isActive ? "2.5px solid #4f46e5" : "2.5px solid transparent",
+    padding: "8px 14px 4px",
+    transition: "color 0.18s, border-color 0.18s",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  });
+
+  const labelStyle = {
+    fontSize: "0.6rem",
+    fontWeight: 600,
+    marginTop: 3,
+    letterSpacing: "0.4px",
+    lineHeight: 1,
+  };
+
   return (
     <footer
-      className="position-fixed bottom-0 start-0 w-100 d-block d-md-none shadow-lg"
+      className="position-fixed bottom-0 start-0 w-100 d-block d-md-none shadow-sm"
       style={{
-        background: "#ffffff",
-        borderTop: "1px solid #f1f5f9",
+        background: "#fff",
+        borderTop: "1px solid #ede9fe",
         zIndex: 1030,
-        // safe-area padding for modern notch phones
-        paddingBottom: "calc(env(safe-area-inset-bottom) + 2px)",
+        paddingBottom: "env(safe-area-inset-bottom)",
       }}
     >
-      <div className="container-fluid">
-        <ul className="nav d-flex flex-row justify-content-around align-items-center py-1 mb-0 list-unstyled">
-          {/* Home */}
-          <li className="nav-item">
-            <NavLink to="/" end className="nav-link p-0">
-              {({ isActive }) => (
-                <div
-                  className="d-flex flex-column align-items-center justify-content-center rounded-3"
-                  style={{
-                    color: isActive ? "#4f46e5" : "#64748b",
-                    background: isActive ? "#f5f3ff" : "transparent",
-                    padding: "6px 12px",
-                    transition: "none", // Removed hover/transition effects
-                  }}
-                >
-                  <FiHome size={22} />
-                  <span
-                    style={{
-                      fontSize: "0.65rem",
-                      fontWeight: 600,
-                      marginTop: "2px",
-                    }}
-                  >
-                    Home
-                  </span>
-                </div>
-              )}
-            </NavLink>
-          </li>
+      <ul className="nav d-flex flex-row justify-content-around align-items-stretch mb-0 list-unstyled">
+        {/* Home */}
+        <li className="nav-item flex-fill">
+          <NavLink to="/" end className="nav-link p-0 h-100">
+            {({ isActive }) => (
+              <div style={getLinkStyle(isActive)}>
+                <FiHome size={21} />
+                <span style={labelStyle}>Home</span>
+              </div>
+            )}
+          </NavLink>
+        </li>
 
-          {/* Products */}
-          <li className="nav-item">
-            <NavLink to="/products" className="nav-link p-0">
-              {({ isActive }) => (
-                <div
-                  className="d-flex flex-column align-items-center justify-content-center rounded-3"
-                  style={{
-                    color: isActive ? "#4f46e5" : "#64748b",
-                    background: isActive ? "#f5f3ff" : "transparent",
-                    padding: "6px 12px",
-                  }}
-                >
-                  <FiShoppingBag size={22} />
-                  <span
-                    style={{
-                      fontSize: "0.65rem",
-                      fontWeight: 600,
-                      marginTop: "2px",
-                    }}
-                  >
-                    Shop
-                  </span>
-                </div>
-              )}
-            </NavLink>
-          </li>
+        {/* Shop */}
+        <li className="nav-item flex-fill">
+          <NavLink to="/products" className="nav-link p-0 h-100">
+            {({ isActive }) => (
+              <div style={getLinkStyle(isActive)}>
+                <FiShoppingBag size={21} />
+                <span style={labelStyle}>Shop</span>
+              </div>
+            )}
+          </NavLink>
+        </li>
 
-          {/* Cart - Only if Token */}
-          {token && (
-            <li className="nav-item">
-              <NavLink to="/cart" className="nav-link p-0">
-                {({ isActive }) => (
-                  <div
-                    className="position-relative d-flex flex-column align-items-center justify-content-center rounded-3"
-                    style={{
-                      color: isActive ? "#4f46e5" : "#64748b",
-                      background: isActive ? "#f5f3ff" : "transparent",
-                      padding: "6px 12px",
-                    }}
+        {/* Cart — only if logged in */}
+        {token && (
+          <li className="nav-item flex-fill">
+            <NavLink to="/cart" className="nav-link p-0 h-100">
+              {({ isActive }) => (
+                <div style={getLinkStyle(isActive)}>
+                  <span
+                    style={{ position: "relative", display: "inline-flex" }}
                   >
-                    <FiShoppingCart size={22} />
+                    <FiShoppingCart size={21} />
                     {totalItemsInCart > 0 && (
                       <span
-                        className="position-absolute translate-middle badge rounded-pill bg-danger"
                         style={{
-                          top: "8px",
-                          right: "2px",
-                          fontSize: "0.55rem",
-                          border: "2px solid #fff",
+                          position: "absolute",
+                          inset: 0,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "0.52rem",
+                          fontWeight: 800,
+                          color: "#fff",
+                          pointerEvents: "none",
+                          textShadow: "0 0 3px rgba(0,0,0,0.5)",
                         }}
                       >
                         {totalItemsInCart}
                       </span>
                     )}
-                    <span
-                      style={{
-                        fontSize: "0.65rem",
-                        fontWeight: 600,
-                        marginTop: "2px",
-                      }}
-                    >
-                      Cart
-                    </span>
-                  </div>
-                )}
-              </NavLink>
-            </li>
-          )}
-
-          {/* Profile or Login */}
-          <li className="nav-item">
-            <NavLink to={token ? "/user" : "/login"} className="nav-link p-0">
-              {({ isActive }) => (
-                <div
-                  className="d-flex flex-column align-items-center justify-content-center rounded-3"
-                  style={{
-                    color: isActive ? "#4f46e5" : "#64748b",
-                    background: isActive ? "#f5f3ff" : "transparent",
-                    padding: "6px 12px",
-                  }}
-                >
-                  {token ? <FiUser size={22} /> : <FiLock size={22} />}
-                  <span
-                    style={{
-                      fontSize: "0.65rem",
-                      fontWeight: 600,
-                      marginTop: "2px",
-                    }}
-                  >
-                    {token ? "Profile" : "Login"}
                   </span>
+                  <span style={labelStyle}>Cart</span>
                 </div>
               )}
             </NavLink>
           </li>
+        )}
 
-          {/* Logout - Simplified Button */}
-          {token && (
-            <li className="nav-item">
-              <button
-                onClick={() => handleLogout(navigate)}
-                className="btn border-0 p-0 d-flex flex-column align-items-center justify-content-center"
-                style={{ color: "#64748b", padding: "6px 12px" }}
-              >
-                <FiLogOut size={22} />
-                <span
-                  style={{
-                    fontSize: "0.65rem",
-                    fontWeight: 600,
-                    marginTop: "2px",
-                  }}
-                >
-                  Logout 
-                </span>
-              </button>
-            </li>
-          )}
-        </ul>
-      </div>
+        {/* Profile or Login */}
+        <li className="nav-item flex-fill">
+          <NavLink
+            to={token ? "/user" : "/login"}
+            className="nav-link p-0 h-100"
+          >
+            {({ isActive }) => (
+              <div style={getLinkStyle(isActive)}>
+                {token ? <FiUser size={21} /> : <FiLock size={21} />}
+                <span style={labelStyle}>{token ? "Profile" : "Login"}</span>
+              </div>
+            )}
+          </NavLink>
+        </li>
+
+        {/* Logout — only if logged in */}
+        {token && (
+          <li className="nav-item flex-fill">
+            <button
+              onClick={() => handleLogout(navigate)}
+              className="btn border-0 p-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center"
+              style={{
+                color: "#6b7280",
+                borderTop: "2.5px solid transparent",
+                padding: "8px 14px 4px",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#ef4444")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#6b7280")}
+            >
+              <FiLogOut size={21} />
+              <span style={labelStyle}>Logout</span>
+            </button>
+          </li>
+        )}
+      </ul>
     </footer>
   );
 };
