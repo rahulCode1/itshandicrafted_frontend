@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Form, useNavigate } from "react-router-dom";
+import { Form } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import Loading from "../../components/Loading";
 import ErrorModal from "../../components/ErrorModal";
@@ -103,7 +103,7 @@ const AddProducts = () => {
       setImgPreviewUrl([]);
       fileInputRef.current.value = "";
 
-      // navigate("/products");
+     
     } catch (error) {
       console.log(error);
 
