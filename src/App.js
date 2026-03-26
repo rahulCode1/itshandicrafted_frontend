@@ -14,6 +14,10 @@ import ErrorPage from "./pages/ErrorPage";
 import { lazy, Suspense } from "react";
 import Loading from "./components/Loading";
 import ProtectedRoutes from "./pages/auth/ProtectedRoutes";
+import Contact from "./pages/home/Contact";
+import Privacy from "./pages/home/Privacy";
+import Shipping from "./pages/home/Shipping";
+import Terms from "./pages/home/Terms";
 
 const Products = lazy(() => import("./features/product/Products"));
 const ProductDetails = lazy(() => import("./features/product/ProductDetails"));
@@ -192,6 +196,22 @@ function App() {
           element: <LoginWithOtp />,
         },
 
+        {
+          path: "terms",
+          element: <Terms />,
+        },
+        {
+          path: "privacy",
+          element: <Privacy />,
+        },
+        {
+          path: "shipping",
+          element: <Shipping />,
+        },
+        {
+          path: "contact",
+          element: <Contact />,
+        },
         { path: "*", element: <NotFound /> },
       ],
     },

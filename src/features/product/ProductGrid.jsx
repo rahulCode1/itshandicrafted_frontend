@@ -2,6 +2,9 @@ import ProductCard from "../../components/product/ProductCard";
 import styles from "./ProductGrid.module.css";
 
 const ProductGrid = ({ filteredProducts, handleClearFilter }) => {
+ 
+  
+ 
   return (
     <div
       className="col-md-9 p-3 p-md-4 pb-5"

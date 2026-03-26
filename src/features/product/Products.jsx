@@ -7,6 +7,8 @@ const Products = () => {
     (state) => state.product,
   );
 
+  
+
   return (
     <>
       {fetchAllProductLoading === "loading" ? (

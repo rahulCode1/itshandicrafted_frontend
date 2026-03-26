@@ -89,12 +89,18 @@
 @media (min-height: 400px) {
   .container {
     min-height: 400px;
+  }
+
+  .overlay {
     min-height: 400px;
   }
 }
 @media (min-height: 500px) {
   .container {
     min-height: 500px;
+  }
+
+  .overlay {
     min-height: 500px;
   }
 }

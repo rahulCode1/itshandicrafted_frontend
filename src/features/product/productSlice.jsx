@@ -30,6 +30,7 @@ export const fetchAllProductsAsync = createAsyncThunk(
     try {
       const res = await API.get("/products");
 
+      // console.log(res.data)
       return res.data;
     } catch (error) {
       return rejectWithValue(

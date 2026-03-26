@@ -1,4 +1,6 @@
 import styles from "./HomeFooter.module.css";
+import { Link } from "react-router-dom";
+
 
 const HomeFooter = () => {
   return (
@@ -133,11 +135,12 @@ const HomeFooter = () => {
           &copy; 2025 <span>It's handicrafted</span>. All rights reserved.
           Handmade in Rajasthan, India.
         </p>
+
         <div className={styles.ftLinks}>
-          <a href="#">Terms of service</a>
-          <a href="#">Privacy policy</a>
-          <a href="#">Shipping policy</a>
-          <a href="#">Contact us</a>
+          <Link to="terms">Terms of service</Link>
+          <Link to="privacy">Privacy policy</Link>
+          <Link to="shipping">Shipping policy</Link>
+          <Link to="contact">Contact us</Link>
         </div>
       </div>
     </footer>
