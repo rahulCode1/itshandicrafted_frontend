@@ -37,7 +37,7 @@ const AddProducts = () => {
   const [imgPreviewUrl, setImgPreviewUrl] = useState([]);
 
   const { status, error } = useSelector((state) => state.product);
-  const navigate = useNavigate();
+
   const fileInputRef = useRef();
   const dispatch = useDispatch();
 
