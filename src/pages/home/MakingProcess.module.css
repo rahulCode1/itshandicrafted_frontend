@@ -1,0 +1,197 @@
+/* ── Making Process Section ──────────────────────────────────── */
+.mpSection {
+  padding: 3rem 0;
+  font-family: "DM Sans", sans-serif;
+
+}
+
+.mpHeader {
+  text-align: center;
+  margin-bottom: 2.75rem;
+}
+
+.mpEyebrow {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8b5e3c;
+  background: #f7ede2;
+  border: 1px solid #e8c9a8;
+  padding: 0.28em 1em;
+  border-radius: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.mpTitle {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.6rem, 4vw, 2.3rem);
+  font-weight: 600;
+  color: #1a1208;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.mpSubtitle {
+  font-size: 0.875rem;
+  color: #8a7560;
+  margin: 0.5rem 0 0;
+  line-height: 1.6;
+}
+
+/* Track (mobile: vertical column) */
+.mpTrack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* Dotted vertical spine (mobile only) */
+.mpTrack::before {
+  content: "";
+  position: absolute;
+  left: 52px;
+  top: 52px;
+  bottom: 52px;
+  width: 0;
+  border-left: 2px dashed #d4b896;
+  z-index: 0;
+}
+
+.mpStep {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Circular image */
+.mpImgWrap {
+  flex-shrink: 0;
+  position: relative;
+  width: 104px;
+  height: 104px;
+}
+
+.mpImgWrap::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px dashed #d4b896;
+}
+
+.mpImgWrap img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  border: 3px solid #fdf6ee;
+}
+
+/* Step number badge */
+.mpBadge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #1a1208;
+  color: #f7ede2;
+  font-size: 0.68rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fdf6ee;
+}
+
+/* Text content */
+.mpText { flex: 1; }
+
+.mpStepLabel {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c97b3a;
+  margin-bottom: 0.2rem;
+}
+
+.mpStepTitle {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.05rem, 3vw, 1.3rem);
+  font-weight: 600;
+  color: #1a1208;
+  margin: 0 0 0.3rem;
+  line-height: 1.25;
+}
+
+.mpStepDesc {
+  font-size: 0.82rem;
+  color: #8a7560;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Mobile arrow */
+.mpArrow {
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 44px;
+  opacity: 0.5;
+}
+
+/* ── Desktop layout ───────────────────────── */
+@media (min-width: 640px) {
+  .mpTrack {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .mpTrack::before { display: none; }
+
+  .mpStep {
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  /* Horizontal dotted connector between steps */
+  .mpStep:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 52px;
+    left: calc(50% + 58px);
+    right: calc(-50% + 58px);
+    height: 0;
+    border-top: 2px dashed #d4b896;
+  }
+
+  .mpImgWrap { width: 120px; height: 120px; }
+  .mpText { flex: none; width: 100%; }
+  .mpArrow { display: none; }
+}
+
+@media (min-width: 860px) {
+  .mpImgWrap { width: 136px; height: 136px; }
+
+  .mpStep:not(:last-child)::after {
+    top: 68px;
+    left: calc(50% + 74px);
+    right: calc(-50% + 74px);
+  }
+
+  .mpBadge { width: 28px; height: 28px; font-size: 0.72rem; }
+}

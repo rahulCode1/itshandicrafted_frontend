@@ -1,16 +1,18 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import kitchenCategory from "../imgs/kitchen.jpg";
-import giftCategory from "../imgs/gifts.jpg";
-import religiousCategory from "../imgs/religious.jpg";
-import decoreCategory from "../imgs/decores.jpg";
-import ganesh from "../imgs/ganesh.png";
-import tray from "../imgs/tray.jpg";
-import newArrivals from "../imgs/new.jpg";
-import deepakCategoryImg from "../imgs/deepak.png";
-import decorativeBowl from "../imgs/bowl.jpg";
+import kitchenCategory from "../../imgs/kitchen.jpg";
+import giftCategory from "../../imgs/gifts.jpg";
+import religiousCategory from "../../imgs/religious.jpg";
+import decoreCategory from "../../imgs/decores.jpg";
+import ganesh from "../../imgs/ganesh.png";
+import tray from "../../imgs/tray.jpg";
+import newArrivals from "../../imgs/new.jpg";
+import deepakCategoryImg from "../../imgs/deepak.png";
+import decorativeBowl from "../../imgs/bowl.jpg";
+import MakingProcess from "./MakingProcess";
+import styles from "./HomePage.module.css";
+import HomeFooter from "./HomeFooter";
 
-const Home = () => {
- 
+const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const navigate = useNavigate();
@@ -144,52 +146,32 @@ const Home = () => {
 
         {/* 2. Hero Banner - Responsive text and height */}
         <div
-          className="my-4 my-md-5 position-relative rounded-4 overflow-hidden shadow-lg"
+          className={styles.container}
           onClick={() => handleUpdateParams("category", "StatuesIdols")}
-          style={{ cursor: "pointer", minHeight: "400px" }}
         >
-          <img
-            src={ganesh}
-            alt="Stone Handicraft"
-            className="position-absolute w-100 h-100 object-fit-cover"
-            style={{ filter: "brightness(0.7)" }}
-          />
+          {/* Background Image */}
+          <img src={ganesh} alt="Stone Handicraft" className={styles.bgImage} />
 
-          <div
-            className="position-relative d-flex align-items-center justify-content-center text-center p-4 py-5"
-            style={{
-              minHeight: "400px",
-              background: "linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.5))",
-            }}
-          >
-            <div className="text-white" style={{ maxWidth: "800px" }}>
-              <p
-                className="text-uppercase mb-2"
-                style={{ letterSpacing: "3px", fontSize: "0.75rem" }}
-              >
-                Premium Stone Handicrafts
-              </p>
+          {/* Overlay Content */}
+          <div className={styles.overlay}>
+            <div className={styles.content}>
+              <p className={styles.subtitle}>Premium Stone Handicrafts</p>
 
-              <h1 className="fw-bold display-4 display-md-3 mb-3">
-                Timeless Stone Art
-              </h1>
+              <h1 className={styles.title}>Timeless Stone Art</h1>
 
-              <div
-                className="mx-auto mb-4 bg-white"
-                style={{ width: "60px", height: "2px" }}
-              />
+              <div className={styles.divider} />
 
-              <p className="lead fs-6 fs-md-5 mb-4 opacity-90 px-md-5">
+              <p className={styles.description}>
                 Handcrafted marble sculptures and decor pieces that bring
                 heritage, spirituality and elegance into your home.
               </p>
 
-              <button className="btn btn-light rounded-pill px-4 py-2 fw-bold text-uppercase small">
-                Explore Collection
-              </button>
+              <button className={styles.button}>Explore Collection</button>
             </div>
           </div>
         </div>
+
+        <MakingProcess />
 
         {/* 3. New Arrivals - Responsive Grid */}
         <div className="row g-4">
@@ -257,6 +239,7 @@ const Home = () => {
         </div>
       </section>
 
+      <HomeFooter />
       {/* CSS for hiding scrollbars while keeping functionality */}
       <style>{`
     .custom-scrollbar::-webkit-scrollbar {
@@ -271,4 +254,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;

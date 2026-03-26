@@ -1,0 +1,244 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap");
+
+.ft {
+  background: #ffffff;
+  color: #444;
+  font-family: "DM Sans", sans-serif;
+  padding: 3.5rem 1.5rem 0;
+}
+
+/* ── Brand row ── */
+.ftBrand {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ftLogo {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #111;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.ftLogo span {
+  color: #7c3aed; /* subtle purple accent */
+}
+
+.ftTagline {
+  font-size: 0.8rem;
+  color: #777;
+  line-height: 1.6;
+  max-width: 340px;
+  margin: 0;
+}
+
+.ftTrust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.ftTrustPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 2rem;
+  padding: 0.28em 0.85em;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #555;
+  letter-spacing: 0.06em;
+}
+
+/* ── Grid ── */
+.ftGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.ftColTitle {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 0.9rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+/* ── List ── */
+.ftList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.ftList li {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: #666;
+}
+
+.ftList li strong {
+  color: #222;
+  font-weight: 500;
+}
+
+/* ── Payment ── */
+.ftPay {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ftPayLabel {
+  font-size: 0.72rem;
+  color: #888;
+  margin: 0 0 0.45rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ftPayRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ftPayChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 0.3em 0.7em;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.ftPayNote {
+  font-size: 0.75rem;
+  color: #888;
+  line-height: 1.6;
+  margin: 0.5rem 0 0;
+}
+
+/* ── Policy accordion ── */
+.ftPolicy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.ftPolicyItem {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.ftPolicyItem summary {
+  list-style: none;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  user-select: none;
+}
+
+.ftPolicyItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.ftPolicyBody {
+  font-size: 0.77rem;
+  color: #666;
+  line-height: 1.7;
+  padding: 0 0.9rem 0.75rem;
+  border-top: 1px solid #eee;
+  margin: 0;
+}
+
+.ftPolicyBody strong {
+  color: #222;
+}
+
+/* ── Bottom bar ── */
+.ftBottom {
+  border-top: 1px solid #eee;
+  padding: 1.25rem 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ftCopy {
+  font-size: 0.72rem;
+  color: #888;
+  margin: 0;
+}
+
+.ftCopy span {
+  color: #7c3aed;
+}
+
+.ftLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.ftLinks a {
+  font-size: 0.72rem;
+  color: #777;
+  text-decoration: none;
+}
+
+.ftLinks a:hover {
+  color: #7c3aed;
+}
+
+/* ── Responsive ── */
+@media (min-width: 540px) {
+  .ftGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ftBrand {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 860px) {
+  .ftGrid {
+    grid-template-columns: 1.1fr 1fr 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .ftBottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

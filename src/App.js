@@ -1,7 +1,7 @@
 import "./App.css";
 import "swiper/swiper-bundle.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./pages/Home";
+import HomePage from "./pages/home/HomePage";
 import Layout from "./components/layout/Layout";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -38,7 +38,7 @@ function App() {
       children: [
         {
           index: true,
-          element: <Home />,
+          element: <HomePage />,
         },
         {
           path: "products",
