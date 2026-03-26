@@ -129,11 +129,9 @@ const ProductItem = ({ productData }) => {
           <div className={styles.container}>
             {/* LEFT IMAGE */}
             <div className={styles["img-container"]}>
-              <img
-                src={productInfo?.images[0].url}
-                className={styles.imgStyle}
-                alt={productInfo.name}
-              />
+             
+
+              <ProductImageCarousel images={productInfo.images}/>
             </div>
             {/* RIGHT DETAILS */}
 
