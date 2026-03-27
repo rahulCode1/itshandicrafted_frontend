@@ -7,7 +7,7 @@ export const fetchUserAddressAsync = createAsyncThunk(
     try {
       const res = await privateApi.get(`/address/getAllAddress`);
 
-        console.log(res.data);
+       
       return res.data;
     } catch (error) {
       return rejectWithValue(

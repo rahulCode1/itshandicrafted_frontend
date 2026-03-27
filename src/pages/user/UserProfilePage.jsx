@@ -1,38 +1,46 @@
-import { Await, useLoaderData } from "react-router-dom";
 import { privateApi } from "../../utils/axios";
 import UserProfile from "../../components/user/UserProfile";
-import { Suspense } from "react";
+import {  useEffect } from "react";
 import Loading from "../../components/Loading";
+import { useState } from "react";
+import ErrorModal from "../../components/ErrorModal";
 
 const UserProfilePage = () => {
-  const { user } = useLoaderData();
+  const [userDetails, setUser] = useState({
+    name: "",
+    phoneNumber: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const handleFetchUser = async () => {
+      try {
+        setIsLoading(true);
+        const res = await privateApi.get("/user/userDetails");
+
+        const user = res.data?.user;
+        setUser({ name: user.name, phoneNumber: user.phoneNumber });
+      } catch (error) {
+        console.log(error);
+        setError(error.response?.data?.message || "Failed to fetch user.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    handleFetchUser();
+  }, []);
+
+
 
   return (
     <>
-      <Suspense fallback={<Loading />}>
-        <Await resolve={user}>
-          {(isUserLoad) => <UserProfile user={isUserLoad.user} />}
-        </Await>
-      </Suspense>
+      {error && <ErrorModal />}
+      {isLoading ? <Loading /> : <UserProfile user={userDetails} />}
     </>
   );
 };
 
 export default UserProfilePage;
 
-const user = async () => {
-  try {
-    const res = await privateApi.get("/user/userDetails");
-
-   
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const loader = async () => {
-  return {
-    user: user(),
-  };
-};

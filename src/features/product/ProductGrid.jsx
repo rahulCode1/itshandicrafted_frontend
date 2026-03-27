@@ -1,9 +1,11 @@
 import ProductCard from "../../components/product/ProductCard";
 import styles from "./ProductGrid.module.css";
 
-const ProductGrid = ({ filteredProducts, handleClearFilter }) => {
- 
-  
+const ProductGrid = ({
+  filteredProducts,
+  handleClearFilter,
+  productCategory,
+}) => {
  
   return (
     <div
@@ -46,22 +48,50 @@ const ProductGrid = ({ filteredProducts, handleClearFilter }) => {
               </div>
             </div>
 
-            {/* Filter button — mobile only */}
-            <button
-              className="btn fw-semibold d-flex align-items-center gap-2 flex-shrink-0 d-md-none"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasResponsive"
-              style={{
-                background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                color: "#fff",
-                border: "none",
-                borderRadius: 10,
-                fontSize: "0.85rem",
-                boxShadow: "0 4px 12px rgba(79,70,229,0.3)",
-              }}
-            >
-              <i className="bi bi-funnel-fill" /> Filters
-            </button>
+            <div className="d-flex align-items-center gap-2 d-md-none">
+              {/* Filter toggle — mobile only */}
+              <button
+                className="btn d-flex align-items-center gap-1"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasResponsive"
+                style={{
+                  background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 8,
+                  fontSize: "0.78rem",
+                  padding: "5px 10px",
+                  boxShadow: "0 2px 8px rgba(79,70,229,0.25)",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <i
+                  className="bi bi-funnel-fill"
+                  style={{ fontSize: "0.75rem" }}
+                />
+                <span>Filter</span>
+              </button>
+
+              {/* Clear filters — only show when filters are active */}
+              {productCategory && (
+                <button
+                  onClick={handleClearFilter}
+                  className="btn d-flex align-items-center gap-1"
+                  style={{
+                    background: "transparent",
+                    color: "#7c3aed",
+                    border: "1.5px solid #c4b5fd",
+                    borderRadius: 8,
+                    fontSize: "0.78rem",
+                    padding: "4px 10px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <i className="bi bi-x-lg" style={{ fontSize: "0.7rem" }} />
+                  <span>Clear</span>
+                </button>
+              )}
+            </div>
           </div>
         )}
 

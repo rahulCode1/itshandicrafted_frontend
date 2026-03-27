@@ -1,5 +1,5 @@
-import { Link, useParams , useNavigate} from "react-router-dom";
-import { useSelector,  useDispatch } from "react-redux";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useEffect, useState } from "react";
 
@@ -24,6 +24,9 @@ const ProductItem = ({ productData }) => {
   const productInfo = productData?.product;
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const location = useLocation();
+
+
 
   const checkProductIsWishlist = (id) => {
     return wishlist.some((product) => product.id === id);
@@ -41,7 +44,7 @@ const ProductItem = ({ productData }) => {
 
   const handleAddToCart = async (productId) => {
     if (!token) {
-      return navigate("/login");
+      return navigate("/login", { state: { from: location.pathname } });
     }
     const toastId = toast.loading("Adding to cart...");
     try {
@@ -58,7 +61,7 @@ const ProductItem = ({ productData }) => {
 
   const handleAddToWishList = async (productId, type) => {
     if (!token) {
-      return navigate("/login");
+      return navigate("/login", { state: { from: location.pathname } });
     }
 
     const tostId = toast.loading(
@@ -94,7 +97,7 @@ const ProductItem = ({ productData }) => {
 
   const handleAddToBuyNow = async () => {
     if (!token) {
-      return navigate("/login");
+      return navigate("/login", { state: { from: location.pathname } });
     }
 
     const toastId = toast.loading("Going to checkout...");
@@ -129,10 +132,7 @@ const ProductItem = ({ productData }) => {
           <div className={styles.container}>
             {/* LEFT IMAGE */}
             <div className={styles["img-container"]}>
-              <ProductImageCarousel
-                images={productInfo.images}
-               
-              />
+              <ProductImageCarousel images={productInfo.images} />
             </div>
             {/* RIGHT DETAILS */}
 

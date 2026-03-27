@@ -146,6 +146,7 @@ export const categoryField = {
     { value: "BuddhaStatues", label: "Buddha Statues" },
     { value: "GaneshStatues", label: "Ganesh Statues" },
     { value: "ShivLing", label: "Shiv Ling" },
+    { value: "SilBatta", label: "Sil Batta " },
     { value: "Planters", label: "Planters" },
     { value: "Vases", label: "Vases" },
     { value: "Showpieces", label: "Showpieces" },

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   sentOtpAsync,
@@ -27,6 +27,9 @@ const LoginWithOtp = () => {
   const { isOtpSent, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  
 
   const handleOnChange = (e) => {
     setFormData((prevStat) => ({
@@ -125,7 +128,10 @@ const LoginWithOtp = () => {
       toast.success(res.message || "OTP verified successfully", {
         id: toastId,
       });
-      navigate("/products");
+
+      const redirectUrl = location.state?.from || "/products";
+
+      navigate(redirectUrl);
     } catch (error) {
       console.log(error);
       toast.error(error || "Failed to verify otp", { id: toastId });

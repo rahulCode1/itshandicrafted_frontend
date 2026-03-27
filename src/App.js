@@ -185,11 +185,7 @@ function App() {
             <ProtectedRoutes>
               <UserProfilePage />
             </ProtectedRoutes>
-          ),
-          loader: () =>
-            import("./pages/user/UserProfilePage").then((module) =>
-              module.loader(),
-            ),
+          )
         },
         {
           path: "login",

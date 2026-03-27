@@ -1,8 +1,8 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import kitchenCategory from "../../imgs/kitchen.jpg";
-import giftCategory from "../../imgs/gifts.jpg";
+
 import religiousCategory from "../../imgs/religious.jpg";
-import decoreCategory from "../../imgs/decores.jpg";
+
 import ganesh from "../../imgs/ganesh.png";
 import tray from "../../imgs/tray.jpg";
 import newArrivals from "../../imgs/new.jpg";
@@ -17,22 +17,13 @@ const HomePage = () => {
 
   const navigate = useNavigate();
   const categories = [
-    {
-      name: "Home Decor",
-      category: "HomeDecor",
-      imgUrl: decoreCategory,
-    },
+    
     {
       name: "Kitchen & Dining",
       category: "KitchenDining",
       imgUrl: kitchenCategory,
     },
 
-    {
-      name: "Corporate Gifts",
-      category: "CorporateGifts",
-      imgUrl: giftCategory,
-    },
     {
       name: "Religious Items",
       category: "ReligiousItems",

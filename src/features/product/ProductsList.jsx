@@ -511,6 +511,7 @@ const ProductsList = ({ productsList }) => {
           <ProductGrid
             filteredProducts={filteredProducts}
             handleClearFilter={handleClearFilter}
+            productCategory={productCategory}
           />
         </div>
       </main>
