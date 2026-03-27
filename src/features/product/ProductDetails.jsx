@@ -10,7 +10,7 @@ const ProductDetails = () => {
   return (
     <Suspense fallback={<Loading />}>
       <Await resolve={product}>
-        {(isProductDetails) => <ProductItem productData={isProductDetails} />}
+        {(isProductLoad) => <ProductItem productData={isProductLoad} />}
       </Await>
     </Suspense>
   );
