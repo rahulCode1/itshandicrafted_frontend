@@ -37,16 +37,11 @@ const BuyNow = ({ info }) => {
       return navigate("/login");
     }
 
-    if (!address || address.length === 0) {
-      setError("Please add a delivery address to place your order.");
-      return;
+    if (!address || address.length === 0 || !selectedAddress) {
+      return navigate("/address/addAddress", { state: { from: "/buyNow" } });
     }
 
-    if (!selectedAddress) {
-      setError("Please set a default address to place your order.");
-      return;
-    }
-
+   
     const toastId = toast.loading("Placing your order...");
 
     try {

@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
 import { useEcommerce } from "../../context/EcommerceContext";
 import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
 import Loading from "../../components/Loading";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchUserAddressAsync,
-  removeUserAddressAsync,
   clearError,
 } from "../../features/address/addressSlice";
 import ErrorModal from "../../components/ErrorModal";
@@ -14,25 +12,9 @@ import ErrorModal from "../../components/ErrorModal";
 const AllAddress = () => {
   const [addressId, setAddressId] = useState(null);
   const { handleSelectDefaultAddress } = useEcommerce();
-  const {
-    address,
-    fetchUserAddressLoading,
-    removeAddressLoading,
-    error,
-    setDefaultAddressLoading,
-  } = useSelector((state) => state.address);
+  const { address, fetchUserAddressLoading, error, setDefaultAddressLoading } =
+    useSelector((state) => state.address);
   const dispatch = useDispatch();
-
-  const removeAddress = async (addressId) => {
-    const toastId = toast.loading("Address remove...");
-    setAddressId(addressId);
-    try {
-      await dispatch(removeUserAddressAsync(addressId)).unwrap();
-      toast.success("Address removed successfully.", { id: toastId });
-    } catch (error) {
-      toast.error(error || "Failed to remove address.", { id: toastId });
-    }
-  };
 
   const selectDefaultAddress = async (addressId) => {
     setAddressId(addressId);
@@ -50,8 +32,6 @@ const AllAddress = () => {
 
     handleGetUserAddress();
   }, [dispatch]);
-
-
 
   return (
     <>
@@ -280,7 +260,7 @@ const AllAddress = () => {
 
                         {/* Actions */}
                         <div className="row g-2">
-                          <div className="col-6">
+                          <div className="">
                             <Link
                               to={`${userAdd.id}`}
                               state={{ from: "/user" }}
@@ -292,29 +272,6 @@ const AllAddress = () => {
                               ></i>
                               Edit
                             </Link>
-                          </div>
-                          <div className="col-6">
-                            <button
-                              onClick={() => removeAddress(userAdd.id)}
-                              disabled={removeAddressLoading === "loading"}
-                              className="btn btn-outline-danger btn-sm w-100 rounded-3 fw-semibold d-flex align-items-center justify-content-center gap-1"
-                            >
-                              {removeAddressLoading === "loading" &&
-                              addressId === userAdd.id ? (
-                                <>
-                                  Deleting…{" "}
-                                  <span className="spinner-border spinner-border-sm ms-1"></span>
-                                </>
-                              ) : (
-                                <>
-                                  <i
-                                    className="bi bi-trash3-fill"
-                                    style={{ fontSize: 11 }}
-                                  ></i>{" "}
-                                  Delete
-                                </>
-                              )}
-                            </button>
                           </div>
                         </div>
                       </div>

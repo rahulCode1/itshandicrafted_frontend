@@ -41,11 +41,8 @@ const Checkout = () => {
     address.find((address) => address.isDefault === true);
 
   const handleSubmitOrder = async () => {
-    if (address.length === 0) {
-      return setError("Please add address to place order.");
-    }
-    if (address.length !== 0 && !selectedAddress) {
-      return setError("Select a default address to place order.");
+    if (!selectedAddress) {
+      return navigate("/address/addAddress", { state: { from: "/checkout" } });
     }
 
     const toastId = toast.loading("Place order...");
