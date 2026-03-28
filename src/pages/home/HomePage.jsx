@@ -8,6 +8,12 @@ import tray from "../../imgs/tray.jpg";
 import newArrivals from "../../imgs/new.jpg";
 import deepakCategoryImg from "../../imgs/deepak.png";
 import decorativeBowl from "../../imgs/bowl.jpg";
+import MortarPestleImg from "../../imgs/mortarPestle.png";
+import SillBattaImg from "../../imgs/SillBatta.png";
+import chaklaBelanImg from "../../imgs/chaklaBelan.png";
+import mortarPestleSmImg from "../../imgs/mortar&PestleSm.png";
+import sillBattaSmImg from "../../imgs/sillBattaSm.png";
+import chaklaBelanSmImg from "../../imgs/chaklaBelanSm.png";
 import MakingProcess from "./MakingProcess";
 import styles from "./HomePage.module.css";
 import HomeFooter from "./HomeFooter";
@@ -17,11 +23,32 @@ const HomePage = () => {
 
   const navigate = useNavigate();
   const categories = [
-    
     {
-      name: "Kitchen & Dining",
-      category: "KitchenDining",
-      imgUrl: kitchenCategory,
+      name: "Mortar Pestle",
+      category: "MortarPestle",
+      imgUrl: MortarPestleImg,
+    },
+
+    {
+      name: "Chakla & Belan",
+      category: "ChaklaBelan",
+      imgUrl: chaklaBelanImg,
+    },
+    {
+      name: "Sil & Batta",
+      category: "SilBatta",
+      imgUrl: SillBattaImg,
+    },
+    {
+      name: "Candle Holders",
+      category: "CandleHolders",
+      imgUrl: deepakCategoryImg,
+    },
+
+    {
+      name: "Statues & Idols",
+      category: "StatuesIdols",
+      imgUrl: ganesh,
     },
 
     {
@@ -29,16 +56,13 @@ const HomePage = () => {
       category: "ReligiousItems",
       imgUrl: religiousCategory,
     },
+
     {
-      name: "Statues & Idols",
-      category: "StatuesIdols",
-      imgUrl: ganesh,
+      name: "Kitchen & Dining",
+      category: "KitchenDining",
+      imgUrl: kitchenCategory,
     },
-    {
-      name: "Candle Holders",
-      category: "CandleHolders",
-      imgUrl: deepakCategoryImg,
-    },
+
     {
       name: "Decorative Bowls",
       category: "DecorativeBowls",
@@ -135,6 +159,66 @@ const HomePage = () => {
           ))}
         </div>
 
+        <div>
+          {/* Mortar & Pestle — text left, img right */}
+          <div
+            className={styles.categoryContainer}
+            onClick={() => handleUpdateParams("category", "MortarPestle")}
+          >
+            <div className={styles.categoryText}>
+              <p>Kitchen Essentials</p>
+              <h5>
+                Handcrafted Granite Mortar & Pestle — grind fresher, cook
+                better.
+              </h5>
+              <span>Explore Collection →</span>
+            </div>
+            <img
+              src={mortarPestleSmImg}
+              className={styles.sideImg}
+              alt="Mortar Pestle"
+            />
+          </div>
+
+          {/* Sil Batta — img left, text right */}
+          <div
+            className={styles.categoryContainer}
+            onClick={() => handleUpdateParams("category", "SilBatta")}
+          >
+            <img
+              src={sillBattaSmImg}
+              className={styles.sideImg}
+              alt="Sil Batta"
+            />
+            <div className={styles.categoryText}>
+              <p>Traditional Grinding</p>
+              <h5>
+                Stone Sil Batta — the art of slow grinding, preserved in
+                granite.
+              </h5>
+              <span>Shop Now →</span>
+            </div>
+          </div>
+
+          {/* Chakla Belan — text left, img right */}
+          <div
+            className={styles.categoryContainer}
+            onClick={() => handleUpdateParams("category", "ChaklaBelan")}
+          >
+            <div className={styles.categoryText}>
+              <p>Everyday Baking</p>
+              <h5>
+                Marble Chakla & Belan — roll the perfect chapati, every time.
+              </h5>
+              <span>View All →</span>
+            </div>
+            <img
+              src={chaklaBelanSmImg}
+              className={styles.sideImg}
+              alt="Chakla Belan"
+            />
+          </div>
+        </div>
         {/* 2. Hero Banner - Responsive text and height */}
         <div
           className={styles.container}

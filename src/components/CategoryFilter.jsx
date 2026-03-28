@@ -1,9 +1,9 @@
-const CategoryFilter = ({handleOnChangeCategory, filterCategory}) => {
+const CategoryFilter = ({ handleOnChangeCategory, filterCategory }) => {
   const categories = [
+    { id: "MortarPestle", value: "MortarPestle", label: "Mortar & Pestle" },
+    { id: "SilBatta", value: "SilBatta", label: "Sil & Batta" },
+    { id: "ChaklaBelan", value: "ChaklaBelan", label: "Chakla & Belan" },
     { id: "KitchenDining", value: "KitchenDining", label: "Kitchen & Dining" },
-    { id: "HomeDecor", value: "HomeDecor", label: "Home & Decor" },
-    { id: "ReligiousItems", value: "ReligiousItems", label: "Religious Items" },
-    { id: "CorporateGifts", value: "CorporateGifts", label: "Corporate Gifts" },
     { id: "StatuesIdols", value: "StatuesIdols", label: "Statues & Idols" },
   ];
 
@@ -34,4 +34,4 @@ const CategoryFilter = ({handleOnChangeCategory, filterCategory}) => {
   );
 };
 
-export default CategoryFilter
+export default CategoryFilter;
