@@ -20,6 +20,7 @@ const ProductItem = ({ productData }) => {
   const { wishlist, toggleWishlistLoading } = useSelector(
     (state) => state.wishlist,
   );
+  
   const dispatch = useDispatch();
   const productId = useParams().id;
   const productInfo = productData?.product;

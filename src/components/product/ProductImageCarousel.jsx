@@ -14,7 +14,7 @@ const S = {
   stage: {
     position: "relative",
     width: "100%",
-    aspectRatio: "1 / 1", // square keeps ratio stable on all screens
+    aspectRatio: "6 / 7", // square keeps ratio stable on all screens
     background: "#fdf6ee",
     borderRadius: "0.75rem 0.75rem 0 0",
     overflow: "hidden",
